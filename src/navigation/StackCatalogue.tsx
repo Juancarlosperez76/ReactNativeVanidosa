@@ -25,7 +25,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),
@@ -42,7 +42,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),
@@ -59,7 +59,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),
@@ -76,7 +76,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),
@@ -93,7 +93,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),
@@ -110,7 +110,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),
@@ -127,7 +127,7 @@ const StackCatalogue = () => {
           headerStyle: { backgroundColor: '#ffffff' },
           headerRight: () => (
             <Image
-              source={require('../../android/assets/logo-168-32.png')}
+              source={require('../../android/assets/img/logo-168-32.png')}
               style={{ position: 'absolute', right: 10 }}
             />
           ),

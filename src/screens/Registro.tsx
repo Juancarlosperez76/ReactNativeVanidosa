@@ -43,7 +43,7 @@ const Registro = ({ navigation }: RegistroProps) => {
     <ScrollView style={styles.contentForm}>
       <SafeAreaView>
         <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/logo-full-136-84.png')} />
+          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
         </View>
         <View>
           <Ionicons style={styles.iconForm} name='person-outline' />

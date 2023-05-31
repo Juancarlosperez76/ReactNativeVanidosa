@@ -8,10 +8,10 @@ const Main = () => {
       <Header />
       <ScrollView>
         <View style={styles.main}>
-          <Image style={styles.immageMain} source={require('../../android/assets/img-main.jpg')} />
+          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main.jpg')} />
         </View>
         <View style={styles.main}>
-          <Image style={styles.immageMain} source={require('../../android/assets/img-main-2.jpg')} />
+          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-2.jpg')} />
         </View>
       </ScrollView>
     </>

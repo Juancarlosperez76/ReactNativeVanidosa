@@ -36,7 +36,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
   return (
     <ScrollView style={styles.contentForm}>
       <View style={styles.contentLogoAccount}>
-        <Image style={styles.logoAccount} source={require('../../android/assets/logo-full-136-84.png')} />
+        <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
       </View>
       <SafeAreaView>
         <View>

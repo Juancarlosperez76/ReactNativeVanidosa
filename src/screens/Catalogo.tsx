@@ -21,7 +21,7 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
     // junto con "flexGrow: 1" solucionan problemas de Scroll
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{ alignItems: 'center', backgroundColor: '#ffffff' }}>
-        <Image style={{ width: '90%', borderRadius: 20, marginTop: 25 }} source={require('../../android/assets/img-main-catalogo.jpg')} />
+        <Image style={{ width: '90%', borderRadius: 20, marginTop: 25 }} source={require('../../android/assets/img/img-main-catalogo.jpg')} />
       </View>
       <View style={styles.contentCatalog}>
         <View style={styles.catalog}>
