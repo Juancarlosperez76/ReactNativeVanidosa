@@ -29,7 +29,7 @@ const StackTabButtom = () => {
           headerShown: false, // Oculta el Header y el título por defecto
 
           tabBarStyle: { // Estilos de la barra de navegación
-            height: 56,
+            height: 52,
             backgroundColor: '#ffffff',
           },
           
@@ -38,7 +38,7 @@ const StackTabButtom = () => {
           //tabBarActiveBackgroundColor: '#0B8ADE',
 
           tabBarItemStyle: { // Estilos Items de la barra de navegación
-            paddingVertical: 5, // Soluciona posisionamiento de iconos al girar la pantalla
+            paddingVertical: 4, // Soluciona posisionamiento de iconos al girar la pantalla
             flexDirection: 'column', // Soluciona posisionamiento de iconos al girar la pantalla
           },
 
@@ -69,7 +69,7 @@ const StackTabButtom = () => {
             }
             else if (route.name === 'Cuenta') {
               iconName = focused ? 'person' : 'md-person-outline';
-              size = 25;
+              size = 24;
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },

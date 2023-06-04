@@ -20,8 +20,8 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
     // La propiedad "contentContainerStyle" en el contenedor "<ScrollView>"
     // junto con "flexGrow: 1" solucionan problemas de Scroll
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={{ alignItems: 'center', backgroundColor: '#ffffff' }}>
-        <Image style={{ width: '90%', borderRadius: 20, marginTop: 25 }} source={require('../../android/assets/img/img-main-catalogo.jpg')} />
+      <View style={styles.contentImgCatalogo}>
+        <Image style={styles.imgCatalogo} source={require('../../android/assets/img/img-catalogo-2.jpg')} />
       </View>
       <View style={styles.contentCatalog}>
         <View style={styles.catalog}>
@@ -77,6 +77,22 @@ export default Catalogo;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    backgroundColor: '#ffffff',
+  },
+  contentImgCatalogo:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 10,
+    aspectRatio: 1 * 1.67, // Convertir pixeles de imágen a "Relación Aspecto" 
+    backgroundColor: '#ffffff',
+  },
+  imgCatalogo: {
+    width: '90%',
+    height: '90%',
+    resizeMode: 'cover',
+    borderRadius: 15,
   },
   contentCatalog: {
     flex: 1,

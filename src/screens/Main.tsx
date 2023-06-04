@@ -7,11 +7,11 @@ const Main = () => {
     <>
       <Header />
       <ScrollView>
-        <View style={styles.main}>
-          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main.jpg')} />
+        <View style={styles.contentImage}>
+          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-1.jpg')} />
         </View>
-        <View style={styles.main}>
-          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-2.jpg')} />
+        <View>
+          <Image source={require('../../android/assets/img/img-main-2.jpg')} />
         </View>
       </ScrollView>
     </>
@@ -22,14 +22,23 @@ export default Main;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  main: {
+  contentImage: {
     display: 'flex',
-    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 5,
+    width: '100%',
+    marginTop: 10,
+    aspectRatio: 1 * 1.31, // Convertir pixeles de imágen a "Relación Aspecto" 
     backgroundColor: '#ffffff',
   },
   immageMain: {
-    width: '98%',
+    width: '96%',
+    height: '96%',
+    resizeMode: 'cover',
+    borderRadius: 15,
+  },
+  contentImage2: {
+  },
+  immageMain2: {
   },
 });
