@@ -29,16 +29,17 @@ const StackTabButtom = () => {
           headerShown: false, // Oculta el Header y el título por defecto
 
           tabBarStyle: { // Estilos de la barra de navegación
-            height: 52,
+            width: '100%',
+            height: 64,
             backgroundColor: '#ffffff',
           },
-          
-          tabBarActiveTintColor: '#005c99',
+
+          tabBarActiveTintColor: '#ffffff',
           tabBarInactiveTintColor: '#7e7e7e',
-          //tabBarActiveBackgroundColor: '#0B8ADE',
+          tabBarActiveBackgroundColor: '#2C4D9E',
 
           tabBarItemStyle: { // Estilos Items de la barra de navegación
-            paddingVertical: 4, // Soluciona posisionamiento de iconos al girar la pantalla
+            paddingVertical: 10, // Soluciona posisionamiento de iconos al girar la pantalla
             flexDirection: 'column', // Soluciona posisionamiento de iconos al girar la pantalla
           },
 
@@ -52,24 +53,24 @@ const StackTabButtom = () => {
             let iconName = ''; // Las "Comillas simples" vacias en la declaración "let", solucionan error en propiedad "name" del "Icono"
 
             if (route.name === 'Inicio') {
-              iconName = focused ? 'home' : 'home-outline';
-              size = 24;
+              iconName = 'home-outline';
+              size = focused ? 24 : 22;
             }
             else if (route.name === 'Catálogo') {
-              iconName = focused ? 'book' : 'book-outline';
-              size = 24;
+              iconName = 'book-outline';
+              size = focused ? 24 : 22;
             }
             else if (route.name === 'Agendar') {
-              iconName = focused ? 'calendar' : 'calendar-outline';
-              size = 24;
+              iconName = 'calendar-outline';
+              size = focused ? 24 : 22;
             }
             else if (route.name === 'Contacto') {
-              iconName = focused ? 'call' : 'call-outline';
-              size = 24;
+              iconName = 'call-outline';
+              size = focused ? 24 : 22;
             }
             else if (route.name === 'Cuenta') {
-              iconName = focused ? 'person' : 'md-person-outline';
-              size = 24;
+              iconName = 'md-person-outline';
+              size = focused ? 24 : 22;
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -81,10 +82,10 @@ const StackTabButtom = () => {
           options={{
             tabBarLabel: ({ focused }) => (
               <Text style={{
-                fontWeight: focused ? '500' : 'normal',
-                color: focused ? '#005c99' : '#7e7e7e',
-                fontSize: 11,
-                letterSpacing: 0.4,
+                fontWeight: focused ? '400' : '300',
+                color: focused ? '#ffffff' : '#7e7e7e',
+                fontSize: 10,
+                letterSpacing: 0.5,
               }}>Inicio
               </Text>
             ),
@@ -96,10 +97,10 @@ const StackTabButtom = () => {
           options={{
             tabBarLabel: ({ focused }) => (
               <Text style={{
-                fontWeight: focused ? '500' : 'normal',
-                color: focused ? '#005c99' : '#7e7e7e',
-                fontSize: 11,
-                letterSpacing: 0.4,
+                fontWeight: focused ? '400' : '300',
+                color: focused ? '#ffffff' : '#7e7e7e',
+                fontSize: 10,
+                letterSpacing: 0.5,
               }}>Catálogo
               </Text>
             ),
@@ -111,10 +112,10 @@ const StackTabButtom = () => {
           options={{
             tabBarLabel: ({ focused }) => (
               <Text style={{
-                fontWeight: focused ? '500' : 'normal',
-                color: focused ? '#005c99' : '#7e7e7e',
-                fontSize: 11,
-                letterSpacing: 0.4,
+                fontWeight: focused ? '400' : '300',
+                color: focused ? '#ffffff' : '#7e7e7e',
+                fontSize: 10,
+                letterSpacing: 0.5,
               }}>Agendar
               </Text>
             ),
@@ -126,10 +127,10 @@ const StackTabButtom = () => {
           options={{
             tabBarLabel: ({ focused }) => (
               <Text style={{
-                fontWeight: focused ? '500' : 'normal',
-                color: focused ? '#005c99' : '#7e7e7e',
-                fontSize: 11,
-                letterSpacing: 0.4,
+                fontWeight: focused ? '400' : '300',
+                color: focused ? '#ffffff' : '#7e7e7e',
+                fontSize: 10,
+                letterSpacing: 0.5,
               }}>Contacto
               </Text>
             ),
@@ -141,10 +142,10 @@ const StackTabButtom = () => {
           options={{
             tabBarLabel: ({ focused }) => (
               <Text style={{
-                fontWeight: focused ? '500' : 'normal',
-                color: focused ? '#005c99' : '#7e7e7e',
-                fontSize: 11,
-                letterSpacing: 0.4,
+                fontWeight: focused ? '400' : '300',
+                color: focused ? '#ffffff' : '#7e7e7e',
+                fontSize: 10,
+                letterSpacing: 0.5,
               }}>Cuenta
               </Text>
             ),

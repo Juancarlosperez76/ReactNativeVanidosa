@@ -74,7 +74,7 @@ const Login = ({ navigation }: LoginProps) => {
             disabled={false}
             value={savePassword}
             onValueChange={(newValue) => setsavePassword(newValue)}
-            tintColors={{ true: '#005c99', false: '#7e7e7e' }}
+            tintColors={{ true: '#2C4D9E', false: '#7e7e7e' }}
           />
           <Text style={{ color: '#7e7e7e' }}>Guardar contraseña</Text>
         </View>
@@ -84,7 +84,7 @@ const Login = ({ navigation }: LoginProps) => {
             onPress={() => alert('Botón personalizado presionado')}
             width='100%'
             height={48}
-            backgroundColor='#005c99'
+            backgroundColor='#2C4D9E'
             borderRadius={24}
             title='INICIAR SESIÓN'
             color='#ffffff'
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     color: '#7e7e7e',
   },
   recoverPassword: {
-    color: '#005c99',
+    color: '#2C4D9E',
     textAlign: 'center',
     marginVertical: 25,
   },
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 48,
     justifyContent: 'center',
-    borderColor: '#005c99',
+    borderColor: '#2C4D9E',
     borderWidth: 1,
     borderRadius: 24,
   },

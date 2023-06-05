@@ -94,7 +94,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
             onPress={() => alert('Botón personalizado presionado')}
             width='100%'
             height={48}
-            backgroundColor='#005c99'
+            backgroundColor='#2C4D9E'
             borderRadius={24}
             title='RESTABLECER'
             color='#ffffff'
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 48,
     justifyContent: 'center',
-    borderColor: '#005c99',
+    borderColor: '#2C4D9E',
     borderWidth: 1,
     borderRadius: 24,
   },

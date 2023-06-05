@@ -6,12 +6,12 @@ const Main = () => {
   return (
     <>
       <Header />
-      <ScrollView>
+      <ScrollView style={{backgroundColor: 'transparent'}}>
         <View style={styles.contentImage}>
-          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-1.jpg')} />
+          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-4.jpg')} />
         </View>
         <View>
-          <Image source={require('../../android/assets/img/img-main-2.jpg')} />
+          <Image source={require('../../android/assets/img/img-main-2.png')} />
         </View>
       </ScrollView>
     </>
@@ -28,8 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginTop: 10,
-    aspectRatio: 1 * 1.31, // Convertir pixeles de imágen a "Relación Aspecto" 
-    backgroundColor: '#ffffff',
+    aspectRatio: 1 * 1.43, // Convertir pixeles de imágen a "Relación Aspecto" 
   },
   immageMain: {
     width: '96%',

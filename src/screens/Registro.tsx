@@ -168,7 +168,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             onPress={() => alert('Botón personalizado presionado')}
             width='100%'
             height={48}
-            backgroundColor='#005c99'
+            backgroundColor='#2C4D9E'
             borderRadius={24}
             title='CREAR CUENTA'
             color='#ffffff'
@@ -182,7 +182,7 @@ const Registro = ({ navigation }: RegistroProps) => {
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text
-              style={{ color: '#005c99' }}> Inicia sesión
+              style={{ color: '#2C4D9E' }}> Inicia sesión
             </Text>
           </TouchableOpacity>
         </View>
