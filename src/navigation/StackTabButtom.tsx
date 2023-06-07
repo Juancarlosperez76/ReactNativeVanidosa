@@ -2,17 +2,17 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Main from '../screens/Main'
+import StackMain from './StackMain'
+import StackCatalogue from './StackCatalogue';
 import StackChedule from './StackChedule';
-import StackCatalogue from '../navigation/StackCatalogue';
-import StackAccount from '../navigation/StackAccount';
 import Contacto from '../screens/Contacto';
+import StackAccount from './StackAccount';
 import { Text } from 'react-native';
 
-function MainScreen() { return (<Main />); }
+function StackMainScreen() { return (<StackMain />); }
+function StackCatalogueScreen() { return (<StackCatalogue />); }
 function StackCheduleScreen() { return (<StackChedule />); }
 function ContactoScreen() { return (<Contacto />); }
-function StackCatalogueScreen() { return (<StackCatalogue />); }
 function StackAccountScreen() { return (<StackAccount />); }
 
 const Tab = createBottomTabNavigator();
@@ -20,8 +20,11 @@ const Tab = createBottomTabNavigator();
 const StackTabButtom = () => {
 
   return (
+
     <NavigationContainer>
+
       <Tab.Navigator
+
         initialRouteName="Inicio" // Establece la vista que se muestra al ejecutar la aplicación
 
         screenOptions={({ route }) => ({
@@ -76,9 +79,10 @@ const StackTabButtom = () => {
           },
         })}
       >
+
         <Tab.Screen
           name="Inicio"
-          component={MainScreen}
+          component={StackMainScreen}
           options={{
             tabBarLabel: ({ focused }) => (
               <Text style={{
@@ -91,6 +95,7 @@ const StackTabButtom = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="Catálogo"
           component={StackCatalogueScreen}
@@ -106,6 +111,7 @@ const StackTabButtom = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="Agendar"
           component={StackCheduleScreen}
@@ -121,6 +127,7 @@ const StackTabButtom = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="Contacto"
           component={ContactoScreen}
@@ -136,6 +143,7 @@ const StackTabButtom = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="Cuenta"
           component={StackAccountScreen}
@@ -151,8 +159,11 @@ const StackTabButtom = () => {
             ),
           }}
         />
+
       </Tab.Navigator>
+
     </NavigationContainer >
+    
   );
 }
 

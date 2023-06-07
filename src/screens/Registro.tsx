@@ -1,7 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import GeneralButton from '../components/GeneralButton';
+import ButtonPrimary from '../components/ButtonPrimary';
+import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type RootStackParamList = {
@@ -24,27 +25,28 @@ const Registro = ({ navigation }: RegistroProps) => {
   const [password, setContrasena] = React.useState('');
   const [confirmarPassword, setConfirmarContrasena] = React.useState('');
 
-  function alert(_arg0: string) {
-    throw new Error('Function not implemented.');
-  }
-
   // Mostrar y ocultar "Contraseña"
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  
+
   const togglePasswordVisibility1 = () => {
     setShowPassword1(!showPassword1);
   };
+
   const togglePasswordVisibility2 = () => {
     setShowPassword2(!showPassword2);
   };
 
   return (
+
     <ScrollView style={styles.contentForm}>
+
       <SafeAreaView>
+
         <View style={styles.contentLogoAccount}>
           <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='person-outline' />
           <TextInput
@@ -56,6 +58,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             value={nombre}
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='people-outline' />
           <TextInput
@@ -67,6 +70,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             value={apellidos}
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='card-outline' />
           <TextInput
@@ -78,6 +82,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             value={tipoDocumento}
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='card-outline' />
           <TextInput
@@ -90,6 +95,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             keyboardType='numeric'
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='home-outline' />
           <TextInput
@@ -101,6 +107,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             value={direccion}
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='call-outline' />
           <TextInput
@@ -113,6 +120,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             keyboardType='numeric'
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='at-sharp' />
           <TextInput
@@ -126,6 +134,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             keyboardType='email-address'
           />
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='lock-closed-outline' />
           <TextInput
@@ -144,6 +153,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             </TouchableOpacity>
           )}
         </View>
+
         <View>
           <Ionicons style={styles.iconForm} name='lock-closed-outline' />
           <TextInput
@@ -164,31 +174,29 @@ const Registro = ({ navigation }: RegistroProps) => {
         </View>
 
         <View style={{ marginTop: 30 }}>
-          <GeneralButton
-            onPress={() => alert('Botón personalizado presionado')}
-            width='100%'
-            height={48}
-            backgroundColor='#2C4D9E'
-            borderRadius={24}
-            title='CREAR CUENTA'
-            color='#ffffff'
-            fontSize={14}
+          <ButtonPrimary
+            onPress={() => { }}
+            title={'CREAR CUENTA'}
+            backgroundColor={'#2C4D9E'}
+            color={'#ffffff'}
           />
         </View>
 
-        <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 25, justifyContent: 'center' }}>
-          <Text
-            style={{ color: '#494949' }}>¿Ya tienes cuenta?
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text
-              style={{ color: '#2C4D9E' }}> Inicia sesión
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.separator}></View>
+
+        <View>
+          <ButtonSecondary
+            onPress={() => navigation.navigate('Login')}
+            title={'REGRESAR'}
+            backgroundColor={'#00000000'}
+            color={'#000000'}
+          />
         </View>
 
       </SafeAreaView>
+      
     </ScrollView>
+    
   );
 };
 
@@ -234,5 +242,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#d3d3d3',
     color: '#7e7e7e',
-  }
+  },
+  separator: {
+    borderColor: '#d3d3d3',
+    borderBottomWidth: 1,
+    marginVertical: 35,
+    marginBottom: 35,
+  },
 });

@@ -2,11 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 const Footer = () => {
+
   return (
+
     <View style={styles.footer}>
       <Text style={styles.textFooter}>Copyright © 2023 Vanidosa SPA.</Text>
       <Text style={styles.textFooter}>All rights reserved</Text>
     </View>
+
   );
 };
 

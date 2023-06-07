@@ -1,6 +1,8 @@
+import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Header from '../components/Header';
 
 type RootStackParamList = {
   Catalogo: undefined;
@@ -10,64 +12,76 @@ type RootStackParamList = {
   Pestanas: undefined;
   Novias: undefined;
   Quinceanera: undefined;
-  // otras rutas de tu aplicación
 };
 type CatalogoProps = NativeStackScreenProps<RootStackParamList, 'Catalogo'>;
 
 const Catalogo = ({ navigation }: CatalogoProps) => {
 
   return (
-    // La propiedad "contentContainerStyle" en el contenedor "<ScrollView>"
-    // junto con "flexGrow: 1" solucionan problemas de Scroll
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.contentImgCatalogo}>
-        <Image style={styles.imgCatalogo} source={require('../../android/assets/img/img-catalogo-2.jpg')} />
-      </View>
-      <View style={styles.contentCatalog}>
-        <View style={styles.catalog}>
-          <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Maquillaje')}>
-            <View style={styles.contentIconCatalogo1}>
-              <Ionicons style={styles.iconCatalogo} name="hand-left-outline" />
-            </View>
-            <Text style={styles.textCategory}>Maquillaje</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Cabello')}>
-            <View style={styles.contentIconCatalogo2}>
-              <Ionicons style={styles.iconCatalogo} name="planet-outline" />
-            </View>
-            <Text style={styles.textCategory}>Cabello</Text>
-          </TouchableOpacity>
+    
+    // "contentContainerStyle" en contenedor "ScrollView" con "flexGrow: 1" solucionan errores de Scroll
+    <>
+      <Header />
 
-          <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Unas')}>
-            <View style={styles.contentIconCatalogo3}>
-              <Ionicons style={styles.iconCatalogo} name="gift-outline" />
-            </View>
-            <Text style={styles.textCategory}>Uñas</Text>
-          </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.container}>
 
-          <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Pestanas')}>
-            <View style={styles.contentIconCatalogo4}>
-              <Ionicons style={styles.iconCatalogo} name="beer-outline" />
-            </View>
-            <Text style={styles.textCategory}>Pestañas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Novias')}>
-            <View style={styles.contentIconCatalogo5}>
-              <Ionicons style={styles.iconCatalogo} name="leaf-outline" />
-            </View>
-            <Text style={styles.textCategory}>Novias</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Quinceanera')}>
-            <View style={styles.contentIconCatalogo6}>
-              <Ionicons style={styles.iconCatalogo} name="color-wand-outline" />
-            </View>
-            <Text style={styles.textCategory}>Quinceañera</Text>
-          </TouchableOpacity>
+        <View style={styles.contentImgCatalogo}>
+          <Image style={styles.imgCatalogo} source={require('../../android/assets/img/img-catalogo-2.png')} />
         </View>
-      </View>
-    </ScrollView>
+
+        <View style={styles.contentCatalog}>
+
+          <View style={styles.catalog}>
+
+            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Maquillaje')}>
+              <View style={styles.contentIconCatalogo1}>
+                <Ionicons style={styles.iconCatalogo} name="hand-left-outline" />
+              </View>
+              <Text style={styles.textCategory}>Maquillaje</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Cabello')}>
+              <View style={styles.contentIconCatalogo2}>
+                <Ionicons style={styles.iconCatalogo} name="planet-outline" />
+              </View>
+              <Text style={styles.textCategory}>Cabello</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Unas')}>
+              <View style={styles.contentIconCatalogo3}>
+                <Ionicons style={styles.iconCatalogo} name="gift-outline" />
+              </View>
+              <Text style={styles.textCategory}>Uñas</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Pestanas')}>
+              <View style={styles.contentIconCatalogo4}>
+                <Ionicons style={styles.iconCatalogo} name="beer-outline" />
+              </View>
+              <Text style={styles.textCategory}>Pestañas</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Novias')}>
+              <View style={styles.contentIconCatalogo5}>
+                <Ionicons style={styles.iconCatalogo} name="leaf-outline" />
+              </View>
+              <Text style={styles.textCategory}>Novias</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Quinceanera')}>
+              <View style={styles.contentIconCatalogo6}>
+                <Ionicons style={styles.iconCatalogo} name="color-wand-outline" />
+              </View>
+              <Text style={styles.textCategory}>Quinceañera</Text>
+            </TouchableOpacity>
+
+          </View>
+
+        </View>
+
+      </ScrollView>
+    </>
+    
   );
 };
 
@@ -77,16 +91,16 @@ export default Catalogo;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#00000000',
   },
-  contentImgCatalogo:{
+  contentImgCatalogo: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     marginTop: 10,
     aspectRatio: 1 * 1.67, // Convertir pixeles de imágen a "Relación Aspecto" 
-    backgroundColor: '#ffffff',
+    backgroundColor: '#00000000',
   },
   imgCatalogo: {
     width: '90%',
@@ -97,13 +111,13 @@ const styles = StyleSheet.create({
   contentCatalog: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#00000000',
   },
   catalog: {
     flexDirection: 'row', // Posisiona elementos en fila
     flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#00000000',
   },
   contentCategory: {
     width: 110,

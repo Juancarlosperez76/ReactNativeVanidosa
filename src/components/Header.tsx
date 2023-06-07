@@ -1,28 +1,33 @@
-import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Button, TouchableOpacity, } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Linking } from 'react-native';
+import ModalAccount from './ModalAccount';
 
 const Header = () => {
 
-  // Código para redirigir a número de Whatsapp con mensaje personalizado
-  const phoneNumber = '3127712964';
-  const message = 'Bienvenido a Vanidosa SPA, ¿cómo podemos ayudarte?';
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const handleWhatsAppPress = () => {
-    const encodedMessage = encodeURIComponent(message);
-    const url = `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`;
-    Linking.openURL(url);
+  const handleOpenModal = () => {
+    setModalVisible(true);
   };
-  // ---------------------------------------------------------------------
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
   return (
+
     <View style={styles.contentLogo}>
+
       <Image style={styles.logo} source={require('../../android/assets/img/logo-full-136-84.png')} />
-      <TouchableOpacity style={styles.contentIconWhatsapp} onPress={handleWhatsAppPress}>
-        <Ionicons style={styles.iconWhatsapp} name="logo-whatsapp" />
+
+      <TouchableOpacity style={styles.contentUserIcon} onPress={handleOpenModal}>
+        <Ionicons style={styles.userIcon} name="person-circle-outline" />
+        <ModalAccount visible={modalVisible} onClose={handleCloseModal} />
       </TouchableOpacity>
+
     </View>
+    
   );
 };
 
@@ -41,14 +46,14 @@ const styles = StyleSheet.create({
     width: 120,
     height: 72,
   },
-  contentIconWhatsapp: {
+  contentUserIcon: {
     position: 'absolute',
-    top: 30,
-    right: 30,
+    top: 24,
+    right: 28,
   },
-  iconWhatsapp: {
+  userIcon: {
     color: '#7e7e7e',
-    fontSize: 28,
+    fontSize: 32,
   },
 });
 
