@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, ScrollView, Image } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, ScrollView, Image } from 'react-native';
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomHeaderReturn from '../components/CustomHeaderReturn';
 
 type RootStackParamList = {
   Login: undefined;
@@ -34,91 +35,93 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
   return (
 
-    <ScrollView style={styles.contentForm}>
+    <>
 
-      <View style={styles.contentLogoAccount}>
-        <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
-      </View>
+      <CustomHeaderReturn title="Restablecer contraseña" />
 
-      <SafeAreaView>
+      <ScrollView style={styles.contentForm}>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='at-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Ingrese E-mail'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setEmail}
-            value={email}
-            autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-            keyboardType='email-address'
-          />
+        <View style={styles.contentLogoAccount}>
+          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
         </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Ingrese contraseña actual'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setPassword}
-            value={password}
-            autoCapitalize='none'
-            secureTextEntry={!showPassword1}
-          />
-          {password !== '' && ( // Código cambio de icono de la contraseña
-            <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
-              <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <SafeAreaView>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Ingrese contraseña nueva'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setRecoverPasword}
-            value={recoverPassword}
-            autoCapitalize='none'
-            secureTextEntry={!showPassword2}
-          />
-          {recoverPassword !== '' && ( // Código cambio de icono de la contraseña
-            <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
-              <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
-            </TouchableOpacity>
-          )}
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='at-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Ingrese E-mail'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setEmail}
+              value={email}
+              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+              keyboardType='email-address' />
+          </View>
 
-        <View style={{ marginTop: 30 }}>
-          <ButtonPrimary
-            onPress={() => { }}
-            title={'RESTABLECER'}
-            backgroundColor={'#2C4D9E'}
-            color={'#ffffff'}
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Ingrese contraseña actual'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setPassword}
+              value={password}
+              autoCapitalize='none'
+              secureTextEntry={!showPassword1} />
+            {password !== '' && ( // Código cambio de icono de la contraseña
+              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
+                <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <View style={styles.separator}></View>
+          <View>
+            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Ingrese contraseña nueva'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setRecoverPasword}
+              value={recoverPassword}
+              autoCapitalize='none'
+              secureTextEntry={!showPassword2} />
+            {recoverPassword !== '' && ( // Código cambio de icono de la contraseña
+              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
+                <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <View>
-          <ButtonSecondary
-            onPress={() => navigation.navigate('Login')}
-            title={'REGRESAR'}
-            backgroundColor={'#00000000'}
-            color={'#000000'}
-          />
-        </View>
+          <View style={{ marginTop: 30 }}>
+            <ButtonPrimary
+              onPress={() => { }}
+              title={'RESTABLECER'}
+              backgroundColor={'#2C4D9E'}
+              color={'#ffffff'} />
+          </View>
 
-      </SafeAreaView>
+          <View style={styles.separator}></View>
 
-    </ScrollView>
-    
+          <View>
+            <ButtonSecondary
+              onPress={() => navigation.navigate('Login')}
+              title={'REGRESAR'}
+              backgroundColor={'#00000000'}
+              color={'#000000'} />
+          </View>
+
+        </SafeAreaView>
+
+      </ScrollView>
+
+    </>
+
   );
+
 };
 
 export default RecoverPass;

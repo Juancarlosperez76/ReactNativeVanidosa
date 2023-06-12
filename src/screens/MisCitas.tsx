@@ -1,6 +1,7 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Text, TouchableOpacity, View } from 'react-native';
+import CustomHeaderReturn from '../components/CustomHeaderReturn';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -12,6 +13,10 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
   return (
 
+    <>
+    
+    <CustomHeaderReturn title="Mis citas" />
+    
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 
       <Text style={{ fontSize: 30, fontWeight: '500', color: '#7e7e7e' }}>Mis citas</Text>
@@ -24,7 +29,10 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
     </View>
     
+    </>
+
   );
+
 };
 
 export default MisCitas;

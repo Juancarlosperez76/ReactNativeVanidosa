@@ -1,20 +1,20 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AccountHeader from '../screens/AccountHeader';
 import Login from '../screens/Login';
 import Registro from '../screens/Registro';
-import RecoverPass from '../screens/RecoverPass';
 
 const Stack = createNativeStackNavigator();
 
-const StackAccount = () => {
+const StackAccountHeader = () => {
 
   return (
 
     <Stack.Navigator>
 
       <Stack.Screen
-        name="Login"
-        component={Login as React.ComponentType<any>}
+        name="AccountHeader"
+        component={AccountHeader as React.ComponentType<any>}
         options={{
           title: 'Iniciar sesión', //Cambia título por defecto de "header"
           headerShown: false, // Oculta o muestra el "header"
@@ -27,10 +27,10 @@ const StackAccount = () => {
       />
 
       <Stack.Screen
-        name="RecoverPass"
-        component={RecoverPass as React.ComponentType<any>}
+        name="Login"
+        component={Login as React.ComponentType<any>}
         options={{
-          title: 'Restablecer contraseña', //Cambia título por defecto de "header"
+          title: 'Iniciar sesión', //Cambia título por defecto de "header"
           headerShown: false, // Oculta o muestra el "header"
           headerShadowVisible: true, // Oculta o muestra box shadow de header
           headerStyle: { backgroundColor: '#ffffff' }, // Cambia color de fondo de "header"
@@ -60,4 +60,5 @@ const StackAccount = () => {
   
 };
 
-export default StackAccount;
+export default StackAccountHeader;
+

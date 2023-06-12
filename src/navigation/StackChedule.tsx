@@ -25,7 +25,7 @@ const StackChedule = () => {
         component={MisCitas as React.ComponentType<any>}
         options={{
           title: 'Mis citas', //Cambia título por defecto de "header"
-          headerShown: true, // Oculta o muestra el "header"
+          headerShown: false, // Oculta o muestra el "header"
           headerShadowVisible: true, // Oculta o muestra box shadow de header
           headerStyle: { backgroundColor: '#ffffff' }, // Cambia color de fondo de "header"
           headerTitleAlign: 'left', // Alinea título de "header"
@@ -43,6 +43,7 @@ const StackChedule = () => {
     </Stack.Navigator>
     
   );
+  
 };
 
 export default StackChedule;

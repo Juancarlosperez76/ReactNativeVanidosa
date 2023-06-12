@@ -1,9 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomHeaderReturn from '../components/CustomHeaderReturn';
 
 type RootStackParamList = {
   Login: undefined;
@@ -39,165 +40,163 @@ const Registro = ({ navigation }: RegistroProps) => {
 
   return (
 
-    <ScrollView style={styles.contentForm}>
+    <>
 
-      <SafeAreaView>
+      <CustomHeaderReturn title="Registro" />
 
-        <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
-        </View>
+      <ScrollView style={styles.contentForm}>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='person-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Nombre'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setNombre}
-            value={nombre}
-          />
-        </View>
+        <SafeAreaView>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='people-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Apellidos'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setApellidos}
-            value={apellidos}
-          />
-        </View>
+          <View style={styles.contentLogoAccount}>
+            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='card-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Tipo de documento'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setTipoDocumento}
-            value={tipoDocumento}
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='person-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Nombre'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setNombre}
+              value={nombre} />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='card-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Documento'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setDocumento}
-            value={documento}
-            keyboardType='numeric'
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='people-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Apellidos'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setApellidos}
+              value={apellidos} />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='home-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Dirección'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setDireccion}
-            value={direccion}
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='card-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Tipo de documento'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setTipoDocumento}
+              value={tipoDocumento} />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='call-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Teléfono'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setTelefono}
-            value={telefono}
-            keyboardType='numeric'
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='card-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Documento'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setDocumento}
+              value={documento}
+              keyboardType='numeric' />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='at-sharp' />
-          <TextInput
-            style={styles.input}
-            placeholder='E-mail'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setEmail}
-            value={email}
-            autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-            keyboardType='email-address'
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='home-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Dirección'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setDireccion}
+              value={direccion} />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Contraseña'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setContrasena}
-            value={password}
-            autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-            secureTextEntry={!showPassword1} // Oculta y muestra carácteres de contraseña
-          />
-          {password !== '' && ( // Código cambio de icono de la contraseña
-            <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
-              <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
-            </TouchableOpacity>
-          )}
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='call-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Teléfono'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setTelefono}
+              value={telefono}
+              keyboardType='numeric' />
+          </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder='Confirmar contraseña'
-            placeholderTextColor='#7e7e7e'
-            // textAlignVertical='bottom'
-            onChangeText={setConfirmarContrasena}
-            value={confirmarPassword}
-            autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-            secureTextEntry={!showPassword2} // Oculta y muestra carácteres de contraseña
-          />
-          {confirmarPassword !== '' && ( // Código cambio de icono de la contraseña
-            <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
-              <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
-            </TouchableOpacity>
-          )}
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='at-sharp' />
+            <TextInput
+              style={styles.input}
+              placeholder='E-mail'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setEmail}
+              value={email}
+              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+              keyboardType='email-address' />
+          </View>
 
-        <View style={{ marginTop: 30 }}>
-          <ButtonPrimary
-            onPress={() => { }}
-            title={'CREAR CUENTA'}
-            backgroundColor={'#2C4D9E'}
-            color={'#ffffff'}
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Contraseña'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setContrasena}
+              value={password}
+              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+              secureTextEntry={!showPassword1} // Oculta y muestra carácteres de contraseña
+            />
+            {password !== '' && ( // Código cambio de icono de la contraseña
+              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
+                <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <View style={styles.separator}></View>
+          <View>
+            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder='Confirmar contraseña'
+              placeholderTextColor='#7e7e7e'
+              // textAlignVertical='bottom'
+              onChangeText={setConfirmarContrasena}
+              value={confirmarPassword}
+              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+              secureTextEntry={!showPassword2} // Oculta y muestra carácteres de contraseña
+            />
+            {confirmarPassword !== '' && ( // Código cambio de icono de la contraseña
+              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
+                <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <View>
-          <ButtonSecondary
-            onPress={() => navigation.navigate('Login')}
-            title={'REGRESAR'}
-            backgroundColor={'#00000000'}
-            color={'#000000'}
-          />
-        </View>
+          <View style={{ marginTop: 30 }}>
+            <ButtonPrimary
+              onPress={() => { }}
+              title={'CREAR CUENTA'}
+              backgroundColor={'#2C4D9E'}
+              color={'#ffffff'} />
+          </View>
 
-      </SafeAreaView>
-      
-    </ScrollView>
-    
+          <View style={styles.separator}></View>
+
+          <View>
+            <ButtonSecondary
+              onPress={() => navigation.navigate('Login')}
+              title={'REGRESAR'}
+              backgroundColor={'#00000000'}
+              color={'#000000'} />
+          </View>
+
+        </SafeAreaView>
+
+      </ScrollView>
+
+    </>
+
   );
+
 };
 
 export default Registro;

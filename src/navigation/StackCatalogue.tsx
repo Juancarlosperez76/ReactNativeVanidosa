@@ -29,6 +29,7 @@ const StackCatalogue = () => {
         name="Maquillaje"
         component={Maquillaje as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Maquillaje',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -47,6 +48,7 @@ const StackCatalogue = () => {
         name="Cabello"
         component={Cabello as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Cabello',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -65,6 +67,7 @@ const StackCatalogue = () => {
         name="Unas"
         component={Unas as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Uñas',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -83,6 +86,7 @@ const StackCatalogue = () => {
         name="Pestanas"
         component={Pestanas as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Pestañas',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -101,6 +105,7 @@ const StackCatalogue = () => {
         name="Novias"
         component={Novias as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Novias',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -119,6 +124,7 @@ const StackCatalogue = () => {
         name="Quinceanera"
         component={Quinceanera as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Quinceañera',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -134,8 +140,9 @@ const StackCatalogue = () => {
       />
 
     </Stack.Navigator>
-    
+
   );
+  
 };
 
 export default StackCatalogue;

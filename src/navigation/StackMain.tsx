@@ -27,6 +27,7 @@ const StackMain = () => {
         name="Maquillaje"
         component={Maquillaje as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Maquillaje',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -45,6 +46,7 @@ const StackMain = () => {
         name="Cabello"
         component={Cabello as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Cabello',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -63,6 +65,7 @@ const StackMain = () => {
         name="Unas"
         component={Unas as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Uñas',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -81,6 +84,7 @@ const StackMain = () => {
         name="Pestanas"
         component={Pestanas as React.ComponentType<any>}
         options={{
+          headerShown: false,
           title: 'Pestañas',
           headerTitleAlign: 'left', // Alinea título de "header"
           headerTitleStyle: { fontWeight: '500', fontSize: 20 },
@@ -96,8 +100,9 @@ const StackMain = () => {
       />
 
     </Stack.Navigator>
-    
+
   );
+  
 }
 
 export default StackMain;

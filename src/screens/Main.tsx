@@ -18,9 +18,10 @@ const Main = ({ navigation }: MainProps) => {
   return (
 
     <>
+
       <Header />
 
-      <ScrollView style={{ backgroundColor: 'transparent' }}>
+      <ScrollView style={{ backgroundColor: '#ffffffff' }}>
 
         <View style={styles.contentImageMain}>
           <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-1.png')} />
@@ -63,9 +64,11 @@ const Main = ({ navigation }: MainProps) => {
         </View>
 
       </ScrollView>
+
     </>
-    
+
   );
+  
 };
 
 export default Main;

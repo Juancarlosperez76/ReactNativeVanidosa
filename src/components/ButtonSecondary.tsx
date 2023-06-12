@@ -35,6 +35,7 @@ const ButtonSecondary = ({ onPress, backgroundColor, color, title }: ButtonSecon
     </TouchableOpacity>
 
   );
+  
 }
 
 export default ButtonSecondary;

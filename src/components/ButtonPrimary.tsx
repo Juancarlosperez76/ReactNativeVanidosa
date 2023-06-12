@@ -30,7 +30,9 @@ const ButtonPrimary = ({ onPress, backgroundColor, color, title }: ButtonPrimary
       }}
       >{title}
       </Text>
-    </TouchableOpacity>);
+    </TouchableOpacity>
+
+  );
 
 };
 

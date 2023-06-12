@@ -5,6 +5,7 @@ import CheckBox from '@react-native-community/checkbox';
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomHeaderReturn from '../components/CustomHeaderReturn';
 
 type RootStackParamList = {
   Login: undefined;
@@ -29,86 +30,89 @@ const Login = ({ navigation }: LoginProps) => {
 
   return (
 
-    <ScrollView style={styles.contentForm}>
-      
-      <View style={styles.contentLogoAccount}>
-        <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
-      </View>
+    <>
 
-      <SafeAreaView>
+      <CustomHeaderReturn title="Iniciar sesión" />
 
-        <View>
-          <Ionicons style={styles.iconForm} name='at-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder="E-mail"
-            placeholderTextColor="#7e7e7e"
-            //textAlignVertical="bottom"
-            onChangeText={setEmail}
-            value={email}
-            autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
-            keyboardType="email-address"
-          />
+      <ScrollView style={styles.contentForm}>
+
+        <View style={styles.contentLogoAccount}>
+          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
         </View>
 
-        <View>
-          <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            placeholderTextColor="#7e7e7e"
-            //textAlignVertical="bottom"
-            onChangeText={setPassword}
-            value={password}
-            autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
-            secureTextEntry={!showPassword} // Oculta y muestra carácteres de contraseña
-          />
-          {password !== '' && ( // Código cambio de icono de la contraseña
-            <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility}>
-              <Ionicons style={styles.iconFormRight} name={showPassword ? 'eye-off-sharp' : 'eye-sharp'} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <SafeAreaView>
 
-        <View style={styles.savePassword}>
-          <CheckBox
-            disabled={false}
-            value={savePassword}
-            onValueChange={(newValue) => setsavePassword(newValue)}
-            tintColors={{ true: '#2C4D9E', false: '#7e7e7e' }}
-          />
-          <Text style={{ color: '#7e7e7e' }}>Guardar contraseña</Text>
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='at-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder="E-mail"
+              placeholderTextColor="#7e7e7e"
+              //textAlignVertical="bottom"
+              onChangeText={setEmail}
+              value={email}
+              autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
+              keyboardType="email-address" />
+          </View>
 
-        <View style={{ marginTop: 30 }}>
-          <ButtonPrimary
-            onPress={() => { }}
-            title={'INICIAR SESIÓN'}
-            backgroundColor={'#2C4D9E'}
-            color={'#ffffff'}
-          />
-        </View>
+          <View>
+            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#7e7e7e"
+              //textAlignVertical="bottom"
+              onChangeText={setPassword}
+              value={password}
+              autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
+              secureTextEntry={!showPassword} // Oculta y muestra carácteres de contraseña
+            />
+            {password !== '' && ( // Código cambio de icono de la contraseña
+              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility}>
+                <Ionicons style={styles.iconFormRight} name={showPassword ? 'eye-off-sharp' : 'eye-sharp'} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('RecoverPass')}>
-          <Text style={styles.recoverPassword}> ¿Olvidaste tu contraseña?</Text>
-        </TouchableOpacity>
+          <View style={styles.savePassword}>
+            <CheckBox
+              disabled={false}
+              value={savePassword}
+              onValueChange={(newValue) => setsavePassword(newValue)}
+              tintColors={{ true: '#2C4D9E', false: '#7e7e7e' }} />
+            <Text style={{ color: '#7e7e7e' }}>Guardar contraseña</Text>
+          </View>
 
-        <View style={styles.separator}></View>
+          <View style={{ marginTop: 30 }}>
+            <ButtonPrimary
+              onPress={() => { }}
+              title={'INICIAR SESIÓN'}
+              backgroundColor={'#2C4D9E'}
+              color={'#ffffff'} />
+          </View>
 
-        <View>
-          <ButtonSecondary
-            onPress={() => navigation.navigate('Registro')}
-            title={'CREAR CUENTA'}
-            backgroundColor={'#00000000'}
-            color={'#000000'}
-          />
-        </View>
+          <TouchableOpacity onPress={() => navigation.navigate('RecoverPass')}>
+            <Text style={styles.recoverPassword}> ¿Olvidaste tu contraseña?</Text>
+          </TouchableOpacity>
 
-      </SafeAreaView>
+          <View style={styles.separator}></View>
 
-    </ScrollView >
-    
+          <View>
+            <ButtonSecondary
+              onPress={() => navigation.navigate('Registro')}
+              title={'CREAR CUENTA'}
+              backgroundColor={'#00000000'}
+              color={'#000000'} />
+          </View>
+
+        </SafeAreaView>
+
+      </ScrollView>
+
+    </>
+
   );
+
 };
 
 export default Login;

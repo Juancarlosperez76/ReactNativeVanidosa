@@ -1,8 +1,7 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text, TouchableOpacity, View } from 'react-native';
-import Header from '../components/Header';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import CustomHeaderReturn from '../components/CustomHeaderReturn';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -15,9 +14,10 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   return (
 
     <>
-      <Header />
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+<CustomHeaderReturn title="Agendar cita" />
+
+      <View style={styles.contentChedule}>
 
         <Text style={{ fontSize: 30, fontWeight: '500', color: '#7e7e7e' }}>Agendar cita</Text>
 
@@ -28,14 +28,21 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
         </TouchableOpacity>
 
       </View>
+
     </>
 
   );
+
 };
 
 export default AgendarCita;
 
 // ********** Estilos CSS **********
-// const styles = StyleSheet.create({
-
-// });
+const styles = StyleSheet.create({
+  contentChedule: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  }
+});

@@ -1,34 +1,16 @@
-import React, { useState } from 'react';
-import { View, Image, StyleSheet, Button, TouchableOpacity, } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ModalAccount from './ModalAccount';
+import React from 'react';
+import { View, StyleSheet, Image } from 'react-native';
 
 const Header = () => {
-
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleOpenModal = () => {
-    setModalVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalVisible(false);
-  };
 
   return (
 
     <View style={styles.contentLogo}>
-
       <Image style={styles.logo} source={require('../../android/assets/img/logo-full-136-84.png')} />
-
-      <TouchableOpacity style={styles.contentUserIcon} onPress={handleOpenModal}>
-        <Ionicons style={styles.userIcon} name="person-circle-outline" />
-        <ModalAccount visible={modalVisible} onClose={handleCloseModal} />
-      </TouchableOpacity>
-
     </View>
-    
+
   );
+
 };
 
 export default Header;
@@ -37,23 +19,16 @@ export default Header;
 const styles = StyleSheet.create({
   contentLogo: {
     flexDirection: 'row',
-    height: 80,
-    backgroundColor: '#ffffff',
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#ffffff',
+    shadowColor: '#ffffff', // Superpone color "#ffffff" sobre el color por defecto
+    elevation: 5, // Crea efecto boxshadow"
+    marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
   },
   logo: {
-    width: 120,
-    height: 72,
-  },
-  contentUserIcon: {
-    position: 'absolute',
-    top: 24,
-    right: 28,
-  },
-  userIcon: {
-    color: '#7e7e7e',
-    fontSize: 32,
+    width: 100,
+    height: 60,
   },
 });
-
