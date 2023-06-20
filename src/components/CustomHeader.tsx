@@ -1,7 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet } from 'react-native';
 
 interface CustomHeaderProps {
   title: string;
@@ -45,13 +43,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   backIcon: {
-    color: '#7e7e7e',
+    color: '#4e4e4e',
     fontSize: 24,
   },
   customHeaderText: {
     flex: 1,
     textAlign: 'center',
     color: '#7e7e7e',
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: '500',
+    letterSpacing: 0.4,
   },
 });

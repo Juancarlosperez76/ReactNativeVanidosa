@@ -36,10 +36,10 @@ const Login = ({ navigation }: LoginProps) => {
 
       <ScrollView style={styles.contentForm}>
 
-        <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
-        </View>
-
+          <View style={styles.contentLogoAccount}>
+            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
+          </View>
+          
         <SafeAreaView>
 
           <View>
@@ -47,7 +47,7 @@ const Login = ({ navigation }: LoginProps) => {
             <TextInput
               style={styles.input}
               placeholder="E-mail"
-              placeholderTextColor="#7e7e7e"
+              placeholderTextColor="#000000"
               //textAlignVertical="bottom"
               onChangeText={setEmail}
               value={email}
@@ -60,7 +60,7 @@ const Login = ({ navigation }: LoginProps) => {
             <TextInput
               style={styles.input}
               placeholder="Contraseña"
-              placeholderTextColor="#7e7e7e"
+              placeholderTextColor="#000000"
               //textAlignVertical="bottom"
               onChangeText={setPassword}
               value={password}
@@ -79,16 +79,17 @@ const Login = ({ navigation }: LoginProps) => {
               disabled={false}
               value={savePassword}
               onValueChange={(newValue) => setsavePassword(newValue)}
-              tintColors={{ true: '#2C4D9E', false: '#7e7e7e' }} />
-            <Text style={{ color: '#7e7e7e' }}>Guardar contraseña</Text>
+              tintColors={{ true: '#5B009D', false: '#7e7e7e' }} />
+            <Text style={{ color: '#4e4e4e' }}>Guardar contraseña</Text>
           </View>
 
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
-              onPress={() => { }}
+              onPress={() => { }} // onPress vacío, sin funcionalidad
               title={'INICIAR SESIÓN'}
-              backgroundColor={'#2C4D9E'}
-              color={'#ffffff'} />
+              backgroundColor={'#5B009D'}
+              color={'#ffffff'}
+              borderRadius={0} />
           </View>
 
           <TouchableOpacity onPress={() => navigation.navigate('RecoverPass')}>
@@ -102,7 +103,8 @@ const Login = ({ navigation }: LoginProps) => {
               onPress={() => navigation.navigate('Registro')}
               title={'CREAR CUENTA'}
               backgroundColor={'#00000000'}
-              color={'#000000'} />
+              color={'#E00083'}
+              borderRadius={0} />
           </View>
 
         </SafeAreaView>
@@ -140,7 +142,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 21,
     left: 6,
-    color: '#7e7e7e',
+    color: '#000000',
+    zIndex: 1,
   },
   contentIconFormRight: {
     position: 'absolute',
@@ -155,20 +158,19 @@ const styles = StyleSheet.create({
     height: 48,
     marginVertical: 8,
     paddingLeft: 32,
-    borderWidth: 1,
-    borderColor: '#d3d3d3',
-    color: '#7e7e7e',
+    backgroundColor: '#e6e6e6',
+    fontWeight: '400',
+    letterSpacing: 0.5,
   },
   recoverPassword: {
-    color: '#2C4D9E',
+    color: '#5B009D',
     textAlign: 'center',
-    marginTop: 15,
+    marginTop: 10,
   },
   separator: {
     borderColor: '#d3d3d3',
     borderBottomWidth: 1,
-    marginTop: 32,
-    marginBottom: 35,
+    marginVertical: 20,
   },
   savePassword: {
     flexDirection: 'row',

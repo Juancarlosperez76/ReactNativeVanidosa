@@ -55,13 +55,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   backIcon: {
-    color: '#7e7e7e',
+    color: '#4e4e4e',
     fontSize: 24,
   },
   customHeaderText: {
     flex: 1,
     textAlign: 'center',
-    color: '#7e7e7e',
-    fontSize: 18,
+    color: '#4e4e4e',
+    fontSize: 20,
+    fontWeight: '500',
+    letterSpacing: 0.4,
   },
 });

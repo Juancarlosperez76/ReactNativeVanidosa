@@ -42,7 +42,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
       <ScrollView style={styles.contentForm}>
 
         <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo-full-136-84.png')} />
+          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
         </View>
 
         <SafeAreaView>
@@ -52,7 +52,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
             <TextInput
               style={styles.input}
               placeholder='Ingrese E-mail'
-              placeholderTextColor='#7e7e7e'
+              placeholderTextColor='#000000'
               // textAlignVertical='bottom'
               onChangeText={setEmail}
               value={email}
@@ -65,7 +65,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
             <TextInput
               style={styles.input}
               placeholder='Ingrese contraseña actual'
-              placeholderTextColor='#7e7e7e'
+              placeholderTextColor='#000000'
               // textAlignVertical='bottom'
               onChangeText={setPassword}
               value={password}
@@ -83,7 +83,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
             <TextInput
               style={styles.input}
               placeholder='Ingrese contraseña nueva'
-              placeholderTextColor='#7e7e7e'
+              placeholderTextColor='#000000'
               // textAlignVertical='bottom'
               onChangeText={setRecoverPasword}
               value={recoverPassword}
@@ -98,10 +98,11 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
-              onPress={() => { }}
+              onPress={() => { }} // onPress vacío, sin funcionalidad
               title={'RESTABLECER'}
-              backgroundColor={'#2C4D9E'}
-              color={'#ffffff'} />
+              backgroundColor={'#5B009D'}
+              color={'#ffffff'}
+              borderRadius={0} />
           </View>
 
           <View style={styles.separator}></View>
@@ -111,7 +112,8 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
               onPress={() => navigation.navigate('Login')}
               title={'REGRESAR'}
               backgroundColor={'#00000000'}
-              color={'#000000'} />
+              color={'#E00083'}
+              borderRadius={0} />
           </View>
 
         </SafeAreaView>
@@ -149,7 +151,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 21,
     left: 6,
-    color: '#7e7e7e',
+    color: '#000000',
+    zIndex: 1,
   },
   contentIconFormRight: {
     position: 'absolute',
@@ -164,14 +167,13 @@ const styles = StyleSheet.create({
     height: 48,
     marginVertical: 8,
     paddingLeft: 32,
-    borderWidth: 1,
-    borderColor: '#d3d3d3',
-    color: '#7e7e7e',
+    backgroundColor: '#e6e6e6',
+    fontWeight: '400',
+    letterSpacing: 0.5,
   },
   separator: {
     borderColor: '#d3d3d3',
     borderBottomWidth: 1,
-    marginVertical: 35,
-    marginBottom: 35,
+    marginVertical: 20,
   },
 });

@@ -6,7 +6,7 @@ const Header = () => {
   return (
 
     <View style={styles.contentLogo}>
-      <Image style={styles.logo} source={require('../../android/assets/img/logo-full-136-84.png')} />
+      <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
     </View>
 
   );

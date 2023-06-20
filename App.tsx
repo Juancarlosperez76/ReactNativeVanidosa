@@ -19,11 +19,11 @@ const App = () => {
     setShowBottomTabs(!showBottomTabs);
   };
 
-  const iconName = showBottomTabs ? 'person-circle-outline' : 'close-outline';
-  const iconSize = iconName === 'person-circle-outline' ? 30 : 40;
-  const AccountIconStyle = iconName === 'person-circle-outline'
-    ? { ...styles.AccountIcon, top: -1, left: 0 }
-    : { ...styles.AccountIcon, top: -6, left: -5 };
+  const iconName = showBottomTabs ? 'settings-outline' : 'close-outline';
+  const iconSize = iconName === 'settings-outline' ? 24 : 38;
+  const AccountIconStyle = iconName === 'settings-outline'
+    ? { ...styles.AccountIcon, top: 2.8, left: 2.7, color: '#5B009D' }
+    : { ...styles.AccountIcon, top: -5, left: -4, color: '#4e4e4e' };
 
   return (
 
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   AccountIcon: {
-    color: '#7e7e7e',
+    color: '',
   },
 });

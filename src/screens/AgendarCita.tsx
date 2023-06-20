@@ -15,7 +15,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
     <>
 
-<CustomHeaderReturn title="Agendar cita" />
+      <CustomHeaderReturn title="Agendar cita" />
 
       <View style={styles.contentChedule}>
 

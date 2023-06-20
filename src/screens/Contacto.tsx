@@ -1,6 +1,48 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CustomHeaderReturnLogo from '../components/CustomHeaderReturnLogo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// --------------Código de redirección a la aplicación de "Google Maps" del teléfono--------------
+const latitude = 6.231539; // Latitud del destino
+const longitude = -75.597750; // Longitud del destino
+
+const handleMapsPress = () => {
+  const query = `${latitude},${longitude}`;
+  const url = `https://www.google.com/maps/dir/?api=1&destination=${query}&travelmode=driving`;
+  Linking.openURL(url);
+};
+// -----------------------------------------------------------------------------------------------
+
+// -----------------Código de redirección a la aplicación de llamadas del teléfono----------------
+const phoneNumber = '3117794075';
+
+const handlePhoneCallPress = () => {
+  const url = `tel:${phoneNumber}`;
+  Linking.openURL(url);
+};
+// -----------------------------------------------------------------------------------------------
+
+// -------------------Código de redirección a Whatsapp con mensaje personalizado------------------
+const phoneWharsApp = '3117794075';
+const message = 'Bienvenido a Vanidosa SPA, ¿cómo podemos ayudarte?';
+
+const handleWhatsAppPress = () => {
+  const encodedMessage = encodeURIComponent(message);
+  const url = `whatsapp://send?phone=${phoneWharsApp}&text=${encodedMessage}`;
+  Linking.openURL(url);
+};
+// -----------------------------------------------------------------------------------------------
+
+// ------------------Código de redirección a la aplicación de Correo del teléfono-----------------
+const recipientEmail = 'vanidosa22adso@gmail.com';
+const emailSubject = 'Asunto del correo';
+
+const handleEmailPress = () => {
+  const url = `mailto:${recipientEmail}?subject=${encodeURIComponent(emailSubject)}`;
+  Linking.openURL(url);
+};
+// -----------------------------------------------------------------------------------------------
 
 const Contacto = () => {
 
@@ -9,15 +51,64 @@ const Contacto = () => {
     <>
       <CustomHeaderReturnLogo />
 
-      <ScrollView style={styles.containerContact}>
+      <View style={styles.containerContact}>
 
         <View style={styles.contentContact}>
-          <View style={styles.contact}>
-            <Text style={{ textAlign: 'center' }}>Contacto</Text>
+
+          <View style={styles.contentContactOption}>
+            <TouchableOpacity onPress={handleMapsPress}>
+              <View style={styles.contactOption}>
+                <Ionicons style={styles.contactOptionIcon} name="map-outline" />
+                <View style={styles.contentTitleText}>
+                  <Text style={styles.titleContactOption}>NUESTRA SEDE</Text>
+                  <Text style={styles.textContactOption}>Carrera 64C # 88 - 16</Text>
+                  <Text style={styles.textContactOption}>Barrio Laureles</Text>
+                  <Text style={styles.textContactOption}>MEDELLÍN</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
+
+          <View style={styles.contentContactOption}>
+            <TouchableOpacity onPress={handlePhoneCallPress}>
+              <View style={styles.contactOption}>
+                <Ionicons style={styles.contactOptionIcon} name="ios-call" />
+                <View style={styles.contentTitleText}>
+                  <Text style={styles.titleContactOption}>TELÉFONO{'\n'}DE CONTACTO</Text>
+                  <Text style={styles.textContactOption}>604-4212500</Text>
+                  <Text style={styles.textContactOption}>+57 3117795670</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.contentContactOption}>
+            <TouchableOpacity onPress={handleWhatsAppPress}>
+              <View style={styles.contactOption}>
+                <Ionicons style={styles.contactOptionIcon} name="logo-whatsapp" />
+                <View style={styles.contentTitleText}>
+                  <Text style={styles.titleContactOption}>WHATSAPP</Text>
+                  <Text style={styles.textContactOption}>+57 3117795670</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.contentContactOption}>
+            <TouchableOpacity onPress={handleEmailPress}>
+              <View style={styles.contactOption}>
+                <Ionicons style={styles.contactOptionIcon} name="mail" />
+                <View style={styles.contentTitleText}>
+                  <Text style={styles.titleContactOption}>CORREO{'\n'}ELECTRÓNICO</Text>
+                  <Text style={styles.textContactOption}>vanidosaspa@gmail.com</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+
         </View>
 
-      </ScrollView>
+      </View>
 
     </>
 
@@ -31,15 +122,43 @@ export default Contacto;
 const styles = StyleSheet.create({
   containerContact: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 30,
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    backgroundColor: '#E5E5E5',
+    borderColor: '#ffffff',
   },
   contentContact: {
-    height: 700,
-    justifyContent: 'center',
-    alignItems:'center',
+    flexDirection: 'row', // Posisiona elementos en fila
+    flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
   },
-  contact: {
-    
+  contentContactOption: {
+    width: '50%',
+  },
+  contactOption: {
+    margin: 6,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
+  contactOptionIcon: {
+    fontSize: 50,
+    marginVertical: 20,
+    color: '#5C54DB',
+  },
+  contentTitleText: {
+    height: 100,
+    marginBottom: 20,
+  },
+  titleContactOption: {
+    fontSize: 14,
+    marginBottom: 12,
+    textAlign: 'center',
+    fontWeight: '800',
+    color: '#3b3b3b',
+  },
+  textContactOption: {
+    marginBottom: 2,
+    textAlign: 'center',
+    fontSize: 13,
+    color: '#3b3b3b',
   },
 });

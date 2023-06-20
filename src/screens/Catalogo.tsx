@@ -130,8 +130,9 @@ const styles = StyleSheet.create({
     marginVertical: 40,
   },
   textCategory: {
+    fontFamily: 'Futura PT Medium',
     color: '#7e7e7e',
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 10,
     fontWeight: '500',
     textAlign: 'center',

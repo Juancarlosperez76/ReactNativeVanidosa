@@ -4,12 +4,13 @@ import { TouchableOpacity, Text } from 'react-native';
 // Solución "El elemento de enlace '' tiene un tipo 'any' implícito."
 interface ButtonPrimaryProps {
   onPress: () => void;
+  title: string;
   backgroundColor: string;
   color: string;
-  title: string;
+  borderRadius: number;
 }
 
-const ButtonPrimary = ({ onPress, backgroundColor, color, title }: ButtonPrimaryProps) => {
+const ButtonPrimary = ({ onPress, title, backgroundColor, color, borderRadius }: ButtonPrimaryProps) => {
 
   return (
 
@@ -18,7 +19,7 @@ const ButtonPrimary = ({ onPress, backgroundColor, color, title }: ButtonPrimary
       height: 48,
       justifyContent: 'center',
       backgroundColor: backgroundColor,
-      borderRadius: 24,
+      borderRadius: borderRadius,
     }} onPress={onPress}
     >
       <Text style={{

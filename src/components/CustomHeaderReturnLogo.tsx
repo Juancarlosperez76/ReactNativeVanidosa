@@ -20,7 +20,7 @@ const CustomHeaderReturnLogo = () => {
       </TouchableOpacity>
 
       <View style={styles.contentLogo}>
-        <Image style={styles.logo} source={require('../../android/assets/img/logo-full-136-84.png')} />
+        <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
       </View>
 
     </View>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   backIcon: {
-    color: '#7e7e7e',
+    color: '#4e4e4e',
     fontSize: 24,
   },
   contentLogo: {

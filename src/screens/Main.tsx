@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, View, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Swiper from 'react-native-swiper';
 
 type RootStackParamList = {
   Main: undefined;
@@ -15,6 +16,12 @@ type MainProps = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
 const Main = ({ navigation }: MainProps) => {
 
+  const images = [
+    require('../../android/assets/img/img-main-1.png'),
+    require('../../android/assets/img/img-main-2.png'),
+    require('../../android/assets/img/img-main-3.png'),
+  ];
+
   return (
 
     <>
@@ -24,7 +31,11 @@ const Main = ({ navigation }: MainProps) => {
       <ScrollView style={{ backgroundColor: '#ffffffff' }}>
 
         <View style={styles.contentImageMain}>
-          <Image style={styles.immageMain} source={require('../../android/assets/img/img-main-1.png')} />
+          <Swiper showsPagination={false} autoplay={true} autoplayTimeout={4} removeClippedSubviews={false}>
+            {images.map((image, index) => (
+              <Image key={index} source={image} style={styles.imageMain} />
+            ))}
+          </Swiper>
         </View>
 
         <View style={styles.containerMain}>
@@ -68,7 +79,7 @@ const Main = ({ navigation }: MainProps) => {
     </>
 
   );
-  
+
 };
 
 export default Main;
@@ -79,13 +90,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    width: '96%',
+    marginHorizontal: '2%',
     marginTop: 10,
     aspectRatio: 1 * 1.43, // Convertir pixeles de imágen a "Relación Aspecto" 
   },
-  immageMain: {
-    width: '96%',
-    height: '96%',
+  imageMain: {
+    width: '100%',
+    height: '100%',
+    padding: 10,
     resizeMode: 'cover',
     borderRadius: 15,
   },
@@ -123,10 +136,12 @@ const styles = StyleSheet.create({
     color: '#5e5e5e',
   },
   textImage: {
-    color: '#7e7e7e',
-    fontSize: 14,
+    fontFamily: 'Futura PT Medium',
     marginTop: 10,
-    fontWeight: '500',
+    color: '#4e4e4e',
     textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 });

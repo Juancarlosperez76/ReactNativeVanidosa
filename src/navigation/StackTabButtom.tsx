@@ -30,13 +30,15 @@ const StackTabButtom = () => {
 
         tabBarStyle: { // Estilos de la barra de navegación
           width: '100%',
-          height: 64,
+          height: 70,
           backgroundColor: '#ffffff',
+          borderTopWidth: 2,
+          borderTopColor: '#E00083',
         },
 
-        tabBarActiveTintColor: '#ffffff',
-        tabBarInactiveTintColor: '#7e7e7e',
-        tabBarActiveBackgroundColor: '#2C4D9E',
+        tabBarActiveTintColor: '#5B009D',
+        tabBarInactiveTintColor: '#5B009D',
+        //tabBarActiveBackgroundColor: '#2C4D9E',
 
         tabBarItemStyle: { // Estilos Items de la barra de navegación
           paddingVertical: 10, // Soluciona posisionamiento de iconos al girar la pantalla
@@ -53,24 +55,24 @@ const StackTabButtom = () => {
           let iconName = ''; // Las "Comillas simples" vacias en la declaración "let", solucionan error en propiedad "name" del "Icono"
 
           if (route.name === 'Inicio') {
-            iconName = 'home-outline';
-            size = focused ? 24 : 22;
+            iconName = focused ? 'home' : 'home-outline';
+            size = 25;
           }
           else if (route.name === 'Catálogo') {
-            iconName = 'book-outline';
-            size = focused ? 24 : 22;
+            iconName = focused ? 'book' : 'book-outline';
+            size = 25;
           }
           else if (route.name === 'Agendar') {
-            iconName = 'calendar-outline';
-            size = focused ? 24 : 22;
+            iconName = focused ? 'calendar' : 'calendar-outline';
+            size = 25;
           }
           else if (route.name === 'Contacto') {
-            iconName = 'call-outline';
-            size = focused ? 24 : 22;
+            iconName = focused ? 'call' : 'call-outline';
+            size = 25;
           }
           else if (route.name === 'Cuenta') {
-            iconName = 'md-person-outline';
-            size = focused ? 24 : 22;
+            iconName = focused ? 'person' : 'person-outline';
+            size = 25;
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -83,10 +85,10 @@ const StackTabButtom = () => {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              fontWeight: focused ? '400' : '300',
-              color: focused ? '#ffffff' : '#7e7e7e',
-              fontSize: 10,
-              letterSpacing: 0.5,
+              color: '#5B009D',
+              fontSize: 12,
+              letterSpacing: 0.6,
+              fontFamily: focused ? 'Futura PT Demi' : 'Futura PT Book',
             }}>Inicio
             </Text>
           ),
@@ -99,10 +101,10 @@ const StackTabButtom = () => {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              fontWeight: focused ? '400' : '300',
-              color: focused ? '#ffffff' : '#7e7e7e',
-              fontSize: 10,
-              letterSpacing: 0.5,
+              color: '#5B009D',
+              fontSize: 12,
+              letterSpacing: 0.6,
+              fontFamily: focused ? 'Futura PT Demi' : 'Futura PT Book',
             }}>Catálogo
             </Text>
           ),
@@ -115,10 +117,10 @@ const StackTabButtom = () => {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              fontWeight: focused ? '400' : '300',
-              color: focused ? '#ffffff' : '#7e7e7e',
-              fontSize: 10,
-              letterSpacing: 0.5,
+              color: '#5B009D',
+              fontSize: 12,
+              letterSpacing: 0.6,
+              fontFamily: focused ? 'Futura PT Demi' : 'Futura PT Book',
             }}>Agendar
             </Text>
           ),
@@ -131,10 +133,10 @@ const StackTabButtom = () => {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              fontWeight: focused ? '400' : '300',
-              color: focused ? '#ffffff' : '#7e7e7e',
-              fontSize: 10,
-              letterSpacing: 0.5,
+              color: '#5B009D',
+              fontSize: 12,
+              letterSpacing: 0.6,
+              fontFamily: focused ? 'Futura PT Demi' : 'Futura PT Book',
             }}>Contacto
             </Text>
           ),
@@ -147,10 +149,10 @@ const StackTabButtom = () => {
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{
-              fontWeight: focused ? '400' : '300',
-              color: focused ? '#ffffff' : '#7e7e7e',
-              fontSize: 10,
-              letterSpacing: 0.5,
+              color: '#5B009D',
+              fontSize: 12,
+              letterSpacing: 0.6,
+              fontFamily: focused ? 'Futura PT Demi' : 'Futura PT Book',
             }}>Cuenta
             </Text>
           ),
@@ -160,7 +162,7 @@ const StackTabButtom = () => {
     </Tab.Navigator>
 
   );
-  
+
 }
 
 export default StackTabButtom;

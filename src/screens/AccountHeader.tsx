@@ -1,12 +1,17 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const AccountHeader = () => {
+type RootStackParamList = {
+  AccountHeader: undefined;
+  EditAccount: undefined;
+};
+type AccountHeaderProps = NativeStackScreenProps<RootStackParamList, 'AccountHeader'>;
+
+const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   return (
-
-    // <Modal visible={visible} onRequestClose={onIconPress}>
 
     <View style={styles.containerModalAccount}>
 
@@ -22,10 +27,10 @@ const AccountHeader = () => {
 
         <View style={styles.separator}></View>
 
-        <View style={styles.contentSetting}>
+        <TouchableOpacity style={styles.contentSetting} onPress={() => navigation.navigate('EditAccount')}>
           <Ionicons style={styles.settingIcon} name="settings-outline" />
-          <Text style={styles.settingText}>Configurar mi cuenta</Text>
-        </View>
+          <Text style={styles.settingText}>Configuración de la cuenta</Text>
+        </TouchableOpacity>
 
         <View style={styles.separator}></View>
 
@@ -37,8 +42,6 @@ const AccountHeader = () => {
       </View>
 
     </View>
-
-    // </Modal>
 
   );
 
@@ -67,10 +70,11 @@ const styles = StyleSheet.create({
   },
   contentProfileImage: {
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 30,
   },
   profileImage: {
-
+    width: 80,
+    height: 80,
   },
   nameText: {
     textAlign: 'center',
@@ -93,9 +97,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   settingIcon: {
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     color: '#333333',
-    fontSize: 20,
+    fontSize: 22,
   },
   settingText: {
     color: '#333333',
@@ -106,9 +110,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   logoutIcon: {
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     color: '#333333',
-    fontSize: 22,
+    fontSize: 25,
   },
   logoutText: {
     color: '#333333',
