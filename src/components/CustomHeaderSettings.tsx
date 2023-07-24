@@ -56,12 +56,10 @@ const styles = StyleSheet.create({
   },
   contentBackIcon: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'absolute',
+    top: 14,
     left: 16,
-    width: 30,
-    height: 30,
+    padding:10,
     zIndex: 1,
   },
   backIcon: {
@@ -78,8 +76,9 @@ const styles = StyleSheet.create({
   },
   contentAccountIcon: {
     position: 'absolute',
-    top: 24,
+    top: 14,
     right: 26,
+    padding:10,
     zIndex: 1,
   },
   accountIcon: {

@@ -8,7 +8,8 @@ import CustomHeaderReturn from '../components/CustomHeaderReturn';
 type RootStackParamList = {
   AccountHeader: undefined;
   EditAccount: undefined;
-  Login: undefined;
+  ChangePassword: undefined;
+  StackAccount: undefined;
 };
 type AccountHeaderProps = NativeStackScreenProps<RootStackParamList, 'AccountHeader'>;
 
@@ -22,7 +23,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       await AsyncStorage.removeItem('userEmail');
 
       // Redireccionar al usuario a la pantalla de inicio de sesión
-      navigation.navigate('Login');
+      navigation.navigate('StackAccount');
 
       // Mostrar mensaje de éxito
       Alert.alert('Éxito', 'Se ha cerrado sesión exitosamente.');
@@ -60,10 +61,19 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
+          <TouchableOpacity style={styles.contentSetting} onPress={() => navigation.navigate('ChangePassword')}>
+            <Ionicons style={styles.settingIcon} name="key-outline" />
+            <Text style={styles.settingText}>Cambiar la contraseña</Text>
+          </TouchableOpacity>
+
+          <View style={styles.separator}></View>
+
           <TouchableOpacity style={styles.contentLogout} onPress={handleLogout}>
             <Ionicons style={styles.logoutIcon} name="log-out-outline" />
             <Text style={styles.logoutText}>Cerrar sesión</Text>
           </TouchableOpacity>
+
+          <View style={styles.separator}></View>
 
         </View>
 

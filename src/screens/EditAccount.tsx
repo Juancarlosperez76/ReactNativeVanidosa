@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
@@ -66,7 +66,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             navigation.navigate('StackAccount');
           }
         } else {
-          console.error('Token de usuario o correo no encontrado en AsyncStorage');
+          Alert.alert('Error', 'Por favor inicie sesión para continuar.');
           // Aquí redirigimos al usuario a la pantalla de inicio de sesión
           navigation.navigate('StackAccount');
         }
@@ -79,7 +79,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   }, []);
 
   // ---------------------------------------------------------------------------
-
 
   return (
 
