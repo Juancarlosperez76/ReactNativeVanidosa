@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, ScrollView, Image } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, ScrollView, Image, Alert, } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
 type RootStackParamList = {
+  StackMainScreen: undefined;
   Login: undefined;
   Registro: undefined;
   RecoverPass: undefined;
+  Main: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const Login = ({ navigation }: LoginProps) => {
 
   // Estado de los "Inputs"
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [Correo, setCorreo] = React.useState('');
+  const [Contrasena, setContrasena] = React.useState('');
 
   // // Mostrar y ocultar "Contraseña"
   const [showPassword, setShowPassword] = useState(false);
@@ -27,19 +31,69 @@ const Login = ({ navigation }: LoginProps) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  // --------------------------------------------------------------------------
+
+  // ------------------------Lógica de Inicio de sesión------------------------
+  const handleLogin = () => {
+    // Validar campos antes de enviar los datos
+    if (!Correo || !Contrasena) {
+      Alert.alert('Error', 'Por favor, complete todos los campos.');
+      return;
+    }
+
+    // Crear un objeto con los datos del formulario
+    const userData = {
+      Correo,
+      Contrasena,
+    };
+
+    // Enviar los datos a la API utilizando axios
+    axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', userData)
+      .then(response => {
+        const { token } = response.data;
+        if (token) {
+          Alert.alert('Éxito', 'Inicio de sesión exitoso.');
+          navigation.navigate('Main'); // Redireccionar al usuario a la pantalla Main
+          // Guardar el token en el almacenamiento local
+          AsyncStorage.setItem('userToken', token)
+            .then(() => {
+              // Guardar el correo del usuario en AsyncStorage
+              AsyncStorage.setItem('userEmail', Correo)
+                .then(() => {
+                  // Resto del código para obtener más datos del usuario si es necesario
+                })
+                .catch(error => {
+                  console.error(error);
+                  Alert.alert('Error', 'Ha ocurrido un error al guardar el correo del usuario.');
+                });
+            })
+            .catch(error => {
+              console.error(error);
+              Alert.alert('Error', 'Ha ocurrido un error al guardar el token.');
+            });
+        } else {
+          Alert.alert('Error', 'Inicio de sesión fallido. Verifique sus credenciales.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        Alert.alert('Error', 'Ha ocurrido un error al iniciar sesión.');
+      });
+  };
+  // --------------------------------------------------------------------------
 
   return (
 
     <>
 
-      <CustomHeaderReturn title="Iniciar sesión" />
+      <CustomHeaderSettings navigation={navigation} title="Iniciar sesión" />
 
       <ScrollView style={styles.contentForm}>
 
-          <View style={styles.contentLogoAccount}>
-            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-          </View>
-          
+        <View style={styles.contentLogoAccount}>
+          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
+        </View>
+
         <SafeAreaView>
 
           <View>
@@ -49,8 +103,8 @@ const Login = ({ navigation }: LoginProps) => {
               placeholder="E-mail"
               placeholderTextColor="#000000"
               //textAlignVertical="bottom"
-              onChangeText={setEmail}
-              value={email}
+              onChangeText={setCorreo}
+              value={Correo}
               autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
               keyboardType="email-address" />
           </View>
@@ -62,12 +116,12 @@ const Login = ({ navigation }: LoginProps) => {
               placeholder="Contraseña"
               placeholderTextColor="#000000"
               //textAlignVertical="bottom"
-              onChangeText={setPassword}
-              value={password}
+              onChangeText={setContrasena}
+              value={Contrasena}
               autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
               secureTextEntry={!showPassword} // Oculta y muestra carácteres de contraseña
             />
-            {password !== '' && ( // Código cambio de icono de la contraseña
+            {Contrasena !== '' && ( // Código cambio de icono de la contraseña
               <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility}>
                 <Ionicons style={styles.iconFormRight} name={showPassword ? 'eye-off-sharp' : 'eye-sharp'} />
               </TouchableOpacity>
@@ -85,7 +139,7 @@ const Login = ({ navigation }: LoginProps) => {
 
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
-              onPress={() => { }} // onPress vacío, sin funcionalidad
+              onPress={handleLogin} // Llamar a la función handleLogin al presionar el botón
               title={'INICIAR SESIÓN'}
               backgroundColor={'#5B009D'}
               color={'#ffffff'}
@@ -147,8 +201,9 @@ const styles = StyleSheet.create({
   },
   contentIconFormRight: {
     position: 'absolute',
-    top: 21,
-    right: 8,
+    top: 12,
+    right: 2,
+    padding: 10,
   },
   iconFormRight: {
     fontSize: 20,
@@ -161,6 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6e6e6',
     fontWeight: '400',
     letterSpacing: 0.5,
+    color: '#000000',
   },
   recoverPassword: {
     color: '#5B009D',

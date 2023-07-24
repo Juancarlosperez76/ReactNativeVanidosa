@@ -1,12 +1,33 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Header = () => {
+interface HeaderProps {
+  title: string;
+  navigation: {
+    goBack: () => void;
+    navigate: (screen: string) => void;
+  };
+}
+
+const Header = ({ navigation }: HeaderProps) => {
+
+  const handleIconPress = () => {
+    navigation.navigate('StackAccountHeader');
+  };
 
   return (
 
-    <View style={styles.contentLogo}>
-      <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
+    <View>
+
+      <View style={styles.contentLogo}>
+        <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
+      </View>
+
+      <TouchableOpacity style={styles.contentAccountIcon} onPress={handleIconPress}>
+        <Ionicons style={styles.accountIcon} name='settings-outline' />
+      </TouchableOpacity>
+
     </View>
 
   );
@@ -30,5 +51,15 @@ const styles = StyleSheet.create({
   logo: {
     width: 100,
     height: 60,
+  },
+  contentAccountIcon: {
+    position: 'absolute',
+    top: 24,
+    right: 26,
+    zIndex: 1,
+  },
+  accountIcon: {
+    color: '#5B009D',
+    fontSize: 24,
   },
 });

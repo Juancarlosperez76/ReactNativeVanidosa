@@ -1,18 +1,24 @@
 import React from 'react';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import { StyleSheet, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
-const Novias = () => {
+type RootStackParamList = {
+  Novias: undefined;
+};
+type NoviasProps = NativeStackScreenProps<RootStackParamList, 'Novias'>;
+
+const Novias = ({ navigation }: NoviasProps) => {
 
   return (
 
     <>
-    <CustomHeaderReturn title="Novias" />
-    <View style={styles.contentBrides}></View>
+      <CustomHeaderSettings navigation={navigation} title="Novias" />
+      <View style={styles.contentBrides}></View>
     </>
-    
+
   );
-  
+
 };
 
 export default Novias;

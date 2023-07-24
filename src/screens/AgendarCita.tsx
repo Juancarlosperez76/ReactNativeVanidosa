@@ -1,7 +1,7 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -15,7 +15,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
     <>
 
-      <CustomHeaderReturn title="Agendar cita" />
+      <CustomHeaderSettings navigation={navigation} title="Agendar cita" />
 
       <View style={styles.contentChedule}>
 

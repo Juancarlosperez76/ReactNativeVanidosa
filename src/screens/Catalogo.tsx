@@ -2,7 +2,7 @@ import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderReturnLogo from '../components/CustomHeaderReturnLogo';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
 type RootStackParamList = {
   Catalogo: undefined;
@@ -20,10 +20,9 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
   return (
 
     // "contentContainerStyle" en contenedor "ScrollView" con "flexGrow: 1" solucionan errores de Scroll
-
     <>
 
-      <CustomHeaderReturnLogo />
+      <CustomHeaderSettings navigation={navigation} title="Catálogo" />
 
       <ScrollView contentContainerStyle={styles.container}>
 

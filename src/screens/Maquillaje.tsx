@@ -1,13 +1,20 @@
 import React from 'react';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import { StyleSheet, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
-const Maquillaje = () => {
+type RootStackParamList = {
+  AgendarCita: undefined;
+  Maquillaje: undefined;
+};
+type MaquillajeProps = NativeStackScreenProps<RootStackParamList, 'Maquillaje'>;
+
+const Maquillaje = ({ navigation }: MaquillajeProps) => {
 
   return (
 
     <>
-      <CustomHeaderReturn title="Maquillaje" />
+      <CustomHeaderSettings navigation={navigation} title="Maquillaje" />
       <View style={styles.contentMakeup}></View>
     </>
 

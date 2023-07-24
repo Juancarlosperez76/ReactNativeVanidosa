@@ -1,15 +1,16 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface CustomHeaderReturnProps {
   title: string;
+  navigation: {
+    goBack: () => void;
+    navigate: (screen: string) => void;
+  };
 }
 
-const CustomHeaderReturn = ({ title }: CustomHeaderReturnProps) => {
-
-  const navigation = useNavigation();
+const CustomHeaderReturn = ({ title, navigation }: CustomHeaderReturnProps) => {
 
   const handleGoBack = () => {
     navigation.goBack();

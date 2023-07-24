@@ -1,26 +1,19 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AgendarCita from '../screens/AgendarCita';
-import MisCitas from '../screens/MisCitas';
+import Contacto from '../screens/Contacto';
 import StackAccountHeader from './StackAccountHeader';
 
 const Stack = createNativeStackNavigator();
 
-const StackChedule = () => {
+const StackContact = () => {
 
   return (
 
     <Stack.Navigator>
 
       <Stack.Screen
-        name="AgendarCita"
-        component={AgendarCita as React.ComponentType<any>}
-        options={{ headerShown: false, }}
-      />
-
-      <Stack.Screen
-        name="MisCitas"
-        component={MisCitas as React.ComponentType<any>}
+        name="Contacto"
+        component={Contacto as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
@@ -36,4 +29,4 @@ const StackChedule = () => {
 
 };
 
-export default StackChedule;
+export default StackContact;

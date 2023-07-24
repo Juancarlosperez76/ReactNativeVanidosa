@@ -7,7 +7,7 @@ import Unas from '../screens/Unas';
 import Pestanas from '../screens/Pestanas';
 import Novias from '../screens/Novias';
 import Quinceanera from '../screens/Quinceanera';
-import { Image } from 'react-native';
+import StackAccountHeader from './StackAccountHeader';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,129 +20,55 @@ const StackCatalogue = () => {
       <Stack.Screen
         name="Catalogo"
         component={Catalogo as React.ComponentType<any>}
-        options={{
-          headerShown: false, // Oculta o muestra el "header"
-        }}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="StackAccountHeader"
+        component={StackAccountHeader as React.ComponentType<any>}
+        options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Maquillaje"
         component={Maquillaje as React.ComponentType<any>}
-        options={{
-          headerShown: false,
-          title: 'Maquillaje',
-          headerTitleAlign: 'left', // Alinea título de "header"
-          headerTitleStyle: { fontWeight: '500', fontSize: 20 },
-          headerTintColor: '#7e7e7e', // Cambia color de flecha y título  de "header"
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerRight: () => (
-            <Image
-              source={require('../../android/assets/img/logo-168-32.png')}
-              style={{ position: 'absolute', right: 10 }}
-            />
-          ),
-        }}
+        options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Cabello"
         component={Cabello as React.ComponentType<any>}
-        options={{
-          headerShown: false,
-          title: 'Cabello',
-          headerTitleAlign: 'left', // Alinea título de "header"
-          headerTitleStyle: { fontWeight: '500', fontSize: 20 },
-          headerTintColor: '#7e7e7e', // Cambia color de flecha y título  de "header"
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerRight: () => (
-            <Image
-              source={require('../../android/assets/img/logo-168-32.png')}
-              style={{ position: 'absolute', right: 10 }}
-            />
-          ),
-        }}
+        options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Unas"
         component={Unas as React.ComponentType<any>}
-        options={{
-          headerShown: false,
-          title: 'Uñas',
-          headerTitleAlign: 'left', // Alinea título de "header"
-          headerTitleStyle: { fontWeight: '500', fontSize: 20 },
-          headerTintColor: '#7e7e7e', // Cambia color de flecha y título  de "header"
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerRight: () => (
-            <Image
-              source={require('../../android/assets/img/logo-168-32.png')}
-              style={{ position: 'absolute', right: 10 }}
-            />
-          ),
-        }}
+        options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Pestanas"
         component={Pestanas as React.ComponentType<any>}
-        options={{
-          headerShown: false,
-          title: 'Pestañas',
-          headerTitleAlign: 'left', // Alinea título de "header"
-          headerTitleStyle: { fontWeight: '500', fontSize: 20 },
-          headerTintColor: '#7e7e7e', // Cambia color de flecha y título  de "header"
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerRight: () => (
-            <Image
-              source={require('../../android/assets/img/logo-168-32.png')}
-              style={{ position: 'absolute', right: 10 }}
-            />
-          ),
-        }}
+        options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Novias"
         component={Novias as React.ComponentType<any>}
-        options={{
-          headerShown: false,
-          title: 'Novias',
-          headerTitleAlign: 'left', // Alinea título de "header"
-          headerTitleStyle: { fontWeight: '500', fontSize: 20 },
-          headerTintColor: '#7e7e7e', // Cambia color de flecha y título  de "header"
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerRight: () => (
-            <Image
-              source={require('../../android/assets/img/logo-168-32.png')}
-              style={{ position: 'absolute', right: 10 }}
-            />
-          ),
-        }}
+        options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Quinceanera"
         component={Quinceanera as React.ComponentType<any>}
-        options={{
-          headerShown: false,
-          title: 'Quinceañera',
-          headerTitleAlign: 'left', // Alinea título de "header"
-          headerTitleStyle: { fontWeight: '500', fontSize: 20 },
-          headerTintColor: '#7e7e7e', // Cambia color de flecha y título  de "header"
-          headerStyle: { backgroundColor: '#ffffff' },
-          headerRight: () => (
-            <Image
-              source={require('../../android/assets/img/logo-168-32.png')}
-              style={{ position: 'absolute', right: 10 }}
-            />
-          ),
-        }}
+        options={{ headerShown: false, }}
       />
 
     </Stack.Navigator>
 
   );
-  
+
 };
 
 export default StackCatalogue;

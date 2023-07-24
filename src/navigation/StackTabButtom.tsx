@@ -4,14 +4,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import StackMain from './StackMain'
 import StackCatalogue from './StackCatalogue';
 import StackChedule from './StackChedule';
-import Contacto from '../screens/Contacto';
 import StackAccount from './StackAccount';
 import { Text } from 'react-native';
+import StackContact from './StackContact';
 
 function StackMainScreen() { return (<StackMain />); }
 function StackCatalogueScreen() { return (<StackCatalogue />); }
 function StackCheduleScreen() { return (<StackChedule />); }
-function ContactoScreen() { return (<Contacto />); }
+function StackContactScreen() { return (<StackContact />); }
 function StackAccountScreen() { return (<StackAccount />); }
 
 const Tab = createBottomTabNavigator();
@@ -54,23 +54,23 @@ const StackTabButtom = () => {
 
           let iconName = ''; // Las "Comillas simples" vacias en la declaración "let", solucionan error en propiedad "name" del "Icono"
 
-          if (route.name === 'Inicio') {
+          if (route.name === 'StackMain') {
             iconName = focused ? 'home' : 'home-outline';
             size = 25;
           }
-          else if (route.name === 'Catálogo') {
+          else if (route.name === 'StackCatalogue') {
             iconName = focused ? 'book' : 'book-outline';
             size = 25;
           }
-          else if (route.name === 'Agendar') {
+          else if (route.name === 'StackChedule') {
             iconName = focused ? 'calendar' : 'calendar-outline';
             size = 25;
           }
-          else if (route.name === 'Contacto') {
+          else if (route.name === 'StackContact') {
             iconName = focused ? 'call' : 'call-outline';
             size = 25;
           }
-          else if (route.name === 'Cuenta') {
+          else if (route.name === 'StackAccount') {
             iconName = focused ? 'person' : 'person-outline';
             size = 25;
           }
@@ -80,7 +80,7 @@ const StackTabButtom = () => {
     >
 
       <Tab.Screen
-        name="Inicio"
+        name="StackMain"
         component={StackMainScreen}
         options={{
           tabBarLabel: ({ focused }) => (
@@ -96,7 +96,7 @@ const StackTabButtom = () => {
       />
 
       <Tab.Screen
-        name="Catálogo"
+        name="StackCatalogue"
         component={StackCatalogueScreen}
         options={{
           tabBarLabel: ({ focused }) => (
@@ -112,7 +112,7 @@ const StackTabButtom = () => {
       />
 
       <Tab.Screen
-        name="Agendar"
+        name="StackChedule"
         component={StackCheduleScreen}
         options={{
           tabBarLabel: ({ focused }) => (
@@ -128,8 +128,8 @@ const StackTabButtom = () => {
       />
 
       <Tab.Screen
-        name="Contacto"
-        component={ContactoScreen}
+        name="StackContact"
+        component={StackContactScreen}
         options={{
           tabBarLabel: ({ focused }) => (
             <Text style={{
@@ -144,7 +144,7 @@ const StackTabButtom = () => {
       />
 
       <Tab.Screen
-        name="Cuenta"
+        name="StackAccount"
         component={StackAccountScreen}
         options={{
           tabBarLabel: ({ focused }) => (

@@ -5,7 +5,7 @@ import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, ScrollView
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
 type RootStackParamList = {
   Login: undefined;
@@ -37,7 +37,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
     <>
 
-      <CustomHeaderReturn title="Restablecer contraseña" />
+      <CustomHeaderSettings navigation={navigation} title="Restablecer contraseña" />
 
       <ScrollView style={styles.contentForm}>
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CustomHeaderReturnLogo from '../components/CustomHeaderReturnLogo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 // --------------Código de redirección a la aplicación de "Google Maps" del teléfono--------------
 const latitude = 6.231539; // Latitud del destino
@@ -44,12 +45,18 @@ const handleEmailPress = () => {
 };
 // -----------------------------------------------------------------------------------------------
 
-const Contacto = () => {
+type RootStackParamList = {
+  Contacto: undefined;
+};
+type ContactoProps = NativeStackScreenProps<RootStackParamList, 'Contacto'>;
+
+const Contacto = ({ navigation }: ContactoProps) => {
 
   return (
 
     <>
-      <CustomHeaderReturnLogo />
+
+      <CustomHeaderSettings navigation={navigation} title="Contacto" />
 
       <View style={styles.containerContact}>
 
@@ -72,7 +79,7 @@ const Contacto = () => {
           <View style={styles.contentContactOption}>
             <TouchableOpacity onPress={handlePhoneCallPress}>
               <View style={styles.contactOption}>
-                <Ionicons style={styles.contactOptionIcon} name="ios-call" />
+                <Ionicons style={styles.contactOptionIcon} name="call" />
                 <View style={styles.contentTitleText}>
                   <Text style={styles.titleContactOption}>TELÉFONO{'\n'}DE CONTACTO</Text>
                   <Text style={styles.textContactOption}>604-4212500</Text>

@@ -26,7 +26,7 @@ const Main = ({ navigation }: MainProps) => {
 
     <>
 
-      <Header />
+      <Header navigation={navigation} title="" />
 
       <ScrollView style={{ backgroundColor: '#ffffffff' }}>
 

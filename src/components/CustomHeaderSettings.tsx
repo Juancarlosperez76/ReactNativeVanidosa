@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface CustomHeaderReturnLogoProps {
+interface CustomHeaderSettingsProps {
   title: string;
   navigation: {
     goBack: () => void;
@@ -10,8 +10,7 @@ interface CustomHeaderReturnLogoProps {
   };
 }
 
-const CustomHeaderReturnLogo = ({ navigation }: CustomHeaderReturnLogoProps) => {
-
+const CustomHeaderSettings = ({ navigation, title }: CustomHeaderSettingsProps) => {
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -29,13 +28,12 @@ const CustomHeaderReturnLogo = ({ navigation }: CustomHeaderReturnLogoProps) => 
         <Ionicons style={styles.backIcon} name="arrow-back-outline" />
       </TouchableOpacity>
 
-      <View style={styles.contentLogo}>
-        <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
-      </View>
+      <Text style={styles.customHeaderText}>{title}</Text>
 
       <TouchableOpacity style={styles.contentAccountIcon} onPress={handleIconPress}>
         <Ionicons style={styles.accountIcon} name='settings-outline' />
       </TouchableOpacity>
+
 
     </View>
 
@@ -43,7 +41,7 @@ const CustomHeaderReturnLogo = ({ navigation }: CustomHeaderReturnLogoProps) => 
 
 };
 
-export default CustomHeaderReturnLogo;
+export default CustomHeaderSettings;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
@@ -70,14 +68,13 @@ const styles = StyleSheet.create({
     color: '#4e4e4e',
     fontSize: 24,
   },
-  contentLogo: {
+  customHeaderText: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 60,
+    textAlign: 'center',
+    color: '#4e4e4e',
+    fontSize: 20,
+    fontWeight: '500',
+    letterSpacing: 0.4,
   },
   contentAccountIcon: {
     position: 'absolute',

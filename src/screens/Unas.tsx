@@ -1,13 +1,19 @@
 import React from 'react';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import { StyleSheet, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-const Unas = () => {
+type RootStackParamList = {
+  Unas: undefined;
+};
+type UnasProps = NativeStackScreenProps<RootStackParamList, 'Unas'>;
+
+const Unas = ({ navigation }: UnasProps) => {
 
   return (
 
     <>
-      <CustomHeaderReturn title="Uñas" />
+      <CustomHeaderSettings navigation={navigation} title="Uñas" />
       <View style={styles.contentnails}></View>
     </>
 

@@ -1,13 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ButtonPrimary from '../components/ButtonPrimary';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
 type RootStackParamList = {
   Login: undefined;
@@ -18,14 +18,14 @@ type RegistroProps = NativeStackScreenProps<RootStackParamList, 'Registro'>;
 const Registro = ({ navigation }: RegistroProps) => {
 
   // --------------------------Estado de los "Inputs"--------------------------
-  const [nombre, setNombre] = React.useState('');
-  const [apellidos, setApellidos] = React.useState('');
-  const [documento, setDocumento] = React.useState('');
-  const [direccion, setDireccion] = React.useState('');
-  const [telefono, setTelefono] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setContrasena] = React.useState('');
-  const [confirmarPassword, setConfirmarContrasena] = React.useState('');
+  const [Nombre, setNombre] = React.useState('');
+  const [Apellido, setApellido] = React.useState('');
+  const [Documento, setDocumento] = React.useState('');
+  const [Direccion, setDireccion] = React.useState('');
+  const [Telefono, setTelefono] = React.useState('');
+  const [Correo, setCorreo] = React.useState('');
+  const [Contrasena, setContrasena] = React.useState('');
+  const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
   // --------------------------------------------------------------------------
 
   // ----------------------Mostrar y ocultar "Contraseña"----------------------
@@ -77,11 +77,105 @@ const Registro = ({ navigation }: RegistroProps) => {
   }, [acceptTerms]);
   // --------------------------------------------------------------------------
 
+  // ---------------------Código envío de datos (Registro)---------------------
+
+  const handleRegister = () => {
+    // Arreglo para almacenar los mensajes de error
+    const errores = [];
+
+    // Validar los campos del formulario antes de enviar los datos
+    if (!Nombre) {
+      errores.push('El campo Nombre es\n   obligatorio.\n');
+    }
+
+    if (!Apellido) {
+      errores.push('El campo Apellido es\n   obligatorio.\n');
+    }
+
+    if (!selectedTipoDocumento) {
+      errores.push('Seleccione un tipo de documento.\n');
+    }
+
+    if (!Documento) {
+      errores.push('El campo Documento es\n   obligatorio.\n');
+    } else if (!/^\d{8,}$/.test(Documento)) {
+      errores.push('El documento debe tener mínimo 8 dígitos.');
+    }
+
+    if (!Direccion) {
+      errores.push('El campo Dirección es\n   obligatorio.\n');
+    }
+
+    if (!Telefono) {
+      errores.push('El campo Teléfono es\n   obligatorio.\n');
+    } else if (!/^\d{10,}$/.test(Telefono)) {
+      errores.push('El teléfono debe tener mínimo 10 dígitos.');
+    }
+
+    if (!Correo) {
+      errores.push('El campo Correo es\n   obligatorio.\n');
+    } else if (!/^(?=.*[@])(?=.*\.(com|es|net))/.test(Correo)) {
+      errores.push('El correo debe ser de tipo @gmail.com, @outlook.com, @hotmail.com o @yahoo.com.');
+    }
+
+    if (!Contrasena) {
+      errores.push('El campo Contraseña es\n   obligatorio.\n');
+    } else if (Contrasena.length < 8) {
+      errores.push('La contraseña debe tener mínimo 8 caracteres.');
+    }
+
+    if (!ConfirmarContrasena) {
+      errores.push('El campo Confirmar Contraseña\n   es obligatorio.\n');
+    } else if (Contrasena !== ConfirmarContrasena) {
+      errores.push('Las contraseñas no coinciden.');
+    }
+
+    if (errores.length > 0) {
+      const mensajeError = errores.map((error) => `• ${error}`).join('\n');
+      Alert.alert('Registro invalido', mensajeError);
+      return;
+    }
+
+    // Crear un objeto con los datos del formulario
+    const userData = {
+      Rol: 'Cliente',
+      Nombre,
+      Apellido,
+      Tipo_Documento: selectedTipoDocumento,
+      Documento,
+      Direccion,
+      Telefono,
+      Correo,
+      Contrasena,
+      ConfirmarContrasena,
+    };
+
+    // Enviar los datos a la API utilizando fetch
+    fetch('https://api-proyecto-5hms.onrender.com/api/usuario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Manejar la respuesta de la API
+        console.log(data);
+      })
+      .catch(error => {
+        // Manejar errores
+        console.error(error);
+      });
+  };
+
+  // ------------------------------------------------------------------------------------------
+
   return (
 
     <>
 
-      <CustomHeaderReturn title="Registro" />
+      <CustomHeaderSettings navigation={navigation} title="Registro" />
 
       <ScrollView style={styles.contentForm}>
 
@@ -98,7 +192,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               placeholder='Nombre'
               placeholderTextColor='#000000'
               onChangeText={setNombre}
-              value={nombre}
+              value={Nombre}
             />
           </View>
 
@@ -108,8 +202,8 @@ const Registro = ({ navigation }: RegistroProps) => {
               style={styles.input}
               placeholder='Apellidos'
               placeholderTextColor='#000000'
-              onChangeText={setApellidos}
-              value={apellidos}
+              onChangeText={setApellido}
+              value={Apellido}
             />
           </View>
 
@@ -146,7 +240,7 @@ const Registro = ({ navigation }: RegistroProps) => {
           {/* --------------------------------------------------------------------------------------- */}
 
           <View>
-            <Ionicons style={styles.iconForm} name='card-outline' />
+            <Ionicons style={styles.iconForm} name='id-card-outline' />
             <TextInput
               style={styles.input}
               placeholder='Documento'
@@ -156,7 +250,7 @@ const Registro = ({ navigation }: RegistroProps) => {
                 const numericValue = text.replace(/[^0-9]/g, '');
                 setDocumento(numericValue);
               }}
-              value={documento}
+              value={Documento}
               keyboardType='numeric'
             />
           </View>
@@ -168,7 +262,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               placeholder='Dirección'
               placeholderTextColor='#000000'
               onChangeText={setDireccion}
-              value={direccion}
+              value={Direccion}
             />
           </View>
 
@@ -183,7 +277,7 @@ const Registro = ({ navigation }: RegistroProps) => {
                 const numericValue = text.replace(/[^0-9]/g, '');
                 setTelefono(numericValue);
               }}
-              value={telefono}
+              value={Telefono}
               keyboardType='numeric'
             />
           </View>
@@ -194,25 +288,25 @@ const Registro = ({ navigation }: RegistroProps) => {
               style={styles.input}
               placeholder='E-mail'
               placeholderTextColor='#000000'
-              onChangeText={setEmail}
-              value={email}
+              onChangeText={setCorreo}
+              value={Correo}
               autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
               keyboardType='email-address'
             />
           </View>
 
           <View>
-            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <Ionicons style={styles.iconForm} name='key-outline' />
             <TextInput
               style={styles.input}
               placeholder='Contraseña'
               placeholderTextColor='#000000'
               onChangeText={setContrasena}
-              value={password}
+              value={Contrasena}
               autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
               secureTextEntry={!showPassword1} // Oculta y muestra carácteres de contraseña
             />
-            {password !== '' && ( // Código cambio de icono de la contraseña
+            {Contrasena !== '' && ( // Código cambio de icono de la contraseña
               <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
                 <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
               </TouchableOpacity>
@@ -220,17 +314,17 @@ const Registro = ({ navigation }: RegistroProps) => {
           </View>
 
           <View>
-            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+            <Ionicons style={styles.iconForm} name='key-outline' />
             <TextInput
               style={styles.input}
               placeholder='Confirmar contraseña'
               placeholderTextColor='#000000'
               onChangeText={setConfirmarContrasena}
-              value={confirmarPassword}
+              value={ConfirmarContrasena}
               autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
               secureTextEntry={!showPassword2} // Oculta y muestra carácteres de contraseña
             />
-            {confirmarPassword !== '' && ( // Código cambio de icono de la contraseña
+            {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
               <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
                 <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
               </TouchableOpacity>
@@ -264,7 +358,7 @@ const Registro = ({ navigation }: RegistroProps) => {
 
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
-              onPress={() => { }} // onPress vacío, sin funcionalidad
+              onPress={handleRegister}
               title={'CREAR CUENTA'}
               backgroundColor={'#5B009D'}
               color={'#FFFFFF'}
@@ -321,8 +415,9 @@ const styles = StyleSheet.create({
   },
   contentIconFormRight: {
     position: 'absolute',
-    top: 21,
-    right: 8,
+    top: 12,
+    right: 2,
+    padding: 10,
   },
   iconFormRight: {
     fontSize: 22,
@@ -335,6 +430,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E6E6E6',
     fontWeight: '400',
     letterSpacing: 0.5,
+    color: '#000000',
   },
   separator: {
     borderColor: '#D3D3D3',

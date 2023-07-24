@@ -1,13 +1,19 @@
 import React from 'react';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import { StyleSheet, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
-const Quinceanera = () => {
+type RootStackParamList = {
+  Quinceanera: undefined;
+};
+type QuinceaneraProps = NativeStackScreenProps<RootStackParamList, 'Quinceanera'>;
+
+const Quinceanera = ({ navigation }: QuinceaneraProps) => {
 
   return (
 
     <>
-      <CustomHeaderReturn title="Quinceañera" />
+      <CustomHeaderSettings navigation={navigation} title="Quinceañera" />
       <View style={styles.contentTeenage}></View>
     </>
 

@@ -1,35 +1,91 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
-import { Image, SafeAreaView, ScrollView, StyleSheet, TextInput, View } from 'react-native';
-import ButtonSecondary from '../components/ButtonSecondary';
+import React, { useEffect, useState } from 'react';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import ButtonPrimary from '../components/ButtonPrimary';
+import ButtonSecondary from '../components/ButtonSecondary';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
 type RootStackParamList = {
-  Login: undefined;
+  StackAccount: undefined;
   EditAccount: undefined;
   AccountHeader: undefined;
 };
+
+type User = {
+  Nombre: string;
+  Apellido: string;
+  Tipo_Documento: string;
+  Documento: string;
+  Direccion: string;
+  Telefono: string;
+  Correo: string;
+  Contrasena: string;
+};
+
 type EditAccountProps = NativeStackScreenProps<RootStackParamList, 'EditAccount'>;
 
 const EditAccount = ({ navigation }: EditAccountProps) => {
+  const [user, setUser] = useState<User | null>(null);
 
-  // ----------------------Estado de los "Inputs"----------------------
-  const [nombre, setNombre] = useState('');
-  const [apellidos, setApellidos] = useState('');
-  const [tipoDocumento, setTipoDocumento] = useState('');
-  const [documento, setDocumento] = useState('');
-  const [direccion, setDireccion] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [email, setEmail] = useState('');
-  // ------------------------------------------------------------------
+  // Estados para campos editables
+  const [Nombre, setNombre] = useState('');
+  const [Apellido, setApellido] = useState('');
+  const [Tipo_Documento, setTipo_Documento] = useState('');
+  const [Documento, setDocumento] = useState('');
+  const [Direccion, setDireccion] = useState('');
+  const [Telefono, setTelefono] = useState('');
+  const [Correo, setCorreo] = useState('');
+  const [Contrasena, setContrasena] = useState('');
+
+  // -------------Lógica para mostrar los datos de usuario logueado-------------
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        const userEmail = await AsyncStorage.getItem('userEmail');
+
+        if (token && userEmail) {
+          const userResponse = await axios.get('https://api-proyecto-5hms.onrender.com/api/usuario', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const userData = userResponse.data.Usuarios;
+          const currentUser = userData.find((user: { Correo: string; }) => user.Correo === userEmail);
+
+          if (currentUser) {
+            setUser(currentUser);
+            console.log('Datos del usuario obtenidos:', currentUser);
+          } else {
+            console.error('Usuario actual no encontrado en la lista de usuarios');
+            // Aquí redirigimos al usuario a la pantalla de inicio de sesión
+            navigation.navigate('StackAccount');
+          }
+        } else {
+          console.error('Token de usuario o correo no encontrado en AsyncStorage');
+          // Aquí redirigimos al usuario a la pantalla de inicio de sesión
+          navigation.navigate('StackAccount');
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos del usuario:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // ---------------------------------------------------------------------------
+
 
   return (
 
     <>
 
-      <CustomHeaderReturn title="Administrar cuenta" />
+      <CustomHeaderSettings navigation={navigation} title="Administrar cuenta" />
 
       <ScrollView style={styles.contentForm}>
 
@@ -39,93 +95,135 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
         <SafeAreaView>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='person-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Nombre'
-              placeholderTextColor='#000000'
-              onChangeText={setNombre}
-              value={nombre}
-              editable={false} // Bloquear el campo de texto
-            />
-          </View>
+          {user ? (
+            <>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='people-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Apellidos'
-              placeholderTextColor='#000000'
-              onChangeText={setApellidos}
-              value={apellidos}
-              editable={false} // Bloquear el campo de texto
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='person-outline' />
+                  <Text style={styles.label}>Nombre:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Nombre}
+                  onChangeText={setNombre}
+                  placeholder={user.Nombre}
+                  placeholderTextColor={'#000000'}
+                  editable={false}
+                />
+              </View>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='card-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Tipo de documento'
-              placeholderTextColor='#000000'
-              onChangeText={setTipoDocumento}
-              value={tipoDocumento}
-              editable={false} // Bloquear el campo de texto
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='people-outline' />
+                  <Text style={styles.label}>Apellidos:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Apellido}
+                  onChangeText={setApellido}
+                  placeholder={user.Apellido}
+                  placeholderTextColor={'#000000'}
+                  editable={false}
+                />
+              </View>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='card-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Documento'
-              placeholderTextColor='#000000'
-              onChangeText={setDocumento}
-              value={documento}
-              keyboardType='numeric'
-              editable={false} // Bloquear el campo de texto
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='card-outline' />
+                  <Text style={styles.label}>Tipo documento:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Tipo_Documento}
+                  onChangeText={setTipo_Documento}
+                  placeholder={user.Tipo_Documento}
+                  placeholderTextColor={'#000000'}
+                  editable
+                />
+              </View>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='home-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Dirección'
-              placeholderTextColor='#000000'
-              onChangeText={setDireccion}
-              value={direccion}
 
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='id-card-outline' />
+                  <Text style={styles.label}>Documento:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Documento}
+                  onChangeText={setDocumento}
+                  placeholder={user.Documento.toString()}
+                  placeholderTextColor={'#000000'}
+                  editable={false}
+                />
+              </View>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='call-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Teléfono'
-              placeholderTextColor='#000000'
-              onChangeText={setTelefono}
-              value={telefono}
-              keyboardType='numeric'
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='home-outline' />
+                  <Text style={styles.label}>Dirección:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Direccion}
+                  onChangeText={setDireccion}
+                  placeholder={user.Direccion}
+                  placeholderTextColor={'#000000'}
+                  editable
+                />
+              </View>
 
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='call-outline' />
+                  <Text style={styles.label}>Teléfono:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Telefono}
+                  onChangeText={setTelefono}
+                  placeholder={user.Telefono.toString()}
+                  placeholderTextColor={'#000000'}
+                  editable
+                />
+              </View>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='at-sharp' />
-            <TextInput
-              style={styles.input}
-              placeholder='E-mail'
-              placeholderTextColor='#000000'
-              onChangeText={setEmail}
-              value={email}
-              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              keyboardType='email-address'
-              editable={false} // Bloquear el campo de texto
-            />
-          </View>
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='at-sharp' />
+                  <Text style={styles.label}>Correo:</Text>
+                </View>
+                <TextInput
+                  style={styles.input}
+                  value={Correo}
+                  onChangeText={setCorreo}
+                  placeholder={user.Correo}
+                  placeholderTextColor={'#000000'}
+                  editable
+                />
+              </View>
+
+              <View style={styles.fieldContainer}>
+                <View style={styles.iconLabelContainer}>
+                  <Ionicons style={styles.iconForm} name='key-outline' />
+                  <Text style={styles.label}>Contraseña:</Text>
+                </View>
+                <TextInput
+                  style={{ ...styles.input, fontSize: 18, letterSpacing: 1 }}
+                  value={Contrasena}
+                  onChangeText={setContrasena}
+                  placeholder='••••••••••'
+                  placeholderTextColor={'#000000'}
+                  secureTextEntry
+                  editable={false}
+                />
+              </View>
+
+            </>
+          ) : (
+            <Text>No se encontró ningún usuario</Text>
+          )}
 
           <View style={{ marginTop: 30 }}>
             <ButtonSecondary
@@ -139,7 +237,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
           <View style={styles.separator}></View>
 
-          <View>
+          <View style={{ marginBottom: 30 }}>
             <ButtonPrimary
               onPress={() => { }} // onPress vacío, sin funcionalidad
               title={'ELIMINAR CUENTA'}
@@ -166,7 +264,8 @@ const styles = StyleSheet.create({
   contentForm: {
     flex: 1,
     backgroundColor: '#ffffff',
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
+
   },
   contentLogoAccount: {
     marginVertical: 20,
@@ -178,26 +277,41 @@ const styles = StyleSheet.create({
     width: 120,
     height: 72,
   },
+  fieldContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+  },
+  iconLabelContainer: {
+    width: '46%',
+    height: 48,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E6E6E6',
+  },
   iconForm: {
     fontSize: 20,
-    position: 'absolute',
-    top: 21,
-    left: 6,
+    paddingLeft: 6,
+    paddingRight: 4,
     color: '#000000',
     zIndex: 1,
   },
-  contentIconFormRight: {
-    position: 'absolute',
-    top: 21,
-    right: 8,
+  label: {
+    color: '#000000',
+    fontSize: 13,
+    letterSpacing: 0.5,
   },
   input: {
+    width: '54%',
     height: 48,
-    marginVertical: 8,
-    paddingLeft: 32,
-    backgroundColor: '#e6e6e6',
+    paddingLeft: 10,
+    color: '#000000',
     fontWeight: '400',
     letterSpacing: 0.5,
+    fontSize: 13,
   },
   separator: {
     borderColor: '#d3d3d3',
