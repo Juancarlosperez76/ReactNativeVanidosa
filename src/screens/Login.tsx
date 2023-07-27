@@ -14,7 +14,7 @@ type RootStackParamList = {
   Login: undefined;
   Registro: undefined;
   RecoverPass: undefined;
-  Main: undefined;
+  StackMain: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -53,7 +53,7 @@ const Login = ({ navigation }: LoginProps) => {
         const { token } = response.data;
         if (token) {
           Alert.alert('Éxito', 'Inicio de sesión exitoso.');
-          navigation.navigate('Main'); // Redireccionar al usuario a la pantalla Main
+          navigation.navigate('StackMain'); // Redireccionar al usuario a la pantalla Main
           // Guardar el token en el almacenamiento local
           AsyncStorage.setItem('userToken', token)
             .then(() => {

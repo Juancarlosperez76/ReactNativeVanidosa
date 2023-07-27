@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface HeaderProps {
@@ -12,9 +13,22 @@ interface HeaderProps {
 
 const Header = ({ navigation }: HeaderProps) => {
 
+  // ------------Código redireccion dependiendo del estado de login-------------
   const handleIconPress = () => {
-    navigation.navigate('StackAccountHeader');
+    AsyncStorage.getItem('userToken') // Obtener el token del AsyncStorage
+      .then(token => {
+        if (token) {
+          navigation.navigate('StackAccountHeader'); // Si hay token, el usuario está logueado
+        } else {
+          navigation.navigate('StackAccount'); // Si no hay token, el usuario no está logueado
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        // Manejar el error si es necesario
+      });
   };
+  // --------------------------------------------------------------------------
 
   return (
 

@@ -26,6 +26,8 @@ const StackTabButtom = () => {
 
       screenOptions={({ route }) => ({
 
+        unmountOnBlur: true, // Resetea las rutas al navegar entre los Tabs
+
         headerShown: false, // Oculta el Header y el título por defecto
 
         tabBarStyle: { // Estilos de la barra de navegación

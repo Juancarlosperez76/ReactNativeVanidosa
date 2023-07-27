@@ -136,37 +136,59 @@ const Registro = ({ navigation }: RegistroProps) => {
       return;
     }
 
-    // Crear un objeto con los datos del formulario
-    const userData = {
-      Rol: 'Cliente',
-      Nombre,
-      Apellido,
-      Tipo_Documento: selectedTipoDocumento,
-      Documento,
-      Direccion,
-      Telefono,
-      Correo,
-      Contrasena,
-      ConfirmarContrasena,
-    };
-
-    // Enviar los datos a la API utilizando fetch
-    fetch('https://api-proyecto-5hms.onrender.com/api/usuario', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Manejar la respuesta de la API
-        console.log(data);
+    // Si no hay errores, entonces el registro fue exitoso
+    if (errores.length === 0) {
+      
+      // Crear un objeto con los datos del formulario
+      const userData = {
+        Rol: 'Cliente',
+        Nombre,
+        Apellido,
+        Tipo_Documento: selectedTipoDocumento,
+        Documento,
+        Direccion,
+        Telefono,
+        Correo,
+        Contrasena,
+        ConfirmarContrasena,
+      };
+  
+      // Enviar los datos a la API utilizando fetch
+      fetch('https://api-proyecto-5hms.onrender.com/api/usuario', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
       })
-      .catch(error => {
-        // Manejar errores
-        console.error(error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          // Manejar la respuesta de la API
+          console.log(data);
+          // Mostrar la alerta de registro exitoso
+          Alert.alert(
+            'Registro Exitoso',
+            'Usuario registrado exitosamente, por favor inicie sesión.',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  // Redireccionar a la página de inicio de sesión (StackAccount.tsx)
+                  navigation.navigate('Login');
+                },
+              },
+            ],
+          );
+        })
+        .catch(error => {
+          // Manejar errores
+          console.error(error);
+        });
+    } else {
+      // Mostrar la alerta de errores de registro
+      const mensajeError = errores.map(error => `• ${error}`).join('\n');
+      Alert.alert('Registro inválido', mensajeError);
+    }
   };
 
   // ------------------------------------------------------------------------------------------

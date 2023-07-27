@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface CustomHeaderSettingsProps {
@@ -16,9 +17,22 @@ const CustomHeaderSettings = ({ navigation, title }: CustomHeaderSettingsProps) 
     navigation.goBack();
   };
 
+  // ------------Código redireccion dependiendo del estado de login-------------
   const handleIconPress = () => {
-    navigation.navigate('StackAccountHeader');
+    AsyncStorage.getItem('userToken') // Obtener el token del AsyncStorage
+      .then(token => {
+        if (token) {
+          navigation.navigate('StackAccountHeader'); // Si hay token, el usuario está logueado
+        } else {
+          navigation.navigate('StackAccount'); // Si no hay token, el usuario no está logueado
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        // Manejar el error si es necesario
+      });
   };
+  // --------------------------------------------------------------------------
 
   return (
 
@@ -59,7 +73,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 14,
     left: 16,
-    padding:10,
+    padding: 10,
     zIndex: 1,
   },
   backIcon: {
@@ -78,7 +92,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 14,
     right: 26,
-    padding:10,
+    padding: 10,
     zIndex: 1,
   },
   accountIcon: {

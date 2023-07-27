@@ -8,12 +8,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 
-type RootStackParamList = {
-  StackAccount: undefined;
-  EditAccount: undefined;
-  AccountHeader: undefined;
-};
-
 type User = {
   Nombre: string;
   Apellido: string;
@@ -23,6 +17,12 @@ type User = {
   Telefono: string;
   Correo: string;
   Contrasena: string;
+};
+
+type RootStackParamList = {
+  StackAccount: undefined;
+  EditAccount: undefined;
+  AccountHeader: undefined;
 };
 
 type EditAccountProps = NativeStackScreenProps<RootStackParamList, 'EditAccount'>;
