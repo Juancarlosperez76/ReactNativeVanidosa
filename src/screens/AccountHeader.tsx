@@ -165,7 +165,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             <Pressable style={styles.modalContainer} onPress={handlePressOutsideModal}>
               <View style={styles.modalContent}>
 
-                {/* Contenido del modal */}
                 <TouchableOpacity style={styles.modalItem} onPress={() => { openCamera(); closeModalOptionImageLoad(); }}>
                   <FontAwesome5 style={styles.modalIcon} name="camera" solid />
                   <Text style={styles.modalItemText}>Tomar una foto</Text>

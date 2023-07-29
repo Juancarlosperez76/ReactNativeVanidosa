@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   acceptTermsText: {
-    color: '#4E4E4E'
+    color: '#4E4E4E',
   },
   textTermsConditions: {
     color: '#5B009D',
