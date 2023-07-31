@@ -8,9 +8,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import AlertSuccess from '../components/AlertSuccess';
 
 type RootStackParamList = {
-  StackMainScreen: undefined;
   Login: undefined;
   Registro: undefined;
   RecoverPass: undefined;
@@ -31,9 +31,21 @@ const Login = ({ navigation }: LoginProps) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ------------------------Lógica de Inicio de sesión------------------------
+  // ------------------------Función para mostrar el modal "AlertSuccess" y redireccionar a "StackMain"------------------------
+  const [SuccessVisible, setSuccessVisible] = useState(false);
+
+  const handleCloseSuccess = () => {
+    setSuccessVisible(false); // Ocultar la alerta de éxito
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'StackMain' }],
+    }); // Redireccionar a "StackAccount"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ------------------------------------------------Lógica de Inicio de sesión------------------------------------------------
   const handleLogin = () => {
     // Validar campos antes de enviar los datos
     if (!Correo || !Contrasena) {
@@ -52,16 +64,14 @@ const Login = ({ navigation }: LoginProps) => {
       .then(response => {
         const { token } = response.data;
         if (token) {
-          Alert.alert('Éxito', 'Inicio de sesión exitoso.');
-          navigation.navigate('StackMain'); // Redireccionar al usuario a la pantalla Main
-          // Guardar el token en el almacenamiento local
-          AsyncStorage.setItem('userToken', token)
+
+          setSuccessVisible(true) // Mostrar mensaje de éxito
+
+          AsyncStorage.setItem('userToken', token) // Guardar el token en el almacenamiento local
             .then(() => {
-              // Guardar el correo del usuario en AsyncStorage
-              AsyncStorage.setItem('userEmail', Correo)
-                .then(() => {
-                  // Resto del código para obtener más datos del usuario si es necesario
-                })
+
+              AsyncStorage.setItem('userEmail', Correo) // Guardar el correo del usuario en AsyncStorage
+
                 .catch(error => {
                   console.error(error);
                   Alert.alert('Error', 'Ha ocurrido un error al guardar el correo del usuario.');
@@ -80,7 +90,9 @@ const Login = ({ navigation }: LoginProps) => {
         Alert.alert('Error', 'Ha ocurrido un error al iniciar sesión.');
       });
   };
-  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
+
+
 
   return (
 
@@ -106,7 +118,8 @@ const Login = ({ navigation }: LoginProps) => {
               onChangeText={setCorreo}
               value={Correo}
               autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
-              keyboardType="email-address" />
+              keyboardType="email-address"
+            />
           </View>
 
           <View>
@@ -161,6 +174,18 @@ const Login = ({ navigation }: LoginProps) => {
               borderRadius={0} />
           </View>
 
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+          {/* Renderizar componente "AlertSuccess" */}
+          <AlertSuccess
+            visible={SuccessVisible}
+            onClose={handleCloseSuccess}
+            title='Sesión iniciada.'
+            message='Ha iniciado sesión con éxito.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
         </SafeAreaView>
 
       </ScrollView>
@@ -199,6 +224,15 @@ const styles = StyleSheet.create({
     color: '#000000',
     zIndex: 1,
   },
+  input: {
+    height: 48,
+    marginVertical: 8,
+    paddingLeft: 32,
+    backgroundColor: '#e6e6e6',
+    fontWeight: '400',
+    letterSpacing: 0.5,
+    color: '#000000',
+  },
   contentIconFormRight: {
     position: 'absolute',
     top: 12,
@@ -208,15 +242,6 @@ const styles = StyleSheet.create({
   iconFormRight: {
     fontSize: 20,
     color: '#4e4e4e',
-  },
-  input: {
-    height: 48,
-    marginVertical: 8,
-    paddingLeft: 32,
-    backgroundColor: '#e6e6e6',
-    fontWeight: '400',
-    letterSpacing: 0.5,
-    color: '#000000',
   },
   recoverPassword: {
     color: '#5B009D',

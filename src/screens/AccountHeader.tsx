@@ -5,9 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { CommonActions } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AlertSuccess from '../components/AlertSuccess';
 
 type User = {
   Nombre: string;
@@ -123,26 +123,32 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   // ---------------------------------Código para cerrar la "Sesión"----------------------------------
   const handleLogout = async () => {
     try {
+
       // Eliminar el token y correo almacenados en AsyncStorage
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userEmail');
 
-      // Reiniciar la pila de navegación y llevar al usuario a la pantalla de inicio de sesión
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'StackAccount' }],
-        })
-      );
-
       // Mostrar mensaje de éxito
-      Alert.alert('Éxito', 'Se ha cerrado sesión exitosamente.');
+      setSuccessVisible(true);
+
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       Alert.alert('Error', 'Ha ocurrido un error al cerrar sesión.');
     }
   };
   // -------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
+  const [SuccessVisible, setSuccessVisible] = useState(false);
+
+  const handleCloseSuccess = () => {
+    setSuccessVisible(false); // Ocultar la alerta de éxito
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'StackAccount' }],
+    }); // Redireccionar a "StackAccount"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
@@ -209,6 +215,18 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           </TouchableOpacity>
 
           <View style={styles.separator}></View>
+
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+          {/* Renderizar componente "AlertSuccess" */}
+          <AlertSuccess
+            visible={SuccessVisible}
+            onClose={handleCloseSuccess}
+            title='Sesión cerrada.'
+            message='Se ha cerrado la sesión con éxito.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
         </View>
 

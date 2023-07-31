@@ -8,16 +8,18 @@ import CheckBox from '@react-native-community/checkbox';
 import { RadioButton } from 'react-native-paper';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import AlertSuccess from '../components/AlertSuccess';
 
 type RootStackParamList = {
   Login: undefined;
   Registro: undefined;
+  AccountHeader: undefined;
 };
 type RegistroProps = NativeStackScreenProps<RootStackParamList, 'Registro'>;
 
 const Registro = ({ navigation }: RegistroProps) => {
 
-  // --------------------------Estado de los "Inputs"--------------------------
+  // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Nombre, setNombre] = React.useState('');
   const [Apellido, setApellido] = React.useState('');
   const [Documento, setDocumento] = React.useState('');
@@ -26,9 +28,9 @@ const Registro = ({ navigation }: RegistroProps) => {
   const [Correo, setCorreo] = React.useState('');
   const [Contrasena, setContrasena] = React.useState('');
   const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
-  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------Mostrar y ocultar "Contraseña"----------------------
+  // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,9 +41,9 @@ const Registro = ({ navigation }: RegistroProps) => {
   const togglePasswordVisibility2 = () => {
     setShowPassword2(!showPassword2);
   };
-  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // Lógica "Imput Select Modal" "Tipo de documento"
+  // -------------------------------------Lógica "Imput Select Modal" "Tipo de documento"--------------------------------------
   const tipoDocumentoOptions = [
     { label: 'Cédula de extranjería', value: 'Cédula de extranjería' },
     { label: 'Cédula de ciudadanía', value: 'Cédula de ciudadanía' },
@@ -61,9 +63,9 @@ const Registro = ({ navigation }: RegistroProps) => {
       setSelectModalVisible(false);
     }, 500); // Cambia el valor 2000 a la cantidad de milisegundos que deseas esperar antes de ocultar el modal
   };
-  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // Controla la visibilidad del "Modal" en función del valor de "acceptTerms"
+  // ------------------------Controla la visibilidad del "Modal" en función del valor de "acceptTerms"-------------------------
   const handleAcceptTerms = () => {
     setacceptTerms(!acceptTerms);
   };
@@ -75,9 +77,9 @@ const Registro = ({ navigation }: RegistroProps) => {
       setModalVisible(false);
     }
   }, [acceptTerms]);
-  // --------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------Código envío de datos (Registro)---------------------
+  // ---------------------------------------------Código envío de datos (Registro)---------------------------------------------
 
   const handleRegister = () => {
     // Arreglo para almacenar los mensajes de error
@@ -138,7 +140,7 @@ const Registro = ({ navigation }: RegistroProps) => {
 
     // Si no hay errores, entonces el registro fue exitoso
     if (errores.length === 0) {
-      
+
       // Crear un objeto con los datos del formulario
       const userData = {
         Rol: 'Cliente',
@@ -152,7 +154,7 @@ const Registro = ({ navigation }: RegistroProps) => {
         Contrasena,
         ConfirmarContrasena,
       };
-  
+
       // Enviar los datos a la API utilizando fetch
       fetch('https://api-proyecto-5hms.onrender.com/api/usuario', {
         method: 'POST',
@@ -166,19 +168,7 @@ const Registro = ({ navigation }: RegistroProps) => {
           // Manejar la respuesta de la API
           console.log(data);
           // Mostrar la alerta de registro exitoso
-          Alert.alert(
-            'Registro Exitoso',
-            'Usuario registrado exitosamente, por favor inicie sesión.',
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  // Redireccionar a la página de inicio de sesión (StackAccount.tsx)
-                  navigation.navigate('Login');
-                },
-              },
-            ],
-          );
+          setSuccessVisible(true);
         })
         .catch(error => {
           // Manejar errores
@@ -191,21 +181,27 @@ const Registro = ({ navigation }: RegistroProps) => {
     }
   };
 
-  // ------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
+
+    // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
+    const [SuccessVisible, setSuccessVisible] = useState(false);
+
+    const handleCloseSuccess = () => {
+      setSuccessVisible(false);
+      navigation.navigate('Login');
+    };
+    // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
     <>
-
       <CustomHeaderSettings navigation={navigation} title="Registro" />
-
       <ScrollView style={styles.contentForm}>
-
-        <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-        </View>
-
         <SafeAreaView>
+
+          <View style={styles.contentLogoAccount}>
+            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
+          </View>
 
           <View>
             <Ionicons style={styles.iconForm} name='person-outline' />
@@ -229,13 +225,13 @@ const Registro = ({ navigation }: RegistroProps) => {
             />
           </View>
 
-          {/* -------------------------------Campo "Tipo de documento"------------------------------- */}
+          {/* ------------------------------------------Campo "Tipo de documento"------------------------------------------ */}
           <TouchableOpacity style={styles.selectInputContainer} onPress={handleOpenSelectModal}>
             <Ionicons style={styles.selectIconForm} name="card-outline" />
             <Text style={styles.selectInput}>{selectedTipoDocumento ? selectedTipoDocumento : 'Tipo de documento'}</Text>
           </TouchableOpacity>
 
-          {/* --------------------------"Modal" opciones "Tipo de documento"------------------------- */}
+          {/* -------------------------------------"Modal" opciones "Tipo de documento"------------------------------------ */}
           <Modal visible={selectModalVisible} animationType="slide" transparent={true}>
             <View style={styles.selectModalContainer}>
               <View style={styles.selectModalContent}>
@@ -259,7 +255,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               </View>
             </View>
           </Modal>
-          {/* --------------------------------------------------------------------------------------- */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           <View>
             <Ionicons style={styles.iconForm} name='id-card-outline' />
@@ -353,7 +349,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             )}
           </View>
 
-          {/* -----------------Código "CheckBox" "Política de privacidad y Términos"----------------- */}
+          {/* ----------------------------Código "CheckBox" "Política de privacidad y Términos"---------------------------- */}
           <View style={styles.checkboxAcceptTerms}>
             <CheckBox
               disabled={false}
@@ -374,7 +370,7 @@ const Registro = ({ navigation }: RegistroProps) => {
 
             </View>
           </View>
-          {/* --------------------------------------------------------------------------------------- */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           <TermsAndConditionsModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
@@ -386,6 +382,18 @@ const Registro = ({ navigation }: RegistroProps) => {
               color={'#FFFFFF'}
               borderRadius={0} />
           </View>
+
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+          {/* Renderizar componente "AlertSuccess" */}
+          <AlertSuccess
+            visible={SuccessVisible}
+            onClose={handleCloseSuccess}
+            title='Registro exitoso.'
+            message='La cuenta ha sido creada con éxito.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           <View style={styles.separator}></View>
 
@@ -399,9 +407,7 @@ const Registro = ({ navigation }: RegistroProps) => {
           </View>
 
         </SafeAreaView>
-
       </ScrollView>
-
     </>
 
   );
@@ -435,6 +441,15 @@ const styles = StyleSheet.create({
     color: '#000000',
     zIndex: 1,
   },
+  input: {
+    height: 48,
+    marginVertical: 8,
+    paddingLeft: 32,
+    backgroundColor: '#E6E6E6',
+    fontWeight: '400',
+    letterSpacing: 0.5,
+    color: '#000000',
+  },
   contentIconFormRight: {
     position: 'absolute',
     top: 12,
@@ -444,15 +459,6 @@ const styles = StyleSheet.create({
   iconFormRight: {
     fontSize: 22,
     color: '#4E4E4E',
-  },
-  input: {
-    height: 48,
-    marginVertical: 8,
-    paddingLeft: 32,
-    backgroundColor: '#E6E6E6',
-    fontWeight: '400',
-    letterSpacing: 0.5,
-    color: '#000000',
   },
   separator: {
     borderColor: '#D3D3D3',
@@ -529,5 +535,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.6,
     fontWeight: '400',
+  },
+  // Estilos "openAlertSuccess"
+  openAlertSuccess: {
+    width: 100,
+    alignItems: 'center',
+    margin: 10,
+    paddingVertical: 10,
+    backgroundColor: '#28a745',
+    borderRadius: 8,
+  },
+  openAlertSuccessText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

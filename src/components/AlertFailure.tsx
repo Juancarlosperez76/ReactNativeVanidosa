@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface ModalAlertSuccessProps {
+interface AlertFailureProps {
   visible: boolean;
   onClose: () => void;
   title: string;
@@ -11,14 +11,14 @@ interface ModalAlertSuccessProps {
   buttonText: string;
 }
 
-const ModalAlertSuccess = ({ visible, onClose, title, message, buttonStyle, buttonText }: ModalAlertSuccessProps) => {
+const AlertFailure = ({ visible, onClose, title, message, buttonStyle, buttonText }: AlertFailureProps) => {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalBackground}>
         <View style={styles.modalContent}>
           <View style={styles.containerAlertIcon}>
-            <Ionicons style={styles.alertIcon} name="checkmark-circle-outline" />
+            <Ionicons style={styles.alertIcon} name="close-circle-outline" />
           </View>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
@@ -33,18 +33,19 @@ const ModalAlertSuccess = ({ visible, onClose, title, message, buttonStyle, butt
   );
 };
 
-export default ModalAlertSuccess;
+export default AlertFailure;
 
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: '#00000080',
   },
   modalContent: {
     width: '75%',
     paddingVertical: 18,
+    paddingHorizontal: 22,
     backgroundColor: 'white',
     borderRadius: 8,
   },
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     fontSize: 48,
-    color: '#28a745',
+    color: '#f27474',
   },
   title: {
     fontFamily: 'Montserrat SemiBold',
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#7066e0',
     paddingVertical: 10,
-    borderRadius: 6,
+    borderRadius: 4,
     borderColor: '#b2abff',
     borderWidth: 3,
   },
