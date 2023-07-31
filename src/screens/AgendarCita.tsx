@@ -4,8 +4,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
-import AlertWarning from '../components/AlertWarning';
 import AlertConfirmPass from '../components/AlertConfirmPass';
+import AlertWarning from '../components/AlertWarning';
+import AlertWarningConfirm from '../components/AlertWarningConfirm';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -39,10 +40,16 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------------------------Función para botones modal "AlertWarning"-----------------------------------------
-  const handleDeleteAccount = () => {
-    handleCloseWarning(); // Cierra "AlertWarning" con botón "Cancelar"
-    handleShowConfirmPass(); // Ejecuta "AlertConfirmPass" con botón "Eliminar"
+  // -------------------------------------Función para mostrar el modal "AlertConfirmPass"-------------------------------------
+  const [ConfirmVisible, setConfirmPassVisible] = useState(false);
+
+  const handleShowConfirmPass = () => {
+    setConfirmPassVisible(true);
+  };
+
+  const handleCloseConfirmPass = () => {
+    setConfirmPassVisible(false);
+    handleShowSuccess(); // Ejecuta el modal "AlertSuccess"
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -58,16 +65,22 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // -------------------------------------Función para mostrar el modal "AlertConfirmPass"-------------------------------------
-  const [ConfirmVisible, setConfirmPassVisible] = useState(false);
+  // ------------------------------------Función para botones modal "AlertWarningConfirm---------------------------------------
+  const handleDeleteAccount = () => {
+    handleCloseWarningConfirm(); // Cierra "AlertWarningConfirm" con botón "Cancelar"
+    handleShowConfirmPass(); // Ejecuta "AlertConfirmPass" con botón "Eliminar"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  const handleShowConfirmPass = () => {
-    setConfirmPassVisible(true);
+  // ------------------------------------Función para mostrar el modal "AlertWarningConfirm"-----------------------------------
+  const [WarningConfirmVisible, setWarningConfirmVisible] = useState(false);
+
+  const handleShowWarningConfirm = () => {
+    setWarningConfirmVisible(true);
   };
 
-  const handleCloseConfirmPass = () => {
-    setConfirmPassVisible(false);
-    handleShowSuccess(); // Ejecuta el modal "AlertSuccess"
+  const handleCloseWarningConfirm = () => {
+    setWarningConfirmVisible(false);
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -98,7 +111,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           {/* Renderizar componente "AlertSuccess" */}
           <AlertSuccess
             visible={SuccessVisible}
-            onClose={handleCloseSuccess}
+            onCloseSuccess={handleCloseSuccess}
             title='Cuenta eliminada.'
             message='La cuenta ha sido eliminada con éxito.'
             buttonStyle={{ width: 70 }}
@@ -115,31 +128,11 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           {/* Renderizar componente "AlertFailure" */}
           <AlertFailure
             visible={FailureVisible}
-            onClose={handleCloseFailure}
+            onCloseFailure={handleCloseFailure}
             title='Registro falló.'
             message='Error al crear la cuenta.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
-          />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
-          {/* Botón para ejecutar el modal "AlertWarning" */}
-          <TouchableOpacity style={styles.openAlertWarning} onPress={handleShowWarning}>
-            <Text style={styles.openAlertWarningText}>Warning</Text>
-          </TouchableOpacity>
-
-          {/* Renderizar componente "AlertWarning" */}
-          <AlertWarning
-            visible={WarningVisible}
-            onClose={handleCloseWarning} // Se ejecuta con botón "Cancelar"
-            onConfirm={handleDeleteAccount} // Se ejecuta con botón "Eliminar"
-            title='¿Está seguro que quiere eliminar cuenta?'
-            message='¡Ya no podrá recuperarla!'
-            buttonConfirmStyle={{ width: 110 }}
-            buttonCancelStyle={{ width: 110 }}
-            buttonConfirmText='Eliminar'
-            buttonCancelText='Cancelar'
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
@@ -152,10 +145,47 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           {/* Renderizar componente "AlertConfirmPass" */}
           <AlertConfirmPass
             visible={ConfirmVisible}
-            onClose={handleCloseConfirmPass}
+            onCloseConfirmPass={handleCloseConfirmPass}
             title='Ingrese su contraseña'
             buttonStyle={{ width: 120 }}
             buttonText='Aceptar'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
+          {/* Botón para ejecutar el modal "AlertWarning" */}
+          <TouchableOpacity style={styles.openAlertWarning} onPress={handleShowWarning}>
+            <Text style={styles.openAlertWarningText}>Warning</Text>
+          </TouchableOpacity>
+
+          {/* Renderizar componente "AlertWarning" */}
+          <AlertWarning
+            visible={WarningVisible}
+            onCloseWarning={handleCloseWarning}
+            title='Registro falló.'
+            message='Error al crear la cuenta.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ------------------------Código para ejecutar y mostrar el modal "AlertWarningConfirm"------------------------ */}
+          {/* Botón para ejecutar el modal "AlertWarningConfirm" */}
+          <TouchableOpacity style={styles.openAlertWarningConfirm} onPress={handleShowWarningConfirm}>
+            <Text style={styles.openAlertWarningConfirmText}>Warning Confirm</Text>
+          </TouchableOpacity>
+
+          {/* Renderizar componente "AlertWarningConfirm" */}
+          <AlertWarningConfirm
+            visible={WarningConfirmVisible}
+            onCloseWarningConfirm={handleCloseWarningConfirm} // Se ejecuta con botón "Cancelar"
+            onConfirmWarning={handleDeleteAccount} // Se ejecuta con botón "Eliminar"
+            title='¿Está seguro que quiere eliminar cuenta?'
+            message='¡Ya no podrá recuperarla!'
+            buttonConfirmStyle={{ width: 110 }}
+            buttonCancelStyle={{ width: 110 }}
+            buttonConfirmText='Eliminar'
+            buttonCancelText='Cancelar'
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
@@ -179,7 +209,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 30,
     backgroundColor: '#ffffff',
-    borderWidth: 1,
   },
   ContainerAlertButtons: {
     flexWrap: 'wrap',
@@ -213,12 +242,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  openAlertWarningConfirm: {
+    width: 160,
+    alignItems: 'center',
+    margin: 10,
+    paddingVertical: 10,
+    backgroundColor: '#ffc107',
+    borderRadius: 8,
+  },
+  openAlertWarningConfirmText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
   openAlertWarning: {
     width: 100,
     alignItems: 'center',
     margin: 10,
     paddingVertical: 10,
-    backgroundColor: '#ffc107',
+    backgroundColor: '#dd3333',
     borderRadius: 8,
   },
   openAlertWarningText: {

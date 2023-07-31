@@ -183,14 +183,14 @@ const Registro = ({ navigation }: RegistroProps) => {
 
   // --------------------------------------------------------------------------------------------------------------------------
 
-    // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
-    const [SuccessVisible, setSuccessVisible] = useState(false);
+  // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
+  const [SuccessVisible, setSuccessVisible] = useState(false);
 
-    const handleCloseSuccess = () => {
-      setSuccessVisible(false);
-      navigation.navigate('Login');
-    };
-    // --------------------------------------------------------------------------------------------------------------------------
+  const handleCloseSuccess = () => {
+    setSuccessVisible(false);
+    navigation.navigate('Login');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
@@ -377,17 +377,23 @@ const Registro = ({ navigation }: RegistroProps) => {
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
               onPress={handleRegister}
-              title={'CREAR CUENTA'}
+              width={'100%'}
+              height={48}
               backgroundColor={'#5B009D'}
+              borderRadius={0}
               color={'#FFFFFF'}
-              borderRadius={0} />
+              fontSize={14}
+              fontWeight={'500'}
+              letterSpacing={0.8}
+              title={'CREAR CUENTA'}
+            />
           </View>
 
           {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
           {/* Renderizar componente "AlertSuccess" */}
           <AlertSuccess
             visible={SuccessVisible}
-            onClose={handleCloseSuccess}
+            onCloseSuccess={handleCloseSuccess}
             title='Registro exitoso.'
             message='La cuenta ha sido creada con éxito.'
             buttonStyle={{ width: 70 }}
@@ -400,10 +406,17 @@ const Registro = ({ navigation }: RegistroProps) => {
           <View style={{ marginBottom: 30 }}>
             <ButtonSecondary
               onPress={() => navigation.navigate('Login')}
-              title={'REGRESAR'}
+              width={'100%'}
+              height={48}
               backgroundColor={'#00000000'}
+              borderWidth={1}
+              borderRadius={0}
               color={'#E00083'}
-              borderRadius={0} />
+              fontSize={14}
+              fontWeight={'600'}
+              letterSpacing={0.8}
+              title={'REGRESAR'}
+            />
           </View>
 
         </SafeAreaView>

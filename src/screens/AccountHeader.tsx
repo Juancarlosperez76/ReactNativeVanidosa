@@ -220,9 +220,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           {/* Renderizar componente "AlertSuccess" */}
           <AlertSuccess
             visible={SuccessVisible}
-            onClose={handleCloseSuccess}
-            title='Sesión cerrada.'
-            message='Se ha cerrado la sesión con éxito.'
+            onCloseSuccess={handleCloseSuccess}
+            title='Cierre de sesión.'
+            message='La sesión se ha cerrado con éxito.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />

@@ -8,9 +8,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import { RadioButton } from 'react-native-paper';
 import axios from 'axios';
-import AlertWarning from '../components/AlertWarning';
 import AlertConfirmPass from '../components/AlertConfirmPass';
 import AlertSuccess from '../components/AlertSuccess';
+import AlertWarningConfirm from '../components/AlertWarningConfirm';
 
 type User = {
   Nombre: string;
@@ -105,22 +105,22 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------------------------Función para botones modal "AlertWarning"-----------------------------------------
+  // ----------------------------------------Función para botones modal "AlertWarningConfirm"-----------------------------------------
   const handleDeleteAccount = () => {
-    handleCloseWarning(); // Cierra "AlertWarning" con botón "Cancelar"
+    handleCloseWarningConfirm(); // Cierra "AlertWarning" con botón "Cancelar"
     handleShowConfirmPass(); // Ejecuta "AlertConfirmPass" con botón "Eliminar"
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
-  const [WarningVisible, setWarningVisible] = useState(false);
+  // ---------------------------------------Función para mostrar el modal "AlertWarningConfirm"---------------------------------------
+  const [WarningConfirmVisible, setWarningConfirmVisible] = useState(false);
 
-  const handleShowWarning = () => {
-    setWarningVisible(true);
+  const handleShowWarningConfirm = () => {
+    setWarningConfirmVisible(true);
   };
 
-  const handleCloseWarning = () => {
-    setWarningVisible(false);
+  const handleCloseWarningConfirm = () => {
+    setWarningConfirmVisible(false);
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -315,33 +315,44 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           )}
 
           <View style={{ marginTop: 30 }}>
-            <ButtonSecondary
+            <ButtonPrimary
               onPress={() => navigation.navigate('AccountHeader')}
-              title={'REGRESAR'}
-              backgroundColor={'#00000000'}
-              color={'#E00083'}
+              width={'100%'}
+              height={48}
+              backgroundColor={'#5B009D'}
               borderRadius={0}
+              color={'#ffffff'}
+              fontSize={14}
+              fontWeight={'500'}
+              letterSpacing={0.8}
+              title={'GUARDAR'}
             />
           </View>
 
           <View style={styles.separator}></View>
 
           <View style={{ marginBottom: 30 }}>
-            <ButtonPrimary
-              onPress={handleShowWarning} // onPress ejecuta el modal "AlertWarning"
-              title={'ELIMINAR CUENTA'}
-              backgroundColor={'#5B009D'}
-              color={'#ffffff'}
+            <ButtonSecondary
+              onPress={handleShowWarningConfirm} // onPress ejecuta el modal "AlertWarningConfirm"
+              width={'100%'} 
+              height={48}
+              backgroundColor={'#00000000'}
+              borderWidth={1}
               borderRadius={0}
+              color={'#E00083'}
+              fontSize={14}
+              fontWeight={'600'}
+              letterSpacing={0.8}
+              title={'ELIMINAR CUENTA'}
             />
           </View>
 
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
-          {/* Renderizar componente "AlertWarning" */}
-          <AlertWarning
-            visible={WarningVisible}
-            onClose={handleCloseWarning} // Se ejecuta con botón "Cancelar"
-            onConfirm={handleDeleteAccount} // Se ejecuta con botón "Eliminar"
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarningConfirm"---------------------------- */}
+          {/* Renderizar componente "AlertWarningConfirm" */}
+          <AlertWarningConfirm
+            visible={WarningConfirmVisible}
+            onCloseWarningConfirm={handleCloseWarningConfirm} // Se ejecuta con botón "Cancelar"
+            onConfirmWarning={handleDeleteAccount} // Se ejecuta con botón "Eliminar"
             title='¿Está seguro que quiere eliminar la cuenta?'
             message='¡Ya no podrá recuperarla!'
             buttonConfirmStyle={{ width: 110 }}
@@ -355,7 +366,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           {/* Renderizar componente "AlertConfirmPass" */}
           <AlertConfirmPass
             visible={ConfirmPassVisible}
-            onClose={handleCloseConfirmPass}
+            onCloseConfirmPass={handleCloseConfirmPass}
             title='Ingrese su contraseña'
             buttonStyle={{ width: 120 }}
             buttonText='Aceptar'
@@ -366,7 +377,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           {/* Renderizar componente "AlertSuccess" */}
           <AlertSuccess
             visible={SuccessVisible}
-            onClose={handleCloseSuccess}
+            onCloseSuccess={handleCloseSuccess}
             title='Cuenta eliminada.'
             message='La cuenta ha sido eliminada con éxito.'
             buttonStyle={{ width: 70 }}

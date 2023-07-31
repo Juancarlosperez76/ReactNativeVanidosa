@@ -4,7 +4,8 @@ import Login from '../screens/Login';
 import StackAccountHeader from '../navigation/StackAccountHeader';
 import Registro from '../screens/Registro';
 import RecoverPass from '../screens/RecoverPass';
-import StackMain from './StackMain';
+import Main from '../screens/Main';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -39,8 +40,8 @@ const StackAccount = () => {
       />
 
       <Stack.Screen
-        name="StackMain"
-        component={StackMain as React.ComponentType<any>}
+        name="Main"
+        component={Main as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

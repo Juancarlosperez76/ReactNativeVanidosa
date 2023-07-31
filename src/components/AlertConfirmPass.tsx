@@ -4,13 +4,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface AlertConfirmPassProps {
   visible: boolean;
-  onClose: () => void;
+  onCloseConfirmPass: () => void;
   title: string;
   buttonStyle?: StyleProp<ViewStyle>;
   buttonText: string;
 }
 
-const AlertConfirmPass = ({ visible, onClose, title, buttonStyle, buttonText }: AlertConfirmPassProps) => {
+const AlertConfirmPass = ({ visible, onCloseConfirmPass, title, buttonStyle, buttonText }: AlertConfirmPassProps) => {
 
   const [Contrasena, setContrasena] = React.useState('');
 
@@ -47,7 +47,7 @@ const AlertConfirmPass = ({ visible, onClose, title, buttonStyle, buttonText }: 
           </View>
 
           <View style={styles.containerButton}>
-            <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onClose}>
+            <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onCloseConfirmPass}>
               <Text style={styles.buttonText}>{buttonText}</Text>
             </TouchableOpacity>
           </View>

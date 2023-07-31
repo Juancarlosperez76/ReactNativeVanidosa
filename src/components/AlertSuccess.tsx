@@ -4,14 +4,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface AlertSuccessProps {
   visible: boolean;
-  onClose: () => void;
+  onCloseSuccess: () => void;
   title: string;
   message: string;
   buttonStyle?: StyleProp<ViewStyle>;
   buttonText: string;
 }
 
-const AlertSuccess = ({ visible, onClose, title, message, buttonStyle, buttonText }: AlertSuccessProps) => {
+const AlertSuccess = ({ visible, onCloseSuccess, title, message, buttonStyle, buttonText }: AlertSuccessProps) => {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -23,7 +23,7 @@ const AlertSuccess = ({ visible, onClose, title, message, buttonStyle, buttonTex
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
           <View style={styles.containerButton}>
-            <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onClose}>
+            <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onCloseSuccess}>
               <Text style={styles.buttonText}>{buttonText}</Text>
             </TouchableOpacity>
           </View>

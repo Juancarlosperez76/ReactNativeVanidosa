@@ -9,6 +9,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import AlertSuccess from '../components/AlertSuccess';
+import AlertFailure from '../components/AlertFailure';
+import AlertWarning from '../components/AlertWarning';
 
 type RootStackParamList = {
   Login: undefined;
@@ -33,62 +35,64 @@ const Login = ({ navigation }: LoginProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ------------------------Función para mostrar el modal "AlertSuccess" y redireccionar a "StackMain"------------------------
+  // ------------------Función mostrar modal "AlertSuccess" y redireccionar a "StackMain" al iniciar "Sesión"------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'StackMain' }],
-    }); // Redireccionar a "StackAccount"
+    navigation.navigate('StackMain'); // Redireccionar a "StackMain"
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
+  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
+  const [WarningVisible, setWarningVisible] = useState(false);
+
+  const handleCloseWarning = () => {
+    setWarningVisible(false);
+    navigation.navigate('Login'); // Redireccionar a "Login"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------Función para mostrar el modal "AlertFailure"---------------------------------------
+  const [FailureVisible, setFailureVisible] = useState(false);
+
+  const handleCloseFailure = () => {
+    setFailureVisible(false);
+    navigation.navigate('Login'); // Redireccionar a "Login"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+
+
   // ------------------------------------------------Lógica de Inicio de sesión------------------------------------------------
-  const handleLogin = () => {
-    // Validar campos antes de enviar los datos
-    if (!Correo || !Contrasena) {
-      Alert.alert('Error', 'Por favor, complete todos los campos.');
+  const handleLogin = async () => {
+    if (!Correo || !Contrasena) { // Validar campos antes de enviar los datos
+      setWarningVisible(true);
       return;
     }
 
-    // Crear un objeto con los datos del formulario
-    const userData = {
+    const userData = { // Crear un objeto con los datos del formulario
       Correo,
       Contrasena,
     };
 
-    // Enviar los datos a la API utilizando axios
-    axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', userData)
-      .then(response => {
-        const { token } = response.data;
-        if (token) {
+    try {
+      // Enviar los datos a la API utilizando axios
+      const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', userData);
+      const { token } = response.data;
 
-          setSuccessVisible(true) // Mostrar mensaje de éxito
-
-          AsyncStorage.setItem('userToken', token) // Guardar el token en el almacenamiento local
-            .then(() => {
-
-              AsyncStorage.setItem('userEmail', Correo) // Guardar el correo del usuario en AsyncStorage
-
-                .catch(error => {
-                  console.error(error);
-                  Alert.alert('Error', 'Ha ocurrido un error al guardar el correo del usuario.');
-                });
-            })
-            .catch(error => {
-              console.error(error);
-              Alert.alert('Error', 'Ha ocurrido un error al guardar el token.');
-            });
-        } else {
-          Alert.alert('Error', 'Inicio de sesión fallido. Verifique sus credenciales.');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        Alert.alert('Error', 'Ha ocurrido un error al iniciar sesión.');
-      });
+      if (token) {
+        await AsyncStorage.setItem('userToken', token); // Guardar el token en el almacenamiento local
+        await AsyncStorage.setItem('userEmail', Correo); // Guardar el correo del usuario en AsyncStorage
+        setSuccessVisible(true); // Mostrar mensaje de éxito
+      } else {
+        setFailureVisible(true);
+        // El mensaje de error en el "else" sólo se mostrará si la API está bien configurada,
+        // de lo contrario mostrará el mensaje del "catch"
+      }
+    } catch {
+      setFailureVisible(true);
+    }
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -153,10 +157,16 @@ const Login = ({ navigation }: LoginProps) => {
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
               onPress={handleLogin} // Llamar a la función handleLogin al presionar el botón
-              title={'INICIAR SESIÓN'}
+              width={'100%'}
+              height={48}
               backgroundColor={'#5B009D'}
+              borderRadius={0}
               color={'#ffffff'}
-              borderRadius={0} />
+              fontSize={14}
+              fontWeight={'500'}
+              letterSpacing={0.8}
+              title={'INICIAR SESIÓN'}
+            />
           </View>
 
           <TouchableOpacity onPress={() => navigation.navigate('RecoverPass')}>
@@ -168,19 +178,50 @@ const Login = ({ navigation }: LoginProps) => {
           <View>
             <ButtonSecondary
               onPress={() => navigation.navigate('Registro')}
-              title={'CREAR CUENTA'}
+              width={'100%'}
+              height={48}
               backgroundColor={'#00000000'}
+              borderWidth={1}
+              borderRadius={0}
               color={'#E00083'}
-              borderRadius={0} />
+              fontSize={14}
+              fontWeight={'600'}
+              letterSpacing={0.8}
+              title={'CREAR CUENTA'}
+            />
           </View>
 
           {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
           {/* Renderizar componente "AlertSuccess" */}
           <AlertSuccess
             visible={SuccessVisible}
-            onClose={handleCloseSuccess}
-            title='Sesión iniciada.'
+            onCloseSuccess={handleCloseSuccess}
+            title='Inicio de sesión.'
             message='Ha iniciado sesión con éxito.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
+          {/* Renderizar componente "AlertWarning" */}
+          <AlertWarning
+            visible={WarningVisible}
+            onCloseWarning={handleCloseWarning}
+            title='Campos vacíos.'
+            message='Por favor, complete todos los campos.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertFailure"---------------------------- */}
+          {/* Renderizar componente "AlertFailure" */}
+          <AlertFailure
+            visible={FailureVisible}
+            onCloseFailure={handleCloseFailure}
+            title='Error al iniciar sesión.'
+            message='Credenciales incorrectas.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
