@@ -64,7 +64,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
             <Ionicons style={styles.iconForm} name='lock-closed-outline' />
             <TextInput
               style={styles.input}
-              placeholder='Ingrese contraseña actual'
+              placeholder='Ingrese la nueva contraseña'
               placeholderTextColor='#000000'
               // textAlignVertical='bottom'
               onChangeText={setPassword}
@@ -82,7 +82,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
             <Ionicons style={styles.iconForm} name='lock-closed-outline' />
             <TextInput
               style={styles.input}
-              placeholder='Ingrese contraseña nueva'
+              placeholder='Confirme la nueva contraseña'
               placeholderTextColor='#000000'
               // textAlignVertical='bottom'
               onChangeText={setRecoverPasword}
@@ -99,10 +99,16 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
               onPress={() => { }} // onPress vacío, sin funcionalidad
-              title={'RESTABLECER'}
+              width={'100%'}
+              height={48}
               backgroundColor={'#5B009D'}
+              borderRadius={0}
               color={'#ffffff'}
-              borderRadius={0} />
+              fontSize={14}
+              fontWeight={'500'}
+              letterSpacing={0.8}
+              title={'RESTABLECER'}
+            />
           </View>
 
           <View style={styles.separator}></View>
@@ -110,10 +116,17 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
           <View>
             <ButtonSecondary
               onPress={() => navigation.navigate('Login')}
-              title={'REGRESAR'}
+              width={'100%'}
+              height={48}
               backgroundColor={'#00000000'}
+              borderRadius={0}
               color={'#E00083'}
-              borderRadius={0} />
+              fontSize={14}
+              borderWidth={1}
+              fontWeight={'500'}
+              letterSpacing={0.8}
+              title={'REGRESAR'}
+            />
           </View>
 
         </SafeAreaView>

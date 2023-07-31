@@ -415,7 +415,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               fontSize={14}
               fontWeight={'600'}
               letterSpacing={0.8}
-              title={'REGRESAR'}
+              title={'INICIAR SESIÓN'}
             />
           </View>
 

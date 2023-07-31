@@ -112,8 +112,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           <AlertSuccess
             visible={SuccessVisible}
             onCloseSuccess={handleCloseSuccess}
-            title='Cuenta eliminada.'
-            message='La cuenta ha sido eliminada con éxito.'
+            title='Registro exitoso.'
+            message='La cuenta ha sido creada con éxito.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
@@ -162,8 +162,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           <AlertWarning
             visible={WarningVisible}
             onCloseWarning={handleCloseWarning}
-            title='Registro falló.'
-            message='Error al crear la cuenta.'
+            title='Error al iniciar sesión.'
+            message='Credenciales incorrectas.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 30,
   },
+  // Estilos botón "AlertFailure"
   openAlertSuccess: {
     width: 100,
     alignItems: 'center',
@@ -229,6 +230,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // Estilos botón "AlertFailure"
   openAlertFailure: {
     width: 100,
     alignItems: 'center',
@@ -242,6 +244,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // Estilos botón "AlertWarningConfirm"
   openAlertWarningConfirm: {
     width: 160,
     alignItems: 'center',
@@ -255,12 +258,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // Estilos botón "AlertWarning"
   openAlertWarning: {
     width: 100,
     alignItems: 'center',
     margin: 10,
     paddingVertical: 10,
-    backgroundColor: '#dd3333',
+    backgroundColor: '#ff8419',
     borderRadius: 8,
   },
   openAlertWarningText: {
@@ -268,6 +272,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // Estilos botón "AlertConfirmPass"
   openAlertConfirmPass: {
     width: 100,
     alignItems: 'center',

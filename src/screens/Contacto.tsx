@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-// --------------Código de redirección a la aplicación de "Google Maps" del teléfono--------------
+// ----------------------------Código de redirección a la aplicación de "Google Maps" del teléfono-----------------------------
 const latitude = 6.231539; // Latitud del destino
 const longitude = -75.597750; // Longitud del destino
 
@@ -13,18 +13,18 @@ const handleMapsPress = () => {
   const url = `https://www.google.com/maps/dir/?api=1&destination=${query}&travelmode=driving`;
   Linking.openURL(url);
 };
-// -----------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------
 
-// -----------------Código de redirección a la aplicación de llamadas del teléfono----------------
+// -------------------------------Código de redirección a la aplicación de llamadas del teléfono-------------------------------
 const phoneNumber = '3117794075';
 
 const handlePhoneCallPress = () => {
   const url = `tel:${phoneNumber}`;
   Linking.openURL(url);
 };
-// -----------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------
 
-// -------------------Código de redirección a Whatsapp con mensaje personalizado------------------
+// ---------------------------------Código de redirección a Whatsapp con mensaje personalizado---------------------------------
 const phoneWharsApp = '3117794075';
 const message = 'Bienvenido a Vanidosa SPA, ¿cómo podemos ayudarte?';
 
@@ -33,9 +33,9 @@ const handleWhatsAppPress = () => {
   const url = `whatsapp://send?phone=${phoneWharsApp}&text=${encodedMessage}`;
   Linking.openURL(url);
 };
-// -----------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------
 
-// ------------------Código de redirección a la aplicación de Correo del teléfono-----------------
+// --------------------------------Código de redirección a la aplicación de Correo del teléfono--------------------------------
 const recipientEmail = 'vanidosa22adso@gmail.com';
 const emailSubject = 'Asunto del correo';
 
@@ -43,7 +43,7 @@ const handleEmailPress = () => {
   const url = `mailto:${recipientEmail}?subject=${encodeURIComponent(emailSubject)}`;
   Linking.openURL(url);
 };
-// -----------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------
 
 type RootStackParamList = {
   Contacto: undefined;

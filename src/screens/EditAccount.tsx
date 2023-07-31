@@ -105,14 +105,14 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------------------------Función para botones modal "AlertWarningConfirm"-----------------------------------------
+  // -------------------------------------Función para botones modal "AlertWarningConfirm"-------------------------------------
   const handleDeleteAccount = () => {
     handleCloseWarningConfirm(); // Cierra "AlertWarning" con botón "Cancelar"
     handleShowConfirmPass(); // Ejecuta "AlertConfirmPass" con botón "Eliminar"
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertWarningConfirm"---------------------------------------
+  // ------------------------------------Función para mostrar el modal "AlertWarningConfirm"-----------------------------------
   const [WarningConfirmVisible, setWarningConfirmVisible] = useState(false);
 
   const handleShowWarningConfirm = () => {
@@ -334,7 +334,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           <View style={{ marginBottom: 30 }}>
             <ButtonSecondary
               onPress={handleShowWarningConfirm} // onPress ejecuta el modal "AlertWarningConfirm"
-              width={'100%'} 
+              width={'100%'}
               height={48}
               backgroundColor={'#00000000'}
               borderWidth={1}
@@ -347,7 +347,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             />
           </View>
 
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarningConfirm"---------------------------- */}
+          {/* -----------------------Código para ejecutar y mostrar el modal "AlertWarningConfirm"------------------------- */}
           {/* Renderizar componente "AlertWarningConfirm" */}
           <AlertWarningConfirm
             visible={WarningConfirmVisible}

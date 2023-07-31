@@ -288,11 +288,17 @@ const TermsAndConditionsModal = ({ modalVisible, setModalVisible }: TermsAndCond
 
         <View>
           <ButtonPrimary
-            onPress={handleCloseModal}// onPress vacío, sin funcionalidad
-            title={'ACEPTAR'}
+            onPress={handleCloseModal} // onPress vacío, sin funcionalidad
+            width={'100%'}
+            height={48}
             backgroundColor={'#5B009D'}
+            borderRadius={0}
             color={'#ffffff'}
-            borderRadius={0} />
+            fontSize={14}
+            fontWeight={'500'}
+            letterSpacing={0.8}
+            title={'ACEPTAR'}
+          />
         </View>
 
       </Modal>
@@ -333,7 +339,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
   },
-  contentDot:{
+  contentDot: {
     width: '4%',
   },
   dot: {

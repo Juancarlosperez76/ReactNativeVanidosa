@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AlertSuccess from '../components/AlertSuccess';
+import AlertWarning from '../components/AlertWarning';
 
 type User = {
   Nombre: string;
@@ -28,22 +29,22 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para almacenar la URI de la imagen seleccionada
   const [modalVisible, setModalVisible] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
 
-  // ------------------Función para abrir modal al hacer clic en la imagen de perfil------------------
+  // ------------------------------Función para abrir modal al hacer clic en la imagen de perfil-------------------------------
   const openModalOptionImageLoad = () => {
     setModalVisible(true);
   };
 
-  // ------------------------------------Función para cerrar modal------------------------------------
+  // ------------------------------------------------Función para cerrar modal-------------------------------------------------
   const closeModalOptionImageLoad = () => {
     setModalVisible(false);
   };
 
-  // -----------------------Función para cerrar modal al dar click fuera de el------------------------
+  // -----------------------------------Función para cerrar modal al dar click fuera de el-------------------------------------
   const handlePressOutsideModal = () => {
     closeModalOptionImageLoad();
   };
 
-  // ---------------------------Función para tomar una imagen con la camara---------------------------
+  // ---------------------------------------Función para tomar una imagen con la camara----------------------------------------
   const openCamera = async () => {
 
     const options: CameraOptions = {
@@ -63,9 +64,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       console.error('Error al abrir la cámara:', error);
     }
   };
-  // -------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ------------------------Función para seleccionar una imagen de la galería------------------------
+  // ------------------------------------Función para seleccionar una imagen de la galería-------------------------------------
   const openImageLibrary = async () => {
 
     const options: ImageLibraryOptions = {
@@ -85,9 +86,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       console.error('Error al abrir la biblioteca de imágenes:', error);
     }
   };
-  // -------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------------Código para obtener el Correo del usuario----------------------------
+  // ----------------------------------------Código para obtener el Correo del usuario-----------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -107,7 +108,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           if (currentUser) {
             setUser(currentUser);
           } else {
-            console.error('Usuario actual no encontrado en la lista de usuarios');
+            setWarningVisible(true);
           }
 
         }
@@ -118,9 +119,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
     fetchUserData();
   }, []);
-  // -------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------Código para cerrar la "Sesión"----------------------------------
+  // ---------------------------------------------Código para cerrar la "Sesión"-----------------------------------------------
   const handleLogout = async () => {
     try {
 
@@ -136,7 +137,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       Alert.alert('Error', 'Ha ocurrido un error al cerrar sesión.');
     }
   };
-  // -------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
@@ -147,6 +148,15 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       index: 0,
       routes: [{ name: 'StackAccount' }],
     }); // Redireccionar a "StackAccount"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
+  const [WarningVisible, setWarningVisible] = useState(false);
+
+  const handleCloseWarning = () => {
+    setWarningVisible(false);
+    navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -184,7 +194,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
               </View>
             </Pressable>
           </Modal>
-          {/* ------------------------------------------------------------------------------------ */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           <View style={styles.containerNameText}>
             <Text style={styles.nameText}>{user?.Nombre} </Text>
@@ -223,6 +233,18 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             onCloseSuccess={handleCloseSuccess}
             title='Cierre de sesión.'
             message='La sesión se ha cerrado con éxito.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
+          {/* Renderizar componente "AlertWarning" */}
+          <AlertWarning
+            visible={WarningVisible}
+            onCloseWarning={handleCloseWarning}
+            title='Cuenta eliminada.'
+            message='La cuenta no exixte o fué eliminada.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
