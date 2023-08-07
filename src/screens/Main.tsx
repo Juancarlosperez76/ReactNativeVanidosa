@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, View, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   Main: undefined;
@@ -15,6 +16,15 @@ type RootStackParamList = {
 type MainProps = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
 const Main = ({ navigation }: MainProps) => {
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   const images = [
     require('../../android/assets/img/img-main-1.png'),
@@ -25,6 +35,8 @@ const Main = ({ navigation }: MainProps) => {
   return (
 
     <>
+
+      <LoadingIndicator isLoading={isLoading} />
 
       <Header navigation={navigation} title="" />
 

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   contentAccountIcon: {
     position: 'absolute',
     top: 14,
-    right: 26,
+    right: 16,
     padding: 10,
     zIndex: 1,
   },

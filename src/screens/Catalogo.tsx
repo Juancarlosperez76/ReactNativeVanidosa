@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   Catalogo: undefined;
@@ -16,11 +17,22 @@ type RootStackParamList = {
 type CatalogoProps = NativeStackScreenProps<RootStackParamList, 'Catalogo'>;
 
 const Catalogo = ({ navigation }: CatalogoProps) => {
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
     // "contentContainerStyle" en contenedor "ScrollView" con "flexGrow: 1" solucionan errores de Scroll
     <>
+
+      <LoadingIndicator isLoading={isLoading} />
 
       <CustomHeaderSettings navigation={navigation} title="Catálogo" />
 

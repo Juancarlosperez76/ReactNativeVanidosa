@@ -1,24 +1,26 @@
+import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AlertWarningConfirm from '../components/AlertWarningConfirm';
+import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import AlertConfirmPass from '../components/AlertConfirmPass';
+import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
-import ButtonSecondary from '../components/ButtonSecondary';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
-import { RadioButton } from 'react-native-paper';
-import axios from 'axios';
-import AlertConfirmPass from '../components/AlertConfirmPass';
 import AlertSuccess from '../components/AlertSuccess';
-import AlertWarningConfirm from '../components/AlertWarningConfirm';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import AlertWarning from '../components/AlertWarning';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type User = {
+  _id: User | null;
   Nombre: string;
   Apellido: string;
   Tipo_Documento: string;
-  Documento: string;
+  Documento: number;
   Direccion: string;
-  Telefono: string;
+  Telefono: number;
   Correo: string;
   Contrasena: string;
 };
@@ -33,40 +35,19 @@ type EditAccountProps = NativeStackScreenProps<RootStackParamList, 'EditAccount'
 
 const EditAccount = ({ navigation }: EditAccountProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
   // ----------------------------------------------Estados para campos editables-----------------------------------------------
   const [Nombre, setNombre] = useState('');
   const [Apellido, setApellido] = useState('');
+  const [Tipo_Documento, setTipo_Documento] = useState('');
   const [Documento, setDocumento] = useState('');
   const [Direccion, setDireccion] = useState('');
   const [Telefono, setTelefono] = useState('');
   const [Correo, setCorreo] = useState('');
-  const [Contrasena, setContrasena] = useState('');
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // -------------------------------------Lógica "Imput Select Modal" "Tipo de documento"--------------------------------------
-  const tipoDocumentoOptions = [
-    { label: 'Cédula de extranjería', value: 'Cédula de extranjería' },
-    { label: 'Cédula de ciudadanía', value: 'Cédula de ciudadanía' },
-    { label: 'Tarjeta de identidad', value: 'Tarjeta de identidad' },
-  ];
-
-  const [selectModalVisible, setSelectModalVisible] = useState(false);
-  const [selectedTipoDocumento, setSelectedTipoDocumento] = useState('');
-
-  const handleOpenSelectModal = () => {
-    setSelectModalVisible(true);
-  };
-
-  const handleSelectTipoDocumento = (value: string) => {
-    setSelectedTipoDocumento(value);
-    setTimeout(() => {
-      setSelectModalVisible(false);
-    }, 300); // Cambia el valor 2000 a la cantidad de milisegundos que deseas esperar antes de ocultar el modal
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // ------------------------------------Lógica para mostrar los datos de usuario logueado-------------------------------------
+  // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -96,13 +77,121 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           // Aquí redirigimos al usuario a la pantalla de inicio de sesión
           navigation.navigate('StackAccount');
         }
+
+        setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
+          setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
+        }, 500);
+
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }
     };
-
     fetchUserData();
   }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ------------------------------------------------Editar cuenta de usuario--------------------------------------------------
+  const handleEdit = async () => {
+    if (!user || typeof user !== 'object') { // Verificar si el objeto user es null o undefined
+      console.error('No se puede editar el usuario. El usuario no está definido o no es un objeto válido.');
+      return;
+    }
+
+    let hasChanges = false;
+
+    // Verificar si algún campo del formulario ha sido editado
+    if (Nombre !== '' && Nombre !== user.Nombre) {
+      hasChanges = true;
+    }
+
+    if (Apellido !== '' && Apellido !== user.Apellido) {
+      hasChanges = true;
+    }
+
+    if (Direccion !== '' && Direccion !== user.Direccion) {
+      hasChanges = true;
+    }
+
+    if (Telefono !== '' && Telefono.toString() !== user.Telefono.toString()) {
+      hasChanges = true;
+    }
+
+    if (Correo !== '' && Correo !== user.Correo) {
+      hasChanges = true;
+    }
+
+    if (!hasChanges) {
+      setWarningEditVisible(true);
+      return;
+    }
+
+    const updatedUserData = { // Crear un objeto con los datos del formulario que serán actualizados
+      _id: user._id,
+      Nombre: Nombre !== '' ? Nombre : user.Nombre,
+      Apellido: Apellido !== '' ? Apellido : user.Apellido,
+      Documento: Documento !== '' ? parseInt(Documento, 10) : user.Documento, // Convierte la cadena en tipo numérico "number"
+      Tipo_Documento: Tipo_Documento !== '' ? Tipo_Documento : user.Tipo_Documento,
+      Direccion: Direccion !== '' ? Direccion : user.Direccion,
+      Telefono: Telefono !== '' ? parseInt(Telefono, 10) : user.Telefono, // Convierte la cadena en tipo numérico "number"
+      Correo: Correo !== '' ? Correo : user.Correo,
+    };
+
+    const token = await AsyncStorage.getItem('userToken');
+
+    if (!token) { console.error('No se puede editar el usuario. El token no está definido.'); return; }
+
+    // Realizar la solicitud de actualización al servidor
+    const response = await axios.put(`https://api-proyecto-5hms.onrender.com/api/usuario`, updatedUserData, {
+      headers: { Authorization: `Bearer ${token}`, },
+    }
+    );
+
+    if (response.status === 200) { // Verificar que la respuesta del servidor sea exitosa
+      setUser({ ...user, ...updatedUserData }); // Actualizar el estado del usuario con los datos editados
+      setSuccessEditVisible(true); // Muestra mensaje "El usuario ha sido actualizado correctamente."
+    } else { console.error('Error al editar el usuario:', response.data); }
+  }
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ----------------------------------------------Desactivar cuenta de usuario------------------------------------------------
+  const deactivateAccount = async () => {
+
+    const token = await AsyncStorage.getItem('userToken');
+    const userEmail = await AsyncStorage.getItem('userEmail');
+
+    if (!token || !userEmail) {
+      Alert.alert('Error', 'Por favor inicie sesión para continuar.');
+      navigation.navigate('StackAccount');
+      return;
+    }
+
+    if (!user || !user._id) {
+      console.error('No se puede desactivar el usuario. El usuario no está definido o no tiene un _id.');
+      return;
+    }
+
+    // Realiza la solicitud de desactivación al servidor
+    const response = await axios.patch(`https://api-proyecto-5hms.onrender.com/api/usuario`, {
+      _id: user._id,
+      Estado: 'false'
+    },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Verifica que la respuesta del servidor sea exitosa
+    if (response.status === 200) {
+      await AsyncStorage.removeItem('userToken'); // Elimina el "token" de AsyncStorage
+      await AsyncStorage.removeItem('userEmail'); // Elimina el "Correo" de AsyncStorage
+      setUser(null); // Actualiza el estado de la aplicación para que refleje que el usuario ha sido desactivado
+      setSuccessVisible(true); // Muestra mensaje "El usuario ha eliminado la cuenta."
+    } else {
+      console.error('Error al desactivar el usuario:', response.data);
+    }
+  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   // -------------------------------------Función para botones modal "AlertWarningConfirm"-------------------------------------
@@ -131,9 +220,14 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
     setConfirmPassVisible(true);
   };
 
-  const handleCloseConfirmPass = () => {
+  const handleCloseConfirmPass = async () => {
     setConfirmPassVisible(false);
-    handleShowSuccess(); // Ejecuta el modal "AlertSuccess"
+    try {
+      await deactivateAccount(); // Espera a que la cuenta se elimine correctamente
+      handleShowSuccess(); // Ejecuta el modal "AlertSuccess" si la cuenta se eliminó correctamente
+    } catch (error) {
+      console.error('Error al eliminar la cuenta:', error);
+    }
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -146,6 +240,24 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false);
+    navigation.navigate('StackAccount');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------Función para mostrar el modal "AlertSuccess"----------------------------------------
+  const [SuccessEditVisible, setSuccessEditVisible] = useState(false);
+
+  const handleCloseSuccessEdit = () => {
+    setSuccessEditVisible(false);
+    navigation.navigate('AccountHeader');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
+  const [WarningEditVisible, setWarningEditVisible] = useState(false);
+
+  const handleCloseWarningEdit = () => {
+    setWarningEditVisible(false);
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -153,9 +265,13 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
     <>
 
-      <CustomHeaderSettings navigation={navigation} title="Administrar cuenta" />
+      <LoadingIndicator isLoading={isLoading} />
 
-      <ScrollView style={styles.contentForm}>
+      <CustomHeaderReturn navigation={navigation} title="Administrar cuenta" />
+
+      <ScrollView style={styles.contentForm}
+        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
+      >
 
         <View style={styles.contentLogoAccount}>
           <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
@@ -173,11 +289,10 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 </View>
                 <TextInput
                   style={styles.input}
-                  value={Nombre}
+                  defaultValue={user.Nombre}
                   onChangeText={setNombre}
-                  placeholder={user.Nombre}
-                  placeholderTextColor={'#000000'}
-                  editable={false}
+                  autoCapitalize="words"
+                  editable={true}
                 />
               </View>
 
@@ -188,50 +303,26 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 </View>
                 <TextInput
                   style={styles.input}
-                  value={Apellido}
+                  defaultValue={user.Apellido}
                   onChangeText={setApellido}
-                  placeholder={user.Apellido}
-                  placeholderTextColor={'#000000'}
-                  editable={false}
+                  autoCapitalize="words"
+                  editable={true}
                 />
               </View>
 
-              {/* ----------------------------------------Campo "Tipo de documento"---------------------------------------- */}
               <View style={styles.fieldContainer}>
                 <View style={styles.iconLabelContainer}>
                   <Ionicons style={styles.iconForm} name='card-outline' />
                   <Text style={styles.label}>Tipo documento:</Text>
                 </View>
-                <TouchableOpacity style={styles.selectInputContainer} onPress={handleOpenSelectModal}>
-                  <Text style={styles.selectInput}>{selectedTipoDocumento ? selectedTipoDocumento : user.Tipo_Documento}</Text>
-                </TouchableOpacity>
+                <TextInput
+                  style={styles.input}
+                  defaultValue={user.Tipo_Documento}
+                  onChangeText={setTipo_Documento}
+                  autoCapitalize="words"
+                  editable={false}
+                />
               </View>
-
-              {/* -----------------------------------"Modal" opciones "Tipo de documento"---------------------------------- */}
-              <Modal visible={selectModalVisible} animationType="slide" transparent={true}>
-                <View style={styles.selectModalContainer}>
-                  <View style={styles.selectModalContent}>
-                    <Text style={styles.modalTitle}>Seleccione tipo de documento</Text>
-                    {tipoDocumentoOptions.map((option) => (
-                      <TouchableOpacity
-                        key={option.value}
-                        style={styles.selectOption}
-                        onPress={() => handleSelectTipoDocumento(option.value)}
-                      >
-                        <Text style={styles.selectOptionText}>{option.label}</Text>
-                        <RadioButton
-                          value={option.value}
-                          status={selectedTipoDocumento === option.value ? 'checked' : 'unchecked'}
-                          onPress={() => handleSelectTipoDocumento(option.value)}
-                          uncheckedColor='#FFFFFF'
-                          color='#E00083'
-                        />
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-              </Modal>
-              {/* --------------------------------------------------------------------------------------------------------- */}
 
               <View style={styles.fieldContainer}>
                 <View style={styles.iconLabelContainer}>
@@ -240,10 +331,9 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 </View>
                 <TextInput
                   style={styles.input}
-                  value={Documento}
+                  defaultValue={user.Documento.toString()}
                   onChangeText={setDocumento}
-                  placeholder={user.Documento.toString()}
-                  placeholderTextColor={'#000000'}
+                  keyboardType='numeric'
                   editable={false}
                 />
               </View>
@@ -255,11 +345,10 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 </View>
                 <TextInput
                   style={styles.input}
-                  value={Direccion}
+                  defaultValue={user.Direccion}
                   onChangeText={setDireccion}
-                  placeholder={user.Direccion}
-                  placeholderTextColor={'#000000'}
-                  editable
+                  keyboardType='default'
+                  editable={true}
                 />
               </View>
 
@@ -270,11 +359,10 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 </View>
                 <TextInput
                   style={styles.input}
-                  value={Telefono}
+                  defaultValue={user.Telefono.toString()}
                   onChangeText={setTelefono}
-                  placeholder={user.Telefono.toString()}
-                  placeholderTextColor={'#000000'}
-                  editable
+                  keyboardType='numeric'
+                  editable={true}
                 />
               </View>
 
@@ -285,27 +373,11 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 </View>
                 <TextInput
                   style={styles.input}
-                  value={Correo}
+                  defaultValue={user.Correo}
                   onChangeText={setCorreo}
-                  placeholder={user.Correo}
-                  placeholderTextColor={'#000000'}
-                  editable
-                />
-              </View>
-
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='key-outline' />
-                  <Text style={styles.label}>Contraseña:</Text>
-                </View>
-                <TextInput
-                  style={{ ...styles.input, fontSize: 18, letterSpacing: 1 }}
-                  value={Contrasena}
-                  onChangeText={setContrasena}
-                  placeholder='••••••••••'
-                  placeholderTextColor={'#000000'}
-                  secureTextEntry
-                  editable={false}
+                  autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                  keyboardType='email-address'
+                  editable={true}
                 />
               </View>
 
@@ -316,7 +388,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
           <View style={{ marginTop: 30 }}>
             <ButtonPrimary
-              onPress={() => navigation.navigate('AccountHeader')}
+              onPress={handleEdit}
               width={'100%'}
               height={48}
               backgroundColor={'#5B009D'}
@@ -347,14 +419,13 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             />
           </View>
 
-          {/* -----------------------Código para ejecutar y mostrar el modal "AlertWarningConfirm"------------------------- */}
-          {/* Renderizar componente "AlertWarningConfirm" */}
+          {/* ---------------------------------Alerta "Ya no podrá recuperar su cuenta"------------------------------------ */}
           <AlertWarningConfirm
             visible={WarningConfirmVisible}
             onCloseWarningConfirm={handleCloseWarningConfirm} // Se ejecuta con botón "Cancelar"
             onConfirmWarning={handleDeleteAccount} // Se ejecuta con botón "Eliminar"
-            title='¿Está seguro que quiere eliminar la cuenta?'
-            message='¡Ya no podrá recuperarla!'
+            title='¿Está seguro?'
+            message='¡Ya no podrá recuperar su cuenta!'
             buttonConfirmStyle={{ width: 110 }}
             buttonCancelStyle={{ width: 110 }}
             buttonConfirmText='Eliminar'
@@ -362,19 +433,17 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          {/* -------------------------Código para ejecutar y mostrar el modal "AlertConfirmPass"-------------------------- */}
-          {/* Renderizar componente "AlertConfirmPass" */}
+          {/* ----------------------------------------Alerta "Verifica tu identidad"--------------------------------------- */}
           <AlertConfirmPass
             visible={ConfirmPassVisible}
             onCloseConfirmPass={handleCloseConfirmPass}
-            title='Ingrese su contraseña'
+            title='Verifica tu identidad'
             buttonStyle={{ width: 120 }}
             buttonText='Aceptar'
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
-          {/* Renderizar componente "AlertSuccess" */}
+          {/* ------------------------------------------Alerta "Cuenta eliminada"------------------------------------------ */}
           <AlertSuccess
             visible={SuccessVisible}
             onCloseSuccess={handleCloseSuccess}
@@ -385,6 +454,27 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
+          {/* --------------------------------------Alerta "Información actualizada"--------------------------------------- */}
+          <AlertSuccess
+            visible={SuccessEditVisible}
+            onCloseSuccess={handleCloseSuccessEdit}
+            title='Información actualizada.'
+            message='La información se ha actualizado correctamente.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ------------------------------------Alerta "Información no actualizada"-------------------------------------- */}
+          <AlertWarning
+            visible={WarningEditVisible}
+            onCloseWarning={handleCloseWarningEdit}
+            title='Información no actualizada.'
+            message='El usuario no ha modificado la información.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
         </SafeAreaView>
 
       </ScrollView>

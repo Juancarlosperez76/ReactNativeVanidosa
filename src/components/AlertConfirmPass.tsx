@@ -32,7 +32,7 @@ const AlertConfirmPass = ({ visible, onCloseConfirmPass, title, buttonStyle, but
 
             <TextInput
               style={styles.input}
-              placeholder='Contraseña'
+              placeholder='Ingrese contraseña'
               placeholderTextColor='#4E4E4E'
               onChangeText={setContrasena}
               value={Contrasena}
@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000080',
   },
   modalContent: {
-    width: '75%',
-    paddingVertical: 18,
-    paddingHorizontal: 22,
+    width: '80%',
+    paddingTop: 20,
+    padding: 15,
     backgroundColor: 'white',
     borderRadius: 8,
   },

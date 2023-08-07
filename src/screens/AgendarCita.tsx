@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
@@ -7,6 +7,7 @@ import AlertFailure from '../components/AlertFailure';
 import AlertConfirmPass from '../components/AlertConfirmPass';
 import AlertWarning from '../components/AlertWarning';
 import AlertWarningConfirm from '../components/AlertWarningConfirm';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -15,6 +16,15 @@ type RootStackParamList = {
 type AgendarCitaProps = NativeStackScreenProps<RootStackParamList, 'AgendarCita'>;
 
 const AgendarCita = ({ navigation }: AgendarCitaProps) => {
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
@@ -87,6 +97,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   return (
 
     <>
+
+      <LoadingIndicator isLoading={isLoading} />
 
       <CustomHeaderSettings navigation={navigation} title="Agendar cita" />
 

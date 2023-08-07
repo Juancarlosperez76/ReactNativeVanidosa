@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
+    top: 14,
     left: 16,
-    width: 30,
-    height: 30,
+    padding: 10,
     zIndex: 1,
   },
   backIcon: {

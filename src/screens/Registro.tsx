@@ -22,6 +22,7 @@ const Registro = ({ navigation }: RegistroProps) => {
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Nombre, setNombre] = React.useState('');
   const [Apellido, setApellido] = React.useState('');
+  const [selectedTipoDocumento, setSelectedTipoDocumento] = useState('');
   const [Documento, setDocumento] = React.useState('');
   const [Direccion, setDireccion] = React.useState('');
   const [Telefono, setTelefono] = React.useState('');
@@ -51,7 +52,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   ];
 
   const [selectModalVisible, setSelectModalVisible] = useState(false);
-  const [selectedTipoDocumento, setSelectedTipoDocumento] = useState('');
 
   const handleOpenSelectModal = () => {
     setSelectModalVisible(true);
@@ -196,7 +196,11 @@ const Registro = ({ navigation }: RegistroProps) => {
 
     <>
       <CustomHeaderSettings navigation={navigation} title="Registro" />
-      <ScrollView style={styles.contentForm}>
+
+      <ScrollView style={styles.contentForm}
+        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
+      >
+
         <SafeAreaView>
 
           <View style={styles.contentLogoAccount}>
@@ -459,9 +463,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     paddingLeft: 32,
     backgroundColor: '#E6E6E6',
+    color: '#000000',
     fontWeight: '400',
     letterSpacing: 0.5,
-    color: '#000000',
   },
   contentIconFormRight: {
     position: 'absolute',

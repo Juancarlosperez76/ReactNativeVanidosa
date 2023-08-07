@@ -2,28 +2,28 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface AlertWarningProps {
+interface AlertInactiveAccountProps {
   visible: boolean;
-  onCloseWarning: () => void;
+  onCloseInactiveAccount: () => void;
   title: string;
   message: string;
   buttonStyle?: StyleProp<ViewStyle>;
   buttonText: string;
 }
 
-const AlertWarning = ({ visible, onCloseWarning, title, message, buttonStyle, buttonText }: AlertWarningProps) => {
+const AlertInactiveAccount = ({ visible, onCloseInactiveAccount, title, message, buttonStyle, buttonText }: AlertInactiveAccountProps) => {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalBackground}>
         <View style={styles.modalContent}>
           <View style={styles.containerAlertIcon}>
-          <Ionicons style={styles.alertIcon} name="alert-circle-outline" />
+            <Ionicons style={styles.alertIcon} name="close-circle-outline" />
           </View>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
           <View style={styles.containerButton}>
-            <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onCloseWarning}>
+            <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onCloseInactiveAccount}>
               <Text style={styles.buttonText}>{buttonText}</Text>
             </TouchableOpacity>
           </View>
@@ -33,7 +33,7 @@ const AlertWarning = ({ visible, onCloseWarning, title, message, buttonStyle, bu
   );
 };
 
-export default AlertWarning;
+export default AlertInactiveAccount;
 
 const styles = StyleSheet.create({
   modalBackground: {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     fontSize: 48,
-    color: '#f8bb86',
+    color: '#f27474',
   },
   title: {
     fontFamily: 'Montserrat SemiBold',
@@ -91,4 +91,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-

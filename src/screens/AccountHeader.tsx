@@ -4,11 +4,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import AlertConfirmPass from '../components/AlertConfirmPass';
 
 type User = {
   Nombre: string;
@@ -28,21 +30,33 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para almacenar la URI de la imagen seleccionada
   const [modalVisible, setModalVisible] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------Función para abrir modal al hacer clic en la imagen de perfil-------------------------------
   const openModalOptionImageLoad = () => {
     setModalVisible(true);
   };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------------------Función para cerrar modal-------------------------------------------------
   const closeModalOptionImageLoad = () => {
     setModalVisible(false);
   };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // -----------------------------------Función para cerrar modal al dar click fuera de el-------------------------------------
   const handlePressOutsideModal = () => {
     closeModalOptionImageLoad();
   };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------Función para tomar una imagen con la camara----------------------------------------
   const openCamera = async () => {
@@ -125,12 +139,13 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const handleLogout = async () => {
     try {
 
+      setIsLoading(true); // Mostrar preload mientras se cierra la sesión
+
       // Eliminar el token y correo almacenados en AsyncStorage
       await AsyncStorage.removeItem('userToken');
       await AsyncStorage.removeItem('userEmail');
 
-      // Mostrar mensaje de éxito
-      setSuccessVisible(true);
+      setSuccessVisible(true); // Mostrar mensaje de éxito
 
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
@@ -139,15 +154,25 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
+  // -------------------------------------Función para mostrar el modal "AlertConfirmPass"-------------------------------------
+  const [ConfirmVisible, setConfirmPassVisible] = useState(false);
+
+  const handleShowConfirmPass = () => {
+    setConfirmPassVisible(true);
+  };
+
+  const handleCloseConfirmPass = () => {
+    setConfirmPassVisible(false);
+    navigation.navigate('ChangePassword');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
   // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'StackAccount' }],
-    }); // Redireccionar a "StackAccount"
+    navigation.navigate('StackAccount');
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -163,6 +188,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   return (
 
     <>
+
+      <LoadingIndicator isLoading={isLoading} />
+
       <CustomHeaderReturn navigation={navigation} title="Mi cuenta" />
 
       <View style={styles.headerAccountContainer}>
@@ -212,7 +240,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.contentItemSetting} onPress={() => navigation.navigate('ChangePassword')}>
+          <TouchableOpacity style={styles.contentItemSetting} onPress={handleShowConfirmPass}>
             <Ionicons style={styles.itemSettingIcon} name="key-outline" />
             <Text style={styles.settingItemText}>Cambiar la contraseña</Text>
           </TouchableOpacity>
@@ -226,8 +254,17 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
+          {/* -------------------------Código para ejecutar y mostrar el modal "AlertConfirmPass"-------------------------- */}
+          <AlertConfirmPass
+            visible={ConfirmVisible}
+            onCloseConfirmPass={handleCloseConfirmPass}
+            title='Verifica tu identidad'
+            buttonStyle={{ width: 120 }}
+            buttonText='Aceptar'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
           {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
-          {/* Renderizar componente "AlertSuccess" */}
           <AlertSuccess
             visible={SuccessVisible}
             onCloseSuccess={handleCloseSuccess}
@@ -239,7 +276,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
           {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
-          {/* Renderizar componente "AlertWarning" */}
           <AlertWarning
             visible={WarningVisible}
             onCloseWarning={handleCloseWarning}

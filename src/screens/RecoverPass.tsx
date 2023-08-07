@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, ScrollView, Image } from 'react-native';
 import ButtonPrimary from '../components/ButtonPrimary';
-import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import AlertSuccess from '../components/AlertSuccess';
 
 type RootStackParamList = {
   Login: undefined;
@@ -33,100 +33,106 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
     setShowPassword2(!showPassword2);
   };
 
+  // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
+  const [SuccessVisible, setSuccessVisible] = useState(false);
+
+  const handleShowSuccess = () => {
+    setSuccessVisible(true);
+  };
+
+  const handleCloseSuccess = () => {
+    setSuccessVisible(false);
+    navigation.navigate('Login');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
   return (
 
     <>
 
       <CustomHeaderSettings navigation={navigation} title="Restablecer contraseña" />
 
-      <ScrollView style={styles.contentForm}>
+      <ScrollView contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
+      >
 
-        <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
 
-        <SafeAreaView>
+          <View style={styles.containerForm}>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='at-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Ingrese E-mail'
-              placeholderTextColor='#000000'
-              // textAlignVertical='bottom'
-              onChangeText={setEmail}
-              value={email}
-              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              keyboardType='email-address' />
-          </View>
+            <View style={styles.contentForm}>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Ingrese la nueva contraseña'
-              placeholderTextColor='#000000'
-              // textAlignVertical='bottom'
-              onChangeText={setPassword}
-              value={password}
-              autoCapitalize='none'
-              secureTextEntry={!showPassword1} />
-            {password !== '' && ( // Código cambio de icono de la contraseña
-              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
-                <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
-              </TouchableOpacity>
-            )}
-          </View>
+              <View style={styles.contentLogoAccount}>
+                <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
+              </View>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Confirme la nueva contraseña'
-              placeholderTextColor='#000000'
-              // textAlignVertical='bottom'
-              onChangeText={setRecoverPasword}
-              value={recoverPassword}
-              autoCapitalize='none'
-              secureTextEntry={!showPassword2} />
-            {recoverPassword !== '' && ( // Código cambio de icono de la contraseña
-              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
-                <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
-              </TouchableOpacity>
-            )}
-          </View>
+              <View>
+                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+                <TextInput
+                  style={styles.input}
+                  placeholder='Ingrese la nueva contraseña'
+                  placeholderTextColor='#000000'
+                  // textAlignVertical='bottom'
+                  onChangeText={setPassword}
+                  value={password}
+                  autoCapitalize='none'
+                  secureTextEntry={!showPassword1} />
+                {password !== '' && ( // Código cambio de icono de la contraseña
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
+                    <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
+                  </TouchableOpacity>
+                )}
+              </View>
 
-          <View style={{ marginTop: 30 }}>
-            <ButtonPrimary
-              onPress={() => { }} // onPress vacío, sin funcionalidad
-              width={'100%'}
-              height={48}
-              backgroundColor={'#5B009D'}
-              borderRadius={0}
-              color={'#ffffff'}
-              fontSize={14}
-              fontWeight={'500'}
-              letterSpacing={0.8}
-              title={'RESTABLECER'}
-            />
-          </View>
+              <View>
+                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+                <TextInput
+                  style={styles.input}
+                  placeholder='Confirme la nueva contraseña'
+                  placeholderTextColor='#000000'
+                  // textAlignVertical='bottom'
+                  onChangeText={setRecoverPasword}
+                  value={recoverPassword}
+                  autoCapitalize='none'
+                  secureTextEntry={!showPassword2} />
+                {recoverPassword !== '' && ( // Código cambio de icono de la contraseña
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
+                    <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
+                  </TouchableOpacity>
+                )}
+              </View>
 
-          <View style={styles.separator}></View>
+              <View style={styles.separator}></View>
 
-          <View>
-            <ButtonSecondary
-              onPress={() => navigation.navigate('Login')}
-              width={'100%'}
-              height={48}
-              backgroundColor={'#00000000'}
-              borderRadius={0}
-              color={'#E00083'}
-              fontSize={14}
-              borderWidth={1}
-              fontWeight={'500'}
-              letterSpacing={0.8}
-              title={'REGRESAR'}
-            />
+              <View style={{ marginBottom: 30 }}>
+                <ButtonPrimary
+                  onPress={handleShowSuccess}
+                  width={'100%'}
+                  height={48}
+                  backgroundColor={'#5B009D'}
+                  borderRadius={0}
+                  color={'#ffffff'}
+                  fontSize={14}
+                  fontWeight={'500'}
+                  letterSpacing={0.8}
+                  title={'RESTABLECER'}
+                />
+              </View>
+
+              {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+              {/* Renderizar componente "AlertSuccess" */}
+              <AlertSuccess
+                visible={SuccessVisible}
+                onCloseSuccess={handleCloseSuccess}
+                title='Contraseña actualizada.'
+                message='La cuontraseña ha sido actualizada con éxito.'
+                buttonStyle={{ width: 70 }}
+                buttonText='OK'
+              />
+              {/* ------------------------------------------------------------------------------------------------------------- */}
+
+            </View>
+
           </View>
 
         </SafeAreaView>
@@ -143,17 +149,22 @@ export default RecoverPass;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  contentForm: {
-    flex: 1,
+  container: {
+    flexGrow: 1,
     backgroundColor: '#ffffff',
+  },
+  containerForm: {
+    flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: 30,
   },
+  contentForm: {
+    // borderWidth: 1
+  },
   contentLogoAccount: {
-    marginTop: 20,
-    marginBottom: 35,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 40,
+    backgroundColor: '#ffffff',
   },
   logoAccount: {
     width: 120,
@@ -169,8 +180,9 @@ const styles = StyleSheet.create({
   },
   contentIconFormRight: {
     position: 'absolute',
-    top: 21,
-    right: 8,
+    top: 12,
+    right: 2,
+    padding: 10,
   },
   iconFormRight: {
     fontSize: 20,
@@ -181,12 +193,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     paddingLeft: 32,
     backgroundColor: '#e6e6e6',
+    color: '#000000',
     fontWeight: '400',
     letterSpacing: 0.5,
   },
   separator: {
     borderColor: '#d3d3d3',
     borderBottomWidth: 1,
-    marginVertical: 20,
+    marginTop: 12,
+    marginBottom: 20,
   },
 });

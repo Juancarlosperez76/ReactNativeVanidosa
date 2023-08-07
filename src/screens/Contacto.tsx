@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LoadingIndicator from '../components/LoadingIndicator';
 
-// ----------------------------Código de redirección a la aplicación de "Google Maps" del teléfono-----------------------------
+// ----------------------------Código de redirección a la aplicación de "Google Maps" del teléfono----------------------------- 
 const latitude = 6.231539; // Latitud del destino
 const longitude = -75.597750; // Longitud del destino
 
@@ -51,10 +52,21 @@ type RootStackParamList = {
 type ContactoProps = NativeStackScreenProps<RootStackParamList, 'Contacto'>;
 
 const Contacto = ({ navigation }: ContactoProps) => {
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
     <>
+
+      <LoadingIndicator isLoading={isLoading} />
 
       <CustomHeaderSettings navigation={navigation} title="Contacto" />
 

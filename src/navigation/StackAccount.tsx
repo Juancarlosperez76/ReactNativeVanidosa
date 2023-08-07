@@ -5,6 +5,7 @@ import StackAccountHeader from '../navigation/StackAccountHeader';
 import Registro from '../screens/Registro';
 import RecoverPass from '../screens/RecoverPass';
 import Main from '../screens/Main';
+import HomeRecoverPass from '../screens/HomeRecoverPass';
 
 
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,12 @@ const StackAccount = () => {
       <Stack.Screen
         name="StackAccountHeader"
         component={StackAccountHeader as React.ComponentType<any>}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="HomeRecoverPass"
+        component={HomeRecoverPass as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
