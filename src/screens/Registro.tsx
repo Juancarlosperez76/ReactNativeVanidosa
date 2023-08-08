@@ -9,6 +9,10 @@ import { RadioButton } from 'react-native-paper';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import AlertSuccess from '../components/AlertSuccess';
+import axios from 'axios';
+import AlertWarning from '../components/AlertWarning';
+import AlertFailure from '../components/AlertFailure';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   Login: undefined;
@@ -18,6 +22,15 @@ type RootStackParamList = {
 type RegistroProps = NativeStackScreenProps<RootStackParamList, 'Registro'>;
 
 const Registro = ({ navigation }: RegistroProps) => {
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Nombre, setNombre] = React.useState('');
@@ -79,68 +92,54 @@ const Registro = ({ navigation }: RegistroProps) => {
   }, [acceptTerms]);
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------------Código envío de datos (Registro)---------------------------------------------
+  // --------------------------------------------------Función de (Registro)---------------------------------------------------
+  const handleRegister = async () => {
 
-  const handleRegister = () => {
-    // Arreglo para almacenar los mensajes de error
-    const errores = [];
-
-    // Validar los campos del formulario antes de enviar los datos
-    if (!Nombre) {
-      errores.push('El campo Nombre es\n   obligatorio.\n');
+    // Validar campos vacíos
+    if (!Nombre || !Apellido || !Documento || !Direccion || !Telefono || !Correo || !Contrasena || !ConfirmarContrasena) {
+      setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
+      return
     }
 
-    if (!Apellido) {
-      errores.push('El campo Apellido es\n   obligatorio.\n');
+    // Validar select "Tipo de documento"
+    else if (!selectedTipoDocumento) {
+      setDocumentTypeVisible(true); // Mostrar alerta "Tipo de documento"
+      return
     }
 
-    if (!selectedTipoDocumento) {
-      errores.push('Seleccione un tipo de documento.\n');
+    // Validar cantidad mínima de digitos del "Documento"
+    if (!/^\d{8,}$/.test(Documento)) {
+      setDocumentVisible(true);
+      return
     }
 
-    if (!Documento) {
-      errores.push('El campo Documento es\n   obligatorio.\n');
-    } else if (!/^\d{8,}$/.test(Documento)) {
-      errores.push('El documento debe tener mínimo 8 dígitos.');
+    // Validar cantidad mínima de digitos del "Teléfono"
+    if (!/^\d{10,}$/.test(Telefono)) {
+      setPhoneVisible(true);
+      return
     }
 
-    if (!Direccion) {
-      errores.push('El campo Dirección es\n   obligatorio.\n');
-    }
-
-    if (!Telefono) {
-      errores.push('El campo Teléfono es\n   obligatorio.\n');
-    } else if (!/^\d{10,}$/.test(Telefono)) {
-      errores.push('El teléfono debe tener mínimo 10 dígitos.');
-    }
-
-    if (!Correo) {
-      errores.push('El campo Correo es\n   obligatorio.\n');
-    } else if (!/^(?=.*[@])(?=.*\.(com|es|net))/.test(Correo)) {
-      errores.push('El correo debe ser de tipo @gmail.com, @outlook.com, @hotmail.com o @yahoo.com.');
-    }
-
-    if (!Contrasena) {
-      errores.push('El campo Contraseña es\n   obligatorio.\n');
-    } else if (Contrasena.length < 8) {
-      errores.push('La contraseña debe tener mínimo 8 caracteres.');
-    }
-
-    if (!ConfirmarContrasena) {
-      errores.push('El campo Confirmar Contraseña\n   es obligatorio.\n');
-    } else if (Contrasena !== ConfirmarContrasena) {
-      errores.push('Las contraseñas no coinciden.');
-    }
-
-    if (errores.length > 0) {
-      const mensajeError = errores.map((error) => `• ${error}`).join('\n');
-      Alert.alert('Registro invalido', mensajeError);
+    // Validar formato de "Correo electrónico"
+    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.(com|es|net|co|yahoo|outlook|hotmail)$/.test(Correo)) {
+      setEmailVisible(true);
       return;
     }
 
-    // Si no hay errores, entonces el registro fue exitoso
-    if (errores.length === 0) {
+    // Validar cantidad mínima de carácteres de la "Contraseña"
+    if (Contrasena.length < 8) {
+      setMinPasswordVisible(true);
+      return
+    }
 
+    // Validar que las contraseñas coincidan
+    if (Contrasena !== ConfirmarContrasena) {
+      setNotMatchVisible(true); // Mostrar alerta "Las contraseñas no coinciden"
+      return;
+    }
+
+    setIsLoading(true); // Activar el preload
+
+    try {
       // Crear un objeto con los datos del formulario
       const userData = {
         Rol: 'Cliente',
@@ -155,51 +154,109 @@ const Registro = ({ navigation }: RegistroProps) => {
         ConfirmarContrasena,
       };
 
-      // Enviar los datos a la API utilizando fetch
-      fetch('https://api-proyecto-5hms.onrender.com/api/usuario', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Manejar la respuesta de la API
-          console.log(data);
-          // Mostrar la alerta de registro exitoso
-          setSuccessVisible(true);
-        })
-        .catch(error => {
-          // Manejar errores
-          console.error(error);
-        });
-    } else {
-      // Mostrar la alerta de errores de registro
-      const mensajeError = errores.map(error => `• ${error}`).join('\n');
-      Alert.alert('Registro inválido', mensajeError);
+      // Enviar los datos a la API utilizando axios
+      const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/usuario', userData);
+      console.log("Respuesta:", response.data);
+
+      setRegisteredVisible(true); // Mostrar alerta "Registro exitoso."
+
+    } catch (error) {
+      setFailedRegisterVisible(true); // Mostrar alerta "Error de Registro."
     }
   };
-
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
-  const [SuccessVisible, setSuccessVisible] = useState(false);
+  // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
+  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
 
-  const handleCloseSuccess = () => {
-    setSuccessVisible(false);
+  const handleCloseEmptyFields = () => {
+    setEmptyFieldsVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------------Función alerta "Tipo de documento"--------------------------------------------
+  const [documentTypeVisible, setDocumentTypeVisible] = useState(false);
+
+  const handleCloseDocumentType = () => {
+    setDocumentTypeVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------------Función alerta "Documento inválido"-------------------------------------------
+  const [documentVisible, setDocumentVisible] = useState(false);
+
+  const handleCloseDocument = () => {
+    setDocumentVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------------Función alerta "Teléfono inválido"--------------------------------------------
+  const [phoneVisible, setPhoneVisible] = useState(false);
+
+  const handleClosePhone = () => {
+    setPhoneVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------------Función alerta "Correo inválido"---------------------------------------------
+  const [emailVisible, setEmailVisible] = useState(false);
+
+  const handleCloseEmail = () => {
+    setEmailVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [minPasswordVisible, setMinPasswordVisible] = useState(false);
+
+  const handleCloseMinPassword = () => {
+    setMinPasswordVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------Función alerta "Las contraseñas no coinciden"--------------------------------------
+  const [notMatchVisible, setNotMatchVisible] = useState(false);
+
+  const handleCloseNotMatch = () => {
+    setNotMatchVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------------Función alerta "Correo ya existe"--------------------------------------------
+  const [existingEmailVisible, setExistingEmailVisible] = useState(false);
+
+  const handleCloseExistingEmail = () => {
+    setExistingEmailVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------------Función alerta "Registro exitoso"---------------------------------------------
+  const [registeredVisible, setRegisteredVisible] = useState(false);
+
+  const handleCloseRegistered = () => {
+    setRegisteredVisible(false);
     navigation.navigate('Login');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------------Función alerta "Error de registro"--------------------------------------------
+  const [failedRegisterVisible, setFailedRegisterVisible] = useState(false);
+
+  const handleCloseFailedRegister = () => {
+    setFailedRegisterVisible(false);
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
     <>
+
+      <LoadingIndicator isLoading={isLoading} />
+
       <CustomHeaderSettings navigation={navigation} title="Registro" />
 
-      <ScrollView style={styles.contentForm}
-        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
-      >
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
 
         <SafeAreaView>
 
@@ -393,13 +450,111 @@ const Registro = ({ navigation }: RegistroProps) => {
             />
           </View>
 
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
-          {/* Renderizar componente "AlertSuccess" */}
+          {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
+          <AlertWarning
+            visible={emptyFieldsVisible}
+            onCloseWarning={handleCloseEmptyFields}
+            title='Campos vacíos.'
+            message='Por favor, complete todos los campos.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* -------------------------------------Mostrar alerta "Tipo de documento"-------------------------------------- */}
+          <AlertWarning
+            visible={documentTypeVisible}
+            onCloseWarning={handleCloseDocumentType}
+            title='Tipo de documento.'
+            message='Seleccione el tipo de documento.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ------------------------------------Mostrar alerta "Documento inválido"-------------------------------------- */}
+          <AlertWarning
+            visible={documentVisible}
+            onCloseWarning={handleCloseDocument}
+            title='Documento inválido.'
+            message='El documento debe tener al menos 8 números.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
+          <AlertWarning
+            visible={phoneVisible}
+            onCloseWarning={handleClosePhone}
+            title='Teléfono inválido.'
+            message='El teléfono debe tener al menos 10 números.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* -------------------------------------Mostrar alerta "Correo inválido"-------------------------------------- */}
+          <AlertWarning
+            visible={emailVisible}
+            onCloseWarning={handleCloseEmail}
+            title='Correo inválido.'
+            message='Formato de correo incorrecto.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
+          <AlertWarning
+            visible={minPasswordVisible}
+            onCloseWarning={handleCloseMinPassword}
+            title='Contraseña inválida.'
+            message='La contraseña debe tener al menos 8 caractéres.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
+          <AlertWarning
+            visible={notMatchVisible}
+            onCloseWarning={handleCloseNotMatch}
+            title='Las contraseñas no coinciden.'
+            message='Las contraseñas ingresadas deben coincidir.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* --------------------------------------Mostrar alerta "Correo ya exixte"-------------------------------------- */}
+          <AlertWarning
+            visible={existingEmailVisible}
+            onCloseWarning={handleCloseExistingEmail}
+            title='Correo ya existe.'
+            message='El correo ingresado se encuentra registrado.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* --------------------------------------Mostrar alerta "Registro exitoso"-------------------------------------- */}
           <AlertSuccess
-            visible={SuccessVisible}
-            onCloseSuccess={handleCloseSuccess}
+            visible={registeredVisible}
+            onCloseSuccess={handleCloseRegistered}
             title='Registro exitoso.'
-            message='La cuenta ha sido creada con éxito.'
+            message='La cuenta se ha creado exitosamente.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* -------------------------------------Mostrar alerta "Error de registro"-------------------------------------- */}
+          <AlertFailure
+            visible={failedRegisterVisible}
+            onCloseFailure={handleCloseFailedRegister}
+            title='Error de registro.'
+            message='El registro no se pudo completar debido a un error.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
@@ -424,7 +579,9 @@ const Registro = ({ navigation }: RegistroProps) => {
           </View>
 
         </SafeAreaView>
+
       </ScrollView>
+
     </>
 
   );

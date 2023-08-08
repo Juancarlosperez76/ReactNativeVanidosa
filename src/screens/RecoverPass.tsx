@@ -52,9 +52,8 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
       <CustomHeaderSettings navigation={navigation} title="Restablecer contraseña" />
 
-      <ScrollView contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
-      >
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
 
         <SafeAreaView style={{ flex: 1 }}>
 

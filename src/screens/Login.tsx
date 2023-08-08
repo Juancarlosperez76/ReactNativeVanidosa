@@ -23,6 +23,15 @@ type RootStackParamList = {
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const Login = ({ navigation }: LoginProps) => {
+  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // -------------------------------------------------Manejo de los "Estados"--------------------------------------------------
   const [Correo, setCorreo] = React.useState(''); // Estado de los "Inputs"
@@ -33,19 +42,10 @@ const Login = ({ navigation }: LoginProps) => {
   const [WarningVisible, setWarningVisible] = useState(false); // Estado de modal "AlertWarning"
   const [FailureVisible, setFailureVisible] = useState(false); // Estado de modal "AlertFailure"
   const [InactiveAccountVisible, setInactiveAccountVisible] = useState(false); // Estado de modal "AlertFailure"
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
-  }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------Función mostrar modal "AlertSuccess" y redireccionar a "StackMain" al iniciar "Sesión"------------------
@@ -79,6 +79,9 @@ const Login = ({ navigation }: LoginProps) => {
 
   // ------------------------------------------------Lógica de Inicio de sesión------------------------------------------------
   const getUserState = async (Correo: string) => {
+
+    setIsLoading(true); // Activar el preload
+
     const response = await axios.get('https://api-proyecto-5hms.onrender.com/api/usuario');
     const { Usuarios } = response.data;
 
@@ -98,7 +101,7 @@ const Login = ({ navigation }: LoginProps) => {
       return;
     }
 
-    setIsLoading(true); // Mostrar "preload" al iniciar sesión
+    // setIsLoading(true); // Mostrar "preload" al iniciar sesión
 
     try {
       // Obtener el estado del usuario antes de iniciar sesión
@@ -142,9 +145,8 @@ const Login = ({ navigation }: LoginProps) => {
 
       <CustomHeaderSettings navigation={navigation} title="Iniciar sesión" />
 
-      <ScrollView contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
-      >
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
 
         <SafeAreaView style={{ flex: 1 }}>
 
@@ -241,7 +243,7 @@ const Login = ({ navigation }: LoginProps) => {
                 visible={SuccessVisible}
                 onCloseSuccess={handleCloseSuccess}
                 title='Inicio de sesión.'
-                message='Ha iniciado sesión con éxito.'
+                message='¡Inicio de sesión exitoso!'
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
@@ -300,12 +302,6 @@ export default Login;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  preloadContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-  },
   container: {
     flexGrow: 1,
     backgroundColor: '#ffffff',

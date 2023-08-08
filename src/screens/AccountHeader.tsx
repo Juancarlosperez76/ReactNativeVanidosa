@@ -32,14 +32,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
   const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
-  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
-  }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
-
   // ------------------------------Función para abrir modal al hacer clic en la imagen de perfil-------------------------------
   const openModalOptionImageLoad = () => {
     setModalVisible(true);
@@ -124,8 +116,12 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           } else {
             setWarningVisible(true);
           }
-
         }
+
+        setTimeout(() => {
+          setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+        }, 500); // Tiempo de carga simulado (en milisegundos)
+
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }

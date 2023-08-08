@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomHeaderReturn from '../components/CustomHeaderReturn';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import LoadingIndicator from '../components/LoadingIndicator';
 
 type User = {
+  _id: User | null;
   Nombre: string;
   Apellido: string;
   Correo: string;
@@ -19,6 +20,7 @@ type RootStackParamList = {
   ChangePassword: undefined;
   AccountHeader: undefined;
   StackAccount: undefined;
+  Login: undefined;
 };
 type ChangePasswordProps = NativeStackScreenProps<RootStackParamList, 'ChangePassword'>;
 
@@ -27,8 +29,8 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
   // Estado de los "Inputs"
-  const [password, setPassword] = useState('');
-  const [changePassword, setChangePasword] = useState('');
+  const [enterPassword, setEnterPassword] = useState('');
+  const [confirmPassword, setConfirmPasword] = useState('');
 
   // Mostrar y ocultar "Contraseña"
   const [showPassword1, setShowPassword1] = useState(false);
@@ -83,6 +85,55 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
+  // --------------------------------------Función para cambiar la contraseña del usuario--------------------------------------
+  const changePass = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const userEmail = await AsyncStorage.getItem('userEmail');
+
+      if (!token || !userEmail) {
+        Alert.alert('Error', 'Por favor inicie sesión para continuar.');
+        navigation.navigate('StackAccount');
+        return;
+      }
+
+      if (!user || !user._id) {
+        console.error('No se puede cambiar la contraseña. El usuario no está definido o no tiene un _id.');
+        return;
+      }
+
+      // Validar que las contraseñas coincidan
+      if (enterPassword !== confirmPassword) {
+        Alert.alert('Error', 'Las contraseñas no coinciden. Por favor, ingrese la misma contraseña en ambos campos.');
+        return;
+      }
+
+      // Realiza la solicitud para cambiar la contraseña al servidor utilizando axios.patch
+      const response = await axios.put('https://api-proyecto-5hms.onrender.com/api/usuario', {
+        _id: user._id,
+        Contrasena: confirmPassword, // Nueva contraseña ingresada en el campo "confirmPassword"
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Verifica que la respuesta del servidor sea exitosa
+      if (response.status === 200) {
+        await AsyncStorage.removeItem('userToken'); // Elimina el "token" de AsyncStorage
+        await AsyncStorage.removeItem('userEmail'); // Elimina el "Correo" de AsyncStorage
+        handleShowSuccess(); // Muestra el mensaje de éxito
+      } else {
+        console.error('Error al cambiar la contraseña:', response.data);
+      }
+    } catch (error) {
+      console.error('Error al cambiar la contraseña:', error);
+    }
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
   // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
@@ -92,7 +143,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false);
-    navigation.navigate('StackAccount');
+    navigation.navigate('Login');
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -103,9 +154,8 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
       <CustomHeaderReturn navigation={navigation} title="Actualizar contraseña" />
 
-      <ScrollView contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
-      >
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
 
         <SafeAreaView style={{ flex: 1 }}>
 
@@ -132,11 +182,11 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   style={styles.input}
                   placeholder='Contraseña nueva'
                   placeholderTextColor='#000000'
-                  onChangeText={setPassword}
-                  value={password}
+                  onChangeText={setEnterPassword}
+                  value={enterPassword}
                   autoCapitalize='none'
                   secureTextEntry={!showPassword1} />
-                {password !== '' && ( // Código cambio de icono de la contraseña
+                {enterPassword !== '' && ( // Código cambio de icono de la contraseña
                   <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
                     <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
@@ -149,11 +199,11 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   style={styles.input}
                   placeholder='Confirmar contraseña nueva'
                   placeholderTextColor='#000000'
-                  onChangeText={setChangePasword}
-                  value={changePassword}
+                  onChangeText={setConfirmPasword}
+                  value={confirmPassword}
                   autoCapitalize='none'
                   secureTextEntry={!showPassword2} />
-                {changePassword !== '' && ( // Código cambio de icono de la contraseña
+                {confirmPassword !== '' && ( // Código cambio de icono de la contraseña
                   <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
                     <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
@@ -164,7 +214,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
               <View style={{ marginBottom: 30 }}>
                 <ButtonPrimary
-                  onPress={handleShowSuccess}
+                  onPress={changePass}
                   width={'100%'}
                   height={48}
                   backgroundColor={'#5B009D'}

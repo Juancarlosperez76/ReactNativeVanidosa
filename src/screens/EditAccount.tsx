@@ -4,14 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertWarningConfirm from '../components/AlertWarningConfirm';
 import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import AlertConfirmPass from '../components/AlertConfirmPass';
+import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
+import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import AlertWarning from '../components/AlertWarning';
-import LoadingIndicator from '../components/LoadingIndicator';
 
 type User = {
   _id: User | null;
@@ -92,6 +92,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
   // ------------------------------------------------Editar cuenta de usuario--------------------------------------------------
   const handleEdit = async () => {
+
     if (!user || typeof user !== 'object') { // Verificar si el objeto user es null o undefined
       console.error('No se puede editar el usuario. El usuario no está definido o no es un objeto válido.');
       return;
@@ -138,18 +139,25 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
     const token = await AsyncStorage.getItem('userToken');
 
-    if (!token) { console.error('No se puede editar el usuario. El token no está definido.'); return; }
+    if (!token) {
+      console.error('No se puede editar el usuario. El token no está definido.');
+      return;
+    }
 
     // Realizar la solicitud de actualización al servidor
     const response = await axios.put(`https://api-proyecto-5hms.onrender.com/api/usuario`, updatedUserData, {
-      headers: { Authorization: `Bearer ${token}`, },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
     );
 
     if (response.status === 200) { // Verificar que la respuesta del servidor sea exitosa
       setUser({ ...user, ...updatedUserData }); // Actualizar el estado del usuario con los datos editados
       setSuccessEditVisible(true); // Muestra mensaje "El usuario ha sido actualizado correctamente."
-    } else { console.error('Error al editar el usuario:', response.data); }
+    } else {
+      console.error('Error al editar el usuario:', response.data);
+    }
   }
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -269,9 +277,8 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
       <CustomHeaderReturn navigation={navigation} title="Administrar cuenta" />
 
-      <ScrollView style={styles.contentForm}
-        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
-      >
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
 
         <View style={styles.contentLogoAccount}>
           <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
