@@ -18,7 +18,7 @@ type RootStackParamList = {
   Login: undefined;
   Registro: undefined;
   HomeRecoverPass: undefined;
-  StackMain: undefined;
+  Main: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -52,7 +52,7 @@ const Login = ({ navigation }: LoginProps) => {
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
     setIsLoading(false); // Mostrar preload mientras se inicia sesión
-    navigation.navigate('StackMain'); // Redireccionar a "StackMain" después de hacer clic en "OK"
+    navigation.navigate('Main'); // Redireccionar a "StackMain" después de hacer clic en "OK"
   }
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -101,8 +101,6 @@ const Login = ({ navigation }: LoginProps) => {
       return;
     }
 
-    // setIsLoading(true); // Mostrar "preload" al iniciar sesión
-
     try {
       // Obtener el estado del usuario antes de iniciar sesión
       const userState = await getUserState(Correo);
@@ -125,8 +123,8 @@ const Login = ({ navigation }: LoginProps) => {
       console.log("Token:", token);
 
       if (token) {
-        await AsyncStorage.setItem('userToken', token); // Guardar "token" localmente con "AsyncStoragede"
-        await AsyncStorage.setItem('userEmail', Correo); // Guardar "Correo" localmente con "AsyncStoragede"
+        await AsyncStorage.setItem('userToken', token); // Guardar "token" localmente con "AsyncStorage"
+        await AsyncStorage.setItem('userEmail', Correo); // Guardar "Correo" localmente con "AsyncStorage"
         setSuccessVisible(true); // Mostrar alerta "Ha iniciado sesión con éxito." 
       } else {
         setFailureVisible(true);

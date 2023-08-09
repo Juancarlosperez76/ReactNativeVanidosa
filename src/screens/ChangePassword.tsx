@@ -8,6 +8,7 @@ import AlertSuccess from '../components/AlertSuccess';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoadingIndicator from '../components/LoadingIndicator';
+import AlertWarning from '../components/AlertWarning';
 
 type User = {
   _id: User | null;
@@ -29,8 +30,8 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
   // Estado de los "Inputs"
-  const [enterPassword, setEnterPassword] = useState('');
-  const [confirmPassword, setConfirmPasword] = useState('');
+  const [Contrasena, setContrasena] = React.useState('');
+  const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
 
   // Mostrar y ocultar "Contraseña"
   const [showPassword1, setShowPassword1] = useState(false);
@@ -102,16 +103,28 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
         return;
       }
 
+      // Validar campos vacíos
+      if (!Contrasena || !ConfirmarContrasena) {
+        setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
+        return
+      }
+
+      // Validar cantidad mínima de carácteres de la "Contraseña"
+      if (Contrasena.length < 8) {
+        setMinPasswordVisible(true);
+        return
+      }
+
       // Validar que las contraseñas coincidan
-      if (enterPassword !== confirmPassword) {
-        Alert.alert('Error', 'Las contraseñas no coinciden. Por favor, ingrese la misma contraseña en ambos campos.');
+      if (Contrasena !== ConfirmarContrasena) {
+        setNotMatchVisible(true); // Mostrar alerta "Las contraseñas no coinciden"
         return;
       }
 
       // Realiza la solicitud para cambiar la contraseña al servidor utilizando axios.patch
-      const response = await axios.put('https://api-proyecto-5hms.onrender.com/api/usuario', {
+      const response = await axios.patch('https://api-proyecto-5hms.onrender.com/api/usuario', {
         _id: user._id,
-        Contrasena: confirmPassword, // Nueva contraseña ingresada en el campo "confirmPassword"
+        Contrasena: ConfirmarContrasena, // Nueva contraseña ingresada en el campo "confirmPassword"
       },
         {
           headers: {
@@ -131,6 +144,30 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error);
     }
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
+  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
+
+  const handleCloseEmptyFields = () => {
+    setEmptyFieldsVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [minPasswordVisible, setMinPasswordVisible] = useState(false);
+
+  const handleCloseMinPassword = () => {
+    setMinPasswordVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------Función alerta "Las contraseñas no coinciden"--------------------------------------
+  const [notMatchVisible, setNotMatchVisible] = useState(false);
+
+  const handleCloseNotMatch = () => {
+    setNotMatchVisible(false);
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -182,11 +219,11 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   style={styles.input}
                   placeholder='Contraseña nueva'
                   placeholderTextColor='#000000'
-                  onChangeText={setEnterPassword}
-                  value={enterPassword}
+                  onChangeText={setContrasena}
+                  value={Contrasena}
                   autoCapitalize='none'
                   secureTextEntry={!showPassword1} />
-                {enterPassword !== '' && ( // Código cambio de icono de la contraseña
+                {Contrasena !== '' && ( // Código cambio de icono de la contraseña
                   <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
                     <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
@@ -199,11 +236,11 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   style={styles.input}
                   placeholder='Confirmar contraseña nueva'
                   placeholderTextColor='#000000'
-                  onChangeText={setConfirmPasword}
-                  value={confirmPassword}
+                  onChangeText={setConfirmarContrasena}
+                  value={ConfirmarContrasena}
                   autoCapitalize='none'
                   secureTextEntry={!showPassword2} />
-                {confirmPassword !== '' && ( // Código cambio de icono de la contraseña
+                {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
                   <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
                     <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
@@ -226,6 +263,39 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   title={'ENVIAR'}
                 />
               </View>
+
+              {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
+              <AlertWarning
+                visible={emptyFieldsVisible}
+                onCloseWarning={handleCloseEmptyFields}
+                title='Campos vacíos.'
+                message='Por favor, complete todos los campos.'
+                buttonStyle={{ width: 70 }}
+                buttonText='OK'
+              />
+              {/* ------------------------------------------------------------------------------------------------------------- */}
+
+              {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
+              <AlertWarning
+                visible={minPasswordVisible}
+                onCloseWarning={handleCloseMinPassword}
+                title='Contraseña inválida.'
+                message='La contraseña debe tener al menos 8 caractéres.'
+                buttonStyle={{ width: 70 }}
+                buttonText='OK'
+              />
+              {/* ------------------------------------------------------------------------------------------------------------- */}
+
+              {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
+              <AlertWarning
+                visible={notMatchVisible}
+                onCloseWarning={handleCloseNotMatch}
+                title='Las contraseñas no coinciden.'
+                message='Las contraseñas ingresadas deben coincidir.'
+                buttonStyle={{ width: 70 }}
+                buttonText='OK'
+              />
+              {/* ------------------------------------------------------------------------------------------------------------- */}
 
               {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
               {/* Renderizar componente "AlertSuccess" */}

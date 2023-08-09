@@ -257,7 +257,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
   const handleCloseSuccessEdit = () => {
     setSuccessEditVisible(false);
-    navigation.navigate('AccountHeader');
+    navigation.replace('AccountHeader'); // 'replace' en lugar de 'navigate' recarga la "Vista" y actualiza cambios
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
