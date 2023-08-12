@@ -171,7 +171,7 @@ const Login = ({ navigation }: LoginProps) => {
               </View>
 
               <View>
-                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+              <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder="Contraseña"

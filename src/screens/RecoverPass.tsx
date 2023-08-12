@@ -66,7 +66,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
               </View>
 
               <View>
-                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+              <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Ingrese la nueva contraseña'
@@ -84,7 +84,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
               </View>
 
               <View>
-                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+              <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Confirme la nueva contraseña'

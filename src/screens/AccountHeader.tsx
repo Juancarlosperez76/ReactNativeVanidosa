@@ -150,19 +150,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // -------------------------------------Función para mostrar el modal "AlertConfirmPass"-------------------------------------
-  const [ConfirmVisible, setConfirmPassVisible] = useState(false);
-
-  const handleShowConfirmPass = () => {
-    setConfirmPassVisible(true);
-  };
-
-  const handleCloseConfirmPass = () => {
-    setConfirmPassVisible(false);
-    navigation.navigate('ChangePassword');
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
-
   // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
@@ -236,7 +223,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.contentItemSetting} onPress={handleShowConfirmPass}>
+          <TouchableOpacity style={styles.contentItemSetting} onPress={() => navigation.navigate('ChangePassword')}>
             <Ionicons style={styles.itemSettingIcon} name="key-outline" />
             <Text style={styles.settingItemText}>Cambiar la contraseña</Text>
           </TouchableOpacity>
@@ -249,16 +236,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           </TouchableOpacity>
 
           <View style={styles.separator}></View>
-
-          {/* -------------------------Código para ejecutar y mostrar el modal "AlertConfirmPass"-------------------------- */}
-          <AlertConfirmPass
-            visible={ConfirmVisible}
-            onCloseConfirmPass={handleCloseConfirmPass}
-            title='Verifica tu identidad'
-            buttonStyle={{ width: 120 }}
-            buttonText='Aceptar'
-          />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
           <AlertSuccess

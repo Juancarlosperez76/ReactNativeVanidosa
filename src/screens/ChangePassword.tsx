@@ -30,19 +30,25 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
   // Estado de los "Inputs"
+  const [ContrasenaActual, setContrasenaActual] = React.useState('');
   const [Contrasena, setContrasena] = React.useState('');
   const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
 
   // Mostrar y ocultar "Contraseña"
-  const [showPassword1, setShowPassword1] = useState(false);
-  const [showPassword2, setShowPassword2] = useState(false);
+  const [showPasswordUno, setShowPasswordUno] = useState(false);
+  const [showPasswordDos, setShowPasswordDos] = useState(false);
+  const [showPasswordTres, setShowPasswordTres] = useState(false);
 
-  const togglePasswordVisibility1 = () => {
-    setShowPassword1(!showPassword1);
+  const togglePasswordVisibilityUno = () => {
+    setShowPasswordUno(!showPasswordUno);
   };
 
-  const togglePasswordVisibility2 = () => {
-    setShowPassword2(!showPassword2);
+  const togglePasswordVisibilityDos = () => {
+    setShowPasswordDos(!showPasswordDos);
+  };
+
+  const togglePasswordVisibilityTres = () => {
+    setShowPasswordTres(!showPasswordTres);
   };
 
   // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
@@ -84,6 +90,10 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
     fetchUserData();
   }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------Función para validar la contraseña del usuario--------------------------------------
+
   // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------Función para cambiar la contraseña del usuario--------------------------------------
@@ -217,21 +227,38 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 <Ionicons style={styles.iconForm} name='lock-closed-outline' />
                 <TextInput
                   style={styles.input}
-                  placeholder='Contraseña nueva'
+                  placeholder='Contraseña actual'
                   placeholderTextColor='#000000'
-                  onChangeText={setContrasena}
-                  value={Contrasena}
+                  onChangeText={setContrasenaActual}
+                  value={ContrasenaActual}
                   autoCapitalize='none'
-                  secureTextEntry={!showPassword1} />
-                {Contrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
-                    <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
+                  secureTextEntry={!showPasswordUno} />
+                {ContrasenaActual !== '' && ( // Código cambio de icono de la contraseña
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityUno}>
+                    <Ionicons style={styles.iconFormRight} name={showPasswordUno ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
                 )}
               </View>
 
               <View>
-                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
+              <Ionicons style={styles.iconForm} name='key-outline' />
+                <TextInput
+                  style={styles.input}
+                  placeholder='Contraseña nueva'
+                  placeholderTextColor='#000000'
+                  onChangeText={setContrasena}
+                  value={Contrasena}
+                  autoCapitalize='none'
+                  secureTextEntry={!showPasswordDos} />
+                {Contrasena !== '' && ( // Código cambio de icono de la contraseña
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityDos}>
+                    <Ionicons style={styles.iconFormRight} name={showPasswordDos ? 'eye-off-sharp' : 'eye-sharp'} />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <View>
+              <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Confirmar contraseña nueva'
@@ -239,10 +266,10 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   onChangeText={setConfirmarContrasena}
                   value={ConfirmarContrasena}
                   autoCapitalize='none'
-                  secureTextEntry={!showPassword2} />
+                  secureTextEntry={!showPasswordTres} />
                 {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
-                    <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityTres}>
+                    <Ionicons style={styles.iconFormRight} name={showPasswordTres ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -348,10 +375,10 @@ const styles = StyleSheet.create({
     height: 72,
   },
   containerInfoAccount: {
+    marginBottom: 30,
+    paddingVertical: 15,
     borderWidth: 2,
     borderColor: '#E6E6E6',
-    paddingVertical: 15,
-    marginBottom: 30,
   },
   containerNameText: {
     flexDirection: 'row',
