@@ -1,7 +1,7 @@
-import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import { Text, TouchableOpacity, View } from 'react-native';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import React from 'react';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -15,7 +15,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
     <>
 
-      <CustomHeaderSettings navigation={navigation} title="Mis citas" />
+      <HeaderSettingsReturn navigation={navigation} title="Mis citas" />
 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
 

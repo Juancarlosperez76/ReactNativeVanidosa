@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, View, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
-import Header from '../components/Header';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Swiper from 'react-native-swiper';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import HeaderSettingsLogo from '../components/HeaderSettingsLogo';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
+import Swiper from 'react-native-swiper';
 
 type RootStackParamList = {
   Main: undefined;
@@ -38,7 +38,7 @@ const Main = ({ navigation }: MainProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <Header navigation={navigation} title="" />
+      <HeaderSettingsLogo navigation={navigation} title="" />
 
       <ScrollView style={{ backgroundColor: '#ffffffff' }}>
 

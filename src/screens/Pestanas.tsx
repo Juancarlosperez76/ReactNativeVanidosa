@@ -1,7 +1,7 @@
-import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
+import React from 'react';
 
 type RootStackParamList = {
   Pestanas: undefined;
@@ -13,7 +13,7 @@ const Pestanas = ({ navigation }: PestanasProps) => {
   return (
 
     <>
-      <CustomHeaderSettings navigation={navigation} title="Pestañas" />
+      <HeaderSettingsReturn navigation={navigation} title="Pestañas" />
       <View style={styles.contentEyelashes}></View>
     </>
 

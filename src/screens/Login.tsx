@@ -1,12 +1,12 @@
 import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, ScrollView, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import AlertInactiveAccount from '../components/AlertInactiveAccount';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CheckBox from '@react-native-community/checkbox';
+//import CheckBox from '@react-native-community/checkbox';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
@@ -23,7 +23,22 @@ type RootStackParamList = {
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const Login = ({ navigation }: LoginProps) => {
+
+  // -------------------------------------------------Manejo de los "Estados"--------------------------------------------------
+  const [InactiveAccountVisible, setInactiveAccountVisible] = useState(false); // Estado de modal "AlertFailure"
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar y ocultar "Contraseña"
+  const [SuccessVisible, setSuccessVisible] = useState(false); // Estado de modal "AlertSuccess" 
+  const [WarningVisible, setWarningVisible] = useState(false); // Estado de modal "AlertWarning"
+  const [FailureVisible, setFailureVisible] = useState(false); // Estado de modal "AlertFailure"
+  // const [savePassword, setsavePassword] = useState(false) // Estado para guardar la contraseña
   const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+  const [Contrasena, setContrasena] = React.useState(''); // Estado de los "Inputs"
+  const [Correo, setCorreo] = React.useState(''); // Estado de los "Inputs"
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
   useEffect(() => {
@@ -31,21 +46,6 @@ const Login = ({ navigation }: LoginProps) => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
     }, 800); // Tiempo de carga simulado (en milisegundos)
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // -------------------------------------------------Manejo de los "Estados"--------------------------------------------------
-  const [Correo, setCorreo] = React.useState(''); // Estado de los "Inputs"
-  const [Contrasena, setContrasena] = React.useState(''); // Estado de los "Inputs"
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar y ocultar "Contraseña"
-  const [savePassword, setsavePassword] = useState(false) // Estado para guardar la contraseña
-  const [SuccessVisible, setSuccessVisible] = useState(false); // Estado de modal "AlertSuccess" 
-  const [WarningVisible, setWarningVisible] = useState(false); // Estado de modal "AlertWarning"
-  const [FailureVisible, setFailureVisible] = useState(false); // Estado de modal "AlertFailure"
-  const [InactiveAccountVisible, setInactiveAccountVisible] = useState(false); // Estado de modal "AlertFailure"
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------Función mostrar modal "AlertSuccess" y redireccionar a "StackMain" al iniciar "Sesión"------------------
@@ -126,11 +126,14 @@ const Login = ({ navigation }: LoginProps) => {
         await AsyncStorage.setItem('userToken', token); // Guardar "token" localmente con "AsyncStorage"
         await AsyncStorage.setItem('userEmail', Correo); // Guardar "Correo" localmente con "AsyncStorage"
         setSuccessVisible(true); // Mostrar alerta "Ha iniciado sesión con éxito." 
+        setCorreo(''); // Limpiar los campos después de cerrar la alerta
+        setContrasena(''); // Limpiar los campos después de cerrar la alerta
       } else {
         setFailureVisible(true);
       }
     } catch {
       setFailureVisible(true);
+      setIsLoading(false); // Desactivar el preload
     }
   };
   // --------------------------------------------------------------------------------------------------------------------------
@@ -141,7 +144,7 @@ const Login = ({ navigation }: LoginProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderSettings navigation={navigation} title="Iniciar sesión" />
+      <HeaderSettingsReturn navigation={navigation} title="Iniciar sesión" />
 
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
@@ -171,7 +174,7 @@ const Login = ({ navigation }: LoginProps) => {
               </View>
 
               <View>
-              <Ionicons style={styles.iconForm} name='key-outline' />
+                <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder="Contraseña"
@@ -189,14 +192,14 @@ const Login = ({ navigation }: LoginProps) => {
                 )}
               </View>
 
-              <View style={styles.savePassword}>
+              {/* <View style={styles.savePassword}>
                 <CheckBox
                   disabled={false}
                   value={savePassword}
                   onValueChange={(newValue) => setsavePassword(newValue)}
                   tintColors={{ true: '#5B009D', false: '#7e7e7e' }} />
                 <Text style={{ color: '#4e4e4e' }}>Guardar contraseña</Text>
-              </View>
+              </View> */}
 
               <View style={{ marginTop: 30 }}>
                 <ButtonPrimary
@@ -235,7 +238,7 @@ const Login = ({ navigation }: LoginProps) => {
                 />
               </View>
 
-              {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+              {/* -------------------------Código para ejecutar y mostrar el modal "AlertSuccess"-------------------------- */}
               {/* Renderizar componente "AlertSuccess" */}
               <AlertSuccess
                 visible={SuccessVisible}
@@ -245,9 +248,9 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
+              {/* -------------------------Código para ejecutar y mostrar el modal "AlertWarning"-------------------------- */}
               {/* Renderizar componente "AlertWarning" */}
               <AlertWarning
                 visible={WarningVisible}
@@ -257,9 +260,9 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              {/* ---------------------------Código para ejecutar y mostrar el modal "AlertFailure"---------------------------- */}
+              {/* -------------------------Código para ejecutar y mostrar el modal "AlertFailure"-------------------------- */}
               {/* Renderizar componente "AlertFailure" */}
               <AlertFailure
                 visible={FailureVisible}
@@ -269,9 +272,9 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              {/* -----------------------Código para ejecutar y mostrar el modal "AlertInactiveAccount"------------------------ */}
+              {/* ---------------------Código para ejecutar y mostrar el modal "AlertInactiveAccount"---------------------- */}
               {/* Renderizar componente "AlertInactiveAccount" */}
               <AlertInactiveAccount visible={InactiveAccountVisible}
                 onCloseInactiveAccount={handleCloseInactiveAccount}
@@ -280,7 +283,7 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
             </View>
 
@@ -358,8 +361,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: 20,
   },
-  savePassword: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  }
+  // savePassword: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  // }
 });

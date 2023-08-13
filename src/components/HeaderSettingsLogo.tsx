@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface CustomHeaderReturnLogoProps {
+interface HeaderSettingsLogoProps {
   title: string;
   navigation: {
     goBack: () => void;
@@ -10,24 +11,28 @@ interface CustomHeaderReturnLogoProps {
   };
 }
 
-const CustomHeaderReturnLogo = ({ navigation }: CustomHeaderReturnLogoProps) => {
+const HeaderSettingsLogo = ({ navigation }: HeaderSettingsLogoProps) => {
 
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
+  // ------------Código redireccion dependiendo del estado de login-------------
   const handleIconPress = () => {
-    navigation.navigate('StackAccountHeader');
+    AsyncStorage.getItem('userToken') // Obtener el token del AsyncStorage
+      .then(token => {
+        if (token) {
+          navigation.navigate('StackAccountHeader'); // Si hay token, el usuario está logueado
+        } else {
+          navigation.navigate('StackAccount'); // Si no hay token, el usuario no está logueado
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        // Manejar el error si es necesario
+      });
   };
+  // --------------------------------------------------------------------------
 
   return (
 
-    <View style={styles.contentCustomHeader}>
-
-      <TouchableOpacity style={styles.contentBackIcon} onPress={handleGoBack}>
-        <Ionicons style={styles.backIcon} name="arrow-back-outline" />
-      </TouchableOpacity>
+    <View>
 
       <View style={styles.contentLogo}>
         <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
@@ -43,37 +48,19 @@ const CustomHeaderReturnLogo = ({ navigation }: CustomHeaderReturnLogoProps) => 
 
 };
 
-export default CustomHeaderReturnLogo;
+export default HeaderSettingsLogo;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  contentCustomHeader: {
+  contentLogo: {
     flexDirection: 'row',
     height: 70,
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
     shadowColor: '#ffffff', // Superpone color "#ffffff" sobre el color por defecto
     elevation: 5, // Crea efecto boxshadow"
     marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
-  },
-  contentBackIcon: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    left: 16,
-    width: 30,
-    height: 30,
-    zIndex: 1,
-  },
-  backIcon: {
-    color: '#4e4e4e',
-    fontSize: 24,
-  },
-  contentLogo: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
     width: 100,
@@ -81,8 +68,9 @@ const styles = StyleSheet.create({
   },
   contentAccountIcon: {
     position: 'absolute',
-    top: 24,
-    right: 26,
+    top: 14,
+    right: 16,
+    padding: 10,
     zIndex: 1,
   },
   accountIcon: {

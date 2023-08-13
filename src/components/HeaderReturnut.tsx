@@ -1,38 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface CustomHeaderReturnProps {
+interface HeaderReturnProps {
   title: string;
-  navigation: {
-    goBack: () => void;
-    navigate: (screen: string) => void;
-  };
+  handleNavigation: () => void; // Función para navegación
 }
 
-const CustomHeaderReturn = ({ title, navigation }: CustomHeaderReturnProps) => {
-
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
+const HeaderReturn = ({ title, handleNavigation  }: HeaderReturnProps) => {
 
   return (
-
     <View style={styles.contentCustomHeader}>
 
-      <TouchableOpacity style={styles.contentBackIcon} onPress={handleGoBack}>
+      <TouchableOpacity style={styles.contentBackIcon} onPress={handleNavigation}>
         <Ionicons style={styles.backIcon} name="arrow-back-outline" />
       </TouchableOpacity>
 
       <Text style={styles.customHeaderText}>{title}</Text>
 
     </View>
-
   );
 
 };
 
-export default CustomHeaderReturn;
+export default HeaderReturn;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
@@ -50,9 +41,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 14,
     left: 16,
-    padding: 10,
+    width: 30,
+    height: 30,
     zIndex: 1,
   },
   backIcon: {

@@ -2,12 +2,12 @@ import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, Vi
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertWarningConfirm from '../components/AlertWarningConfirm';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import AlertConfirmPass from '../components/AlertConfirmPass';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
+import HeaderReturn from '../components/HeaderReturnut';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
@@ -269,13 +269,19 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
+  // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
+  const navigateToView = () => {
+    navigation.replace('AccountHeader');
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
   return (
 
     <>
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderReturn navigation={navigation} title="Administrar cuenta" />
+      <HeaderReturn handleNavigation={navigateToView} title="Administrar cuenta" />
 
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">

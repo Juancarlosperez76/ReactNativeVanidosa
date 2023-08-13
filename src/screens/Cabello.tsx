@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
 
 type RootStackParamList = {
   Cabello: undefined;
@@ -13,7 +13,7 @@ const Cabello = ({ navigation }: CabelloProps) => {
   return (
 
     <>
-      <CustomHeaderSettings navigation={navigation} title="Cabello" />
+      <HeaderSettingsReturn navigation={navigation} title="Cabello" />
       <View style={styles.contentHair}></View>
     </>
 

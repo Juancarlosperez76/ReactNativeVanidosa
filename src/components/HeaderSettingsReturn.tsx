@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface CustomHeaderSettingsProps {
+interface HeaderSettingsReturnProps {
   title: string;
   navigation: {
     goBack: () => void;
@@ -11,7 +11,7 @@ interface CustomHeaderSettingsProps {
   };
 }
 
-const CustomHeaderSettings = ({ navigation, title }: CustomHeaderSettingsProps) => {
+const HeaderSettingsReturn = ({ navigation, title }: HeaderSettingsReturnProps) => {
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -55,7 +55,7 @@ const CustomHeaderSettings = ({ navigation, title }: CustomHeaderSettingsProps) 
 
 };
 
-export default CustomHeaderSettings;
+export default HeaderSettingsReturn;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({

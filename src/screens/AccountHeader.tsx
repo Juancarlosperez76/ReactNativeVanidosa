@@ -1,16 +1,15 @@
 import { launchCamera, CameraOptions, launchImageLibrary, ImageLibraryOptions } from 'react-native-image-picker';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Pressable, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Pressable, Modal, TextInput } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import HeaderReturn from '../components/HeaderReturnut';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import AlertConfirmPass from '../components/AlertConfirmPass';
 
 type User = {
   Nombre: string;
@@ -23,10 +22,12 @@ type RootStackParamList = {
   EditAccount: undefined;
   ChangePassword: undefined;
   StackAccount: undefined;
+  Main: undefined;
 };
 type AccountHeaderProps = NativeStackScreenProps<RootStackParamList, 'AccountHeader'>;
 
 const AccountHeader = ({ navigation }: AccountHeaderProps) => {
+
   const [user, setUser] = useState<User | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para almacenar la URI de la imagen seleccionada
   const [modalVisible, setModalVisible] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
@@ -94,7 +95,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------------------------Código para obtener el Correo del usuario-----------------------------------------
+  // ----------------------------------------Función para obtener el Correo del usuario----------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -131,7 +132,78 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------------Código para cerrar la "Sesión"-----------------------------------------------
+  // ------------------------------------------Función modal "Confirmar identidad""--------------------------------------------
+  const [ContrasenaActual, setContrasenaActual] = React.useState(''); // Estado contraseña de la alerta "Confirma tu identidad"
+  const [validatePassVisible, setValidatePassVisible] = useState(false); // Estado contraseña de la alerta "Confirma tu identidad"
+
+  const handleValidatePassVisible = () => {
+    setValidatePassVisible(true);
+  }
+
+  // Mostrar y ocultar "Contraseña"
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  const togglePasswordModalVisibility = () => {
+    setShowPasswordModal(!showPasswordModal);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // --------------------------------------Función para validar la contraseña del usuario--------------------------------------
+  const validatePassword = async () => {
+    try {
+
+      setIsLoading(true); // Activar el preload
+
+      const token = await AsyncStorage.getItem('userToken');
+      const userEmail = await AsyncStorage.getItem('userEmail');
+
+      if (!token || !userEmail) {
+        Alert.alert('Error', 'Por favor inicie sesión para continuar.');
+        return;
+      }
+
+      // Validar campos vacíos
+      if (!ContrasenaActual) {
+        setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
+        setIsLoading(false); // Desactivar el preload
+        return
+      }
+
+      const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', {
+        Correo: userEmail,
+        Contrasena: ContrasenaActual, // Contraseña actual ingresada en el campo
+      });
+
+      if (response.data.token) {
+        navigation.navigate('ChangePassword');
+      } else {
+        setInvalidPassVisible(true);
+      }
+    } catch (error) {
+      setInvalidPassVisible(true);
+      setIsLoading(false); // Desactivar el preload
+      setContrasenaActual(''); // Limpia el campo "Ingrese contraseña", después de cerrar alerta "Contraseña inválida"
+    }
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
+  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
+
+  const handleCloseEmptyFields = () => {
+    setEmptyFieldsVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [invalidPassVisible, setInvalidPassVisible] = useState(false);
+
+  const handleCloseInvalidPass = () => {
+    setInvalidPassVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ---------------------------------------------Función para cerrar la "Sesión"----------------------------------------------
   const handleLogout = async () => {
     try {
 
@@ -150,7 +222,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
+  // --------------------------------------------Función alerta "Cierre de sesión"---------------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
   const handleCloseSuccess = () => {
@@ -159,12 +231,18 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
+  // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
   const [WarningVisible, setWarningVisible] = useState(false);
 
   const handleCloseWarning = () => {
     setWarningVisible(false);
     navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
+  const navigateToView = () => {
+    navigation.replace('Main');
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -174,20 +252,20 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderReturn navigation={navigation} title="Mi cuenta" />
+      <HeaderReturn handleNavigation={navigateToView} title="Mi cuenta" />
 
       <View style={styles.headerAccountContainer}>
 
         <View style={styles.headerAccountContent}>
 
-          {/* ----Mostrar imagen seleccionada si hay una, si nó, mostrar imagen predeterminada---- */}
+          {/* -----------------Mostrar imagen seleccionada si hay una, si nó, mostrar imagen predeterminada---------------- */}
           <TouchableOpacity style={styles.containerProfileImage} onPress={openModalOptionImageLoad}>
             <Image style={styles.profileImage} source={selectedImage ? { uri: selectedImage } : require('../../android/assets/img/profileIcon.png')} />
             <FontAwesome5 style={styles.iconEditImage} name="pencil-alt" solid />
           </TouchableOpacity>
-          {/* ------------------------------------------------------------------------------------ */}
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          {/* -----------------------Modal para opciones de carga de imagen----------------------- */}
+          {/* -----------------------------------Modal para opciones de carga de imagen------------------------------------ */}
           <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={closeModalOptionImageLoad}>
             <Pressable style={styles.modalContainer} onPress={handlePressOutsideModal}>
               <View style={styles.modalContent}>
@@ -223,7 +301,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.contentItemSetting} onPress={() => navigation.navigate('ChangePassword')}>
+          <TouchableOpacity style={styles.contentItemSetting} onPress={handleValidatePassVisible}>
             <Ionicons style={styles.itemSettingIcon} name="key-outline" />
             <Text style={styles.settingItemText}>Cambiar la contraseña</Text>
           </TouchableOpacity>
@@ -237,7 +315,29 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+          {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
+          <AlertWarning
+            visible={emptyFieldsVisible}
+            onCloseWarning={handleCloseEmptyFields}
+            title='Campos vacíos.'
+            message='Por favor, ingrese la contraseña para continuar.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
+          <AlertWarning
+            visible={invalidPassVisible}
+            onCloseWarning={handleCloseInvalidPass}
+            title='Contraseña inválida.'
+            message='La contraseña ingresada es incorrecta.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* ------------------------------------------Alerta "Cierre de sesión"------------------------------------------ */}
           <AlertSuccess
             visible={SuccessVisible}
             onCloseSuccess={handleCloseSuccess}
@@ -248,7 +348,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          {/* ---------------------------Código para ejecutar y mostrar el modal "AlertWarning"---------------------------- */}
+          {/* -----------------------------------------Alerta "Cuenta eliminada"------------------------------------------- */}
           <AlertWarning
             visible={WarningVisible}
             onCloseWarning={handleCloseWarning}
@@ -257,6 +357,42 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
+          <Modal visible={validatePassVisible} transparent animationType="fade">
+            <View style={styles.modalBackground}>
+              <View style={styles.modalContentAlert}>
+
+                <Text style={styles.title}>Confirma tu identidad</Text>
+
+                <View>
+
+                  <TextInput
+                    style={styles.input}
+                    placeholder='Ingrese contraseña'
+                    placeholderTextColor='#4E4E4E'
+                    onChangeText={setContrasenaActual}
+                    value={ContrasenaActual}
+                    autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                    secureTextEntry={!showPasswordModal} // Oculta y muestra carácteres de contraseña
+                  />
+                  {ContrasenaActual !== '' && ( // Código cambio de icono de la contraseña
+                    <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordModalVisibility}>
+                      <Ionicons style={styles.iconFormRight} name={showPasswordModal ? 'eye-off-sharp' : 'eye-sharp'} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                <View style={styles.containerButton}>
+                  <TouchableOpacity style={styles.button} onPress={validatePassword}>
+                    <Text style={styles.buttonText}>ENVIAR</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+            </View>
+          </Modal>
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
         </View>
@@ -293,7 +429,7 @@ const styles = StyleSheet.create({
     color: "#4e4e4e",
     fontSize: 16,
   },
-  // Estilos del modal 
+  // Estilos modal de opciones carga de imagen
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -328,7 +464,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  // Fin estilos del modal 
+  // Fin estilos modal de opciones carga de imagen
   containerNameText: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -367,4 +503,67 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '400',
   },
+  // Estilos Modal "Confirmar identidad"
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000080',
+  },
+  modalContentAlert: {
+    width: '80%',
+    paddingTop: 20,
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 8,
+  },
+  title: {
+    fontFamily: 'Montserrat SemiBold',
+    fontSize: 20,
+    marginBottom: 16,
+    color: '#545454',
+    textAlign: 'center',
+    letterSpacing: 0.2,
+  },
+  input: {
+    height: 48,
+    marginVertical: 18,
+    marginHorizontal: 10,
+    marginBottom: 18,
+    paddingLeft: 8,
+    borderRadius: 3,
+    borderColor: '#d9d9d9',
+    borderWidth: 2,
+    fontWeight: '400',
+    color: '#4E4E4E',
+    letterSpacing: 0.5,
+  },
+  contentIconFormRight: {
+    position: 'absolute',
+    top: 22,
+    right: 12,
+    padding: 10,
+  },
+  iconFormRight: {
+    fontSize: 20,
+    color: '#4e4e4e',
+  },
+  containerButton: {
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#7066e0',
+    padding: 10,
+    borderRadius: 4,
+    borderColor: '#b2abff',
+    borderWidth: 3,
+  },
+  buttonText: {
+    fontFamily: 'Montserrat Medium',
+    color: 'white',
+    fontSize: 16,
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
+  // Fin estilos Modal "Confirmar identidad"
 });

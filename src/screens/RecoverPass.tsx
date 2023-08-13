@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, ScrollView, Image } from 'react-native';
-import ButtonPrimary from '../components/ButtonPrimary';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
+import React, { useState } from 'react';
 
 type RootStackParamList = {
   Login: undefined;
@@ -50,7 +50,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
     <>
 
-      <CustomHeaderSettings navigation={navigation} title="Restablecer contraseña" />
+      <HeaderSettingsReturn navigation={navigation} title="Restablecer contraseña" />
 
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >

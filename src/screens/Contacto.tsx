@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
 
 // ----------------------------Código de redirección a la aplicación de "Google Maps" del teléfono----------------------------- 
 const latitude = 6.231539; // Latitud del destino
@@ -68,7 +68,7 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderSettings navigation={navigation} title="Contacto" />
+      <HeaderSettingsReturn navigation={navigation} title="Contacto" />
 
       <View style={styles.containerContact}>
 

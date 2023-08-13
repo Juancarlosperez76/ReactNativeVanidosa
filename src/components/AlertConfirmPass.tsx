@@ -14,7 +14,7 @@ const AlertConfirmPass = ({ visible, onCloseConfirmPass, title, buttonStyle, but
 
   const [Contrasena, setContrasena] = React.useState('');
 
-  // // Mostrar y ocultar "Contraseña"
+  // Mostrar y ocultar "Contraseña"
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {

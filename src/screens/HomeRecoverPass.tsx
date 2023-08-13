@@ -1,11 +1,11 @@
 
 import { SafeAreaView, StyleSheet, TextInput, View, Image, ScrollView } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AlertEnterCode from '../components/AlertEnterCode';
 import ButtonPrimary from '../components/ButtonPrimary';
 import React, { useState } from 'react';
-import AlertEnterCode from '../components/AlertEnterCode';
 
 type RootStackParamList = {
   Login: undefined;
@@ -37,7 +37,7 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
 
     <>
 
-      <CustomHeaderSettings navigation={navigation} title="Validar correo" />
+      <HeaderSettingsReturn navigation={navigation} title="Validar correo" />
 
       <ScrollView contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo

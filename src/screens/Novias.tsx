@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
 
 type RootStackParamList = {
   Novias: undefined;
@@ -13,7 +13,7 @@ const Novias = ({ navigation }: NoviasProps) => {
   return (
 
     <>
-      <CustomHeaderSettings navigation={navigation} title="Novias" />
+      <HeaderSettingsReturn navigation={navigation} title="Novias" />
       <View style={styles.contentBrides}></View>
     </>
 

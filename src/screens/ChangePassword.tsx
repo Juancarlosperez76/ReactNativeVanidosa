@@ -1,14 +1,15 @@
 import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomHeaderReturn from '../components/CustomHeaderReturn';
+import LoadingIndicator from '../components/LoadingIndicator';
+import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
+import HeaderReturn from '../components/HeaderReturnut';
 import AlertSuccess from '../components/AlertSuccess';
+import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingIndicator from '../components/LoadingIndicator';
-import AlertWarning from '../components/AlertWarning';
 
 type User = {
   _id: User | null;
@@ -29,15 +30,15 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
+  
+
   // Estado de los "Inputs"
-  const [ContrasenaActual, setContrasenaActual] = React.useState('');
   const [Contrasena, setContrasena] = React.useState('');
   const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
 
   // Mostrar y ocultar "Contraseña"
   const [showPasswordUno, setShowPasswordUno] = useState(false);
   const [showPasswordDos, setShowPasswordDos] = useState(false);
-  const [showPasswordTres, setShowPasswordTres] = useState(false);
 
   const togglePasswordVisibilityUno = () => {
     setShowPasswordUno(!showPasswordUno);
@@ -45,10 +46,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
   const togglePasswordVisibilityDos = () => {
     setShowPasswordDos(!showPasswordDos);
-  };
-
-  const togglePasswordVisibilityTres = () => {
-    setShowPasswordTres(!showPasswordTres);
   };
 
   // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
@@ -59,7 +56,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ----------------------------------------Código para obtener el Correo del usuario-----------------------------------------
+  // ----------------------------------------Función para obtener el Correo del usuario----------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -90,10 +87,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
     fetchUserData();
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // --------------------------------------Función para validar la contraseña del usuario--------------------------------------
-
   // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------Función para cambiar la contraseña del usuario--------------------------------------
@@ -157,6 +150,14 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [invalidPassVisible, setInvalidPassVisible] = useState(false);
+
+  const handleCloseInvalidPass = () => {
+    setInvalidPassVisible(false);
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
   const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
 
@@ -165,7 +166,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  // --------------------------------Función alerta "Contraseña inválida, mínimo de caracteres"--------------------------------
   const [minPasswordVisible, setMinPasswordVisible] = useState(false);
 
   const handleCloseMinPassword = () => {
@@ -181,7 +182,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertSuccess"---------------------------------------
+  // ------------------------------------------Función alerta "Actualización exitosa"------------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
   const handleShowSuccess = () => {
@@ -194,12 +195,18 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
+  // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
+  const navigateToView = () => {
+    navigation.replace('AccountHeader'); 
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
   return (
     <>
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderReturn navigation={navigation} title="Actualizar contraseña" />
+      <HeaderReturn handleNavigation={navigateToView} title="Actualizar contraseña" />
 
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
@@ -224,24 +231,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
               </View>
 
               <View>
-                <Ionicons style={styles.iconForm} name='lock-closed-outline' />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Contraseña actual'
-                  placeholderTextColor='#000000'
-                  onChangeText={setContrasenaActual}
-                  value={ContrasenaActual}
-                  autoCapitalize='none'
-                  secureTextEntry={!showPasswordUno} />
-                {ContrasenaActual !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityUno}>
-                    <Ionicons style={styles.iconFormRight} name={showPasswordUno ? 'eye-off-sharp' : 'eye-sharp'} />
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View>
-              <Ionicons style={styles.iconForm} name='key-outline' />
+                <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Contraseña nueva'
@@ -249,16 +239,16 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   onChangeText={setContrasena}
                   value={Contrasena}
                   autoCapitalize='none'
-                  secureTextEntry={!showPasswordDos} />
+                  secureTextEntry={!showPasswordUno} />
                 {Contrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityDos}>
-                    <Ionicons style={styles.iconFormRight} name={showPasswordDos ? 'eye-off-sharp' : 'eye-sharp'} />
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityUno}>
+                    <Ionicons style={styles.iconFormRight} name={showPasswordUno ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
                 )}
               </View>
 
               <View>
-              <Ionicons style={styles.iconForm} name='key-outline' />
+                <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Confirmar contraseña nueva'
@@ -266,10 +256,10 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   onChangeText={setConfirmarContrasena}
                   value={ConfirmarContrasena}
                   autoCapitalize='none'
-                  secureTextEntry={!showPasswordTres} />
+                  secureTextEntry={!showPasswordDos} />
                 {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityTres}>
-                    <Ionicons style={styles.iconFormRight} name={showPasswordTres ? 'eye-off-sharp' : 'eye-sharp'} />
+                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityDos}>
+                    <Ionicons style={styles.iconFormRight} name={showPasswordDos ? 'eye-off-sharp' : 'eye-sharp'} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -291,7 +281,18 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 />
               </View>
 
-              {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
+              {/* --------------------------------------Alerta "Contraseña inválida"--------------------------------------- */}
+              <AlertWarning
+                visible={invalidPassVisible}
+                onCloseWarning={handleCloseInvalidPass}
+                title='Contraseña inválida.'
+                message='La contraseña ingresada es incorrecta.'
+                buttonStyle={{ width: 70 }}
+                buttonText='OK'
+              />
+              {/* --------------------------------------------------------------------------------------------------------- */}
+
+              {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
               <AlertWarning
                 visible={emptyFieldsVisible}
                 onCloseWarning={handleCloseEmptyFields}
@@ -300,9 +301,9 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
+              {/* ---------------------------Alerta "Contraseña inválida, mínimo de caracteres"---------------------------- */}
               <AlertWarning
                 visible={minPasswordVisible}
                 onCloseWarning={handleCloseMinPassword}
@@ -311,9 +312,9 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
+              {/* ----------------------------------Alerta "Las contraseñas no coinciden"---------------------------------- */}
               <AlertWarning
                 visible={notMatchVisible}
                 onCloseWarning={handleCloseNotMatch}
@@ -322,19 +323,19 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              {/* ---------------------------Código para ejecutar y mostrar el modal "AlertSuccess"---------------------------- */}
+              {/* -------------------------------------Alerta "Actualización exitosa"-------------------------------------- */}
               {/* Renderizar componente "AlertSuccess" */}
               <AlertSuccess
                 visible={SuccessVisible}
                 onCloseSuccess={handleCloseSuccess}
                 title='Actualización exitosa.'
-                message='La contraseña se ha actualizada correctamente.'
+                message='La contraseña se ha actualizado correctamente.'
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
             </View>
 

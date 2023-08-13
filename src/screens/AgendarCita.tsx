@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
+import AlertWarningConfirm from '../components/AlertWarningConfirm';
+import AlertConfirmPass from '../components/AlertConfirmPass';
+import LoadingIndicator from '../components/LoadingIndicator';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
-import AlertConfirmPass from '../components/AlertConfirmPass';
 import AlertWarning from '../components/AlertWarning';
-import AlertWarningConfirm from '../components/AlertWarningConfirm';
-import LoadingIndicator from '../components/LoadingIndicator';
+import React, { useEffect, useState } from 'react';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -100,7 +100,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderSettings navigation={navigation} title="Agendar cita" />
+      <HeaderSettingsReturn navigation={navigation} title="Agendar cita" />
 
       <View style={styles.contentChedule}>
 

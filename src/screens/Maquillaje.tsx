@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -14,7 +14,7 @@ const Maquillaje = ({ navigation }: MaquillajeProps) => {
   return (
 
     <>
-      <CustomHeaderSettings navigation={navigation} title="Maquillaje" />
+      <HeaderSettingsReturn navigation={navigation} title="Maquillaje" />
       <View style={styles.contentMakeup}></View>
     </>
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomHeaderSettings from '../components/CustomHeaderSettings';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, { useEffect, useState } from 'react';
 
 type RootStackParamList = {
   Catalogo: undefined;
@@ -34,7 +34,7 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <CustomHeaderSettings navigation={navigation} title="Catálogo" />
+      <HeaderSettingsReturn navigation={navigation} title="Catálogo" />
 
       <ScrollView contentContainerStyle={styles.container}>
 
