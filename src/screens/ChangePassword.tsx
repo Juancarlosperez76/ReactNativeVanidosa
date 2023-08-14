@@ -2,7 +2,6 @@ import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, To
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
-import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderReturn from '../components/HeaderReturnut';
@@ -27,16 +26,23 @@ type RootStackParamList = {
 type ChangePasswordProps = NativeStackScreenProps<RootStackParamList, 'ChangePassword'>;
 
 const ChangePassword = ({ navigation }: ChangePasswordProps) => {
+
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
-  
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Estado de los "Inputs"
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+
+  // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Contrasena, setContrasena] = React.useState('');
   const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
 
-  // Mostrar y ocultar "Contraseña"
+  // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
   const [showPasswordUno, setShowPasswordUno] = useState(false);
   const [showPasswordDos, setShowPasswordDos] = useState(false);
 
@@ -47,14 +53,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const togglePasswordVisibilityDos = () => {
     setShowPasswordDos(!showPasswordDos);
   };
-
-  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
-  }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------------Función para obtener el Correo del usuario----------------------------------------
   useEffect(() => {
@@ -87,7 +85,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
     fetchUserData();
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------Función para cambiar la contraseña del usuario--------------------------------------
   const changePass = async () => {
@@ -148,7 +145,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
       console.error('Error al cambiar la contraseña:', error);
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
   const [invalidPassVisible, setInvalidPassVisible] = useState(false);
@@ -156,7 +152,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const handleCloseInvalidPass = () => {
     setInvalidPassVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
   const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
@@ -164,7 +159,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const handleCloseEmptyFields = () => {
     setEmptyFieldsVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------Función alerta "Contraseña inválida, mínimo de caracteres"--------------------------------
   const [minPasswordVisible, setMinPasswordVisible] = useState(false);
@@ -172,7 +166,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const handleCloseMinPassword = () => {
     setMinPasswordVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------Función alerta "Las contraseñas no coinciden"--------------------------------------
   const [notMatchVisible, setNotMatchVisible] = useState(false);
@@ -180,7 +173,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const handleCloseNotMatch = () => {
     setNotMatchVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------------Función alerta "Actualización exitosa"------------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
@@ -193,28 +185,21 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
     setSuccessVisible(false);
     navigation.navigate('Login');
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
   const navigateToView = () => {
-    navigation.replace('AccountHeader'); 
+    navigation.replace('AccountHeader');
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
     <>
-
       <LoadingIndicator isLoading={isLoading} />
-
       <HeaderReturn handleNavigation={navigateToView} title="Actualizar contraseña" />
-
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
-
         <SafeAreaView style={{ flex: 1 }}>
-
           <View style={styles.containerForm}>
-
             <View style={styles.contentForm}>
 
               <View style={styles.contentLogoAccount}>
@@ -226,7 +211,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                   <Text style={styles.nameText}>{user?.Nombre} </Text>
                   <Text style={styles.nameText}>{user?.Apellido}</Text>
                 </View>
-
                 <Text style={styles.emailText}>{user?.Correo}</Text>
               </View>
 
@@ -290,8 +274,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
               {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
               <AlertWarning
                 visible={emptyFieldsVisible}
@@ -301,8 +283,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
               {/* ---------------------------Alerta "Contraseña inválida, mínimo de caracteres"---------------------------- */}
               <AlertWarning
                 visible={minPasswordVisible}
@@ -312,8 +292,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
               {/* ----------------------------------Alerta "Las contraseñas no coinciden"---------------------------------- */}
               <AlertWarning
                 visible={notMatchVisible}
@@ -323,10 +301,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
               {/* -------------------------------------Alerta "Actualización exitosa"-------------------------------------- */}
-              {/* Renderizar componente "AlertSuccess" */}
               <AlertSuccess
                 visible={SuccessVisible}
                 onCloseSuccess={handleCloseSuccess}
@@ -338,16 +313,11 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
               {/* --------------------------------------------------------------------------------------------------------- */}
 
             </View>
-
           </View>
-
         </SafeAreaView>
-
       </ScrollView>
-
     </>
   );
-
 };
 
 export default ChangePassword;

@@ -5,7 +5,8 @@ import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertEnterCode from '../components/AlertEnterCode';
 import ButtonPrimary from '../components/ButtonPrimary';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   Login: undefined;
@@ -17,10 +18,19 @@ type HomeRecoverPassProps = NativeStackScreenProps<RootStackParamList, 'HomeReco
 
 const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
 
-  // Estado de los "Inputs"
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+
+  // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [email, setEmail] = useState('');
 
-  // -------------------------------------Función para mostrar el modal "AlertEnterCode"-------------------------------------
+  // --------------------------------------Función para mostrar el modal "AlertEnterCode"--------------------------------------
   const [EnterCodeVisible, setEnterCodeVisible] = useState(false);
 
   const handleShowEnterCode = () => {
@@ -36,7 +46,7 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
   return (
 
     <>
-
+      <LoadingIndicator isLoading={isLoading} />
       <HeaderSettingsReturn navigation={navigation} title="Validar correo" />
 
       <ScrollView contentContainerStyle={styles.container}

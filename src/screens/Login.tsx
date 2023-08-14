@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-//import CheckBox from '@react-native-community/checkbox';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
@@ -24,58 +23,58 @@ type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const Login = ({ navigation }: LoginProps) => {
 
-  // -------------------------------------------------Manejo de los "Estados"--------------------------------------------------
-  const [InactiveAccountVisible, setInactiveAccountVisible] = useState(false); // Estado de modal "AlertFailure"
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar y ocultar "Contraseña"
-  const [SuccessVisible, setSuccessVisible] = useState(false); // Estado de modal "AlertSuccess" 
-  const [WarningVisible, setWarningVisible] = useState(false); // Estado de modal "AlertWarning"
-  const [FailureVisible, setFailureVisible] = useState(false); // Estado de modal "AlertFailure"
-  // const [savePassword, setsavePassword] = useState(false) // Estado para guardar la contraseña
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
-  const [Contrasena, setContrasena] = React.useState(''); // Estado de los "Inputs"
-  const [Correo, setCorreo] = React.useState(''); // Estado de los "Inputs"
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true); 
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
     }, 800); // Tiempo de carga simulado (en milisegundos)
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ------------------Función mostrar modal "AlertSuccess" y redireccionar a "StackMain" al iniciar "Sesión"------------------
+  // --------------------------------------------------Estado de los input"----------------------------------------------------
+  const [Contrasena, setContrasena] = React.useState('');
+  const [Correo, setCorreo] = React.useState('');
+
+  // ---------------------------------------------Mostrar y ocultar la contraseña----------------------------------------------
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar y ocultar "Contraseña"
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // ---------------------------------------Función alerta "¡Inicio de sesión exitoso!"----------------------------------------
+  const [SuccessVisible, setSuccessVisible] = useState(false); // Estado de modal "AlertSuccess" 
+
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
     setIsLoading(false); // Mostrar preload mientras se inicia sesión
     navigation.navigate('Main'); // Redireccionar a "StackMain" después de hacer clic en "OK"
   }
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
+  // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
+  const [WarningVisible, setWarningVisible] = useState(false); // Estado de modal "AlertWarning"
+
   const handleCloseWarning = () => {
     setWarningVisible(false);
     navigation.navigate('Login'); // Redireccionar a "Login"
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertFailure"---------------------------------------
+  // ----------------------------------------Función alerta "Credenciales incorrectas"-----------------------------------------
+  const [FailureVisible, setFailureVisible] = useState(false); // Estado de modal "AlertFailure"
+
   const handleCloseFailure = () => {
     setFailureVisible(false);
     navigation.navigate('Login'); // Redireccionar a "Login"
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // -----------------------------------Función para mostrar el modal "AlertInactiveAccount"-----------------------------------
+  // ---------------------------------------------Función alerta "Cuenta inactiva"---------------------------------------------
+  const [InactiveAccountVisible, setInactiveAccountVisible] = useState(false); // Estado de modal "AlertFailure"
+
   const handleCloseInactiveAccount = () => {
     setInactiveAccountVisible(false);
     navigation.navigate('Login'); // Redireccionar a "Login"
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------------------Lógica de Inicio de sesión------------------------------------------------
   const getUserState = async (Correo: string) => {
@@ -109,6 +108,7 @@ const Login = ({ navigation }: LoginProps) => {
         setInactiveAccountVisible(true); // Mostrar alerta "El usuario ha eliminado la cuenta." 
         setCorreo(''); // Limpiar los campos después de cerrar la alerta
         setContrasena(''); // Limpiar los campos después de cerrar la alerta
+        setIsLoading(false); // Desactivar el preload
         return;
       }
 
@@ -139,20 +139,13 @@ const Login = ({ navigation }: LoginProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-
     <>
-
       <LoadingIndicator isLoading={isLoading} />
-
       <HeaderSettingsReturn navigation={navigation} title="Iniciar sesión" />
-
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
-
         <SafeAreaView style={{ flex: 1 }}>
-
           <View style={styles.containerForm}>
-
             <View style={styles.contentForm}>
 
               <View style={styles.contentLogoAccount}>
@@ -165,7 +158,6 @@ const Login = ({ navigation }: LoginProps) => {
                   style={styles.input}
                   placeholder="E-mail"
                   placeholderTextColor="#000000"
-                  //textAlignVertical="bottom"
                   onChangeText={setCorreo}
                   value={Correo}
                   autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
@@ -179,7 +171,6 @@ const Login = ({ navigation }: LoginProps) => {
                   style={styles.input}
                   placeholder="Contraseña"
                   placeholderTextColor="#000000"
-                  //textAlignVertical="bottom"
                   onChangeText={setContrasena}
                   value={Contrasena}
                   autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
@@ -191,15 +182,6 @@ const Login = ({ navigation }: LoginProps) => {
                   </TouchableOpacity>
                 )}
               </View>
-
-              {/* <View style={styles.savePassword}>
-                <CheckBox
-                  disabled={false}
-                  value={savePassword}
-                  onValueChange={(newValue) => setsavePassword(newValue)}
-                  tintColors={{ true: '#5B009D', false: '#7e7e7e' }} />
-                <Text style={{ color: '#4e4e4e' }}>Guardar contraseña</Text>
-              </View> */}
 
               <View style={{ marginTop: 30 }}>
                 <ButtonPrimary
@@ -238,8 +220,7 @@ const Login = ({ navigation }: LoginProps) => {
                 />
               </View>
 
-              {/* -------------------------Código para ejecutar y mostrar el modal "AlertSuccess"-------------------------- */}
-              {/* Renderizar componente "AlertSuccess" */}
+              {/* ----------------------------------Alerta "¡Inicio de sesión exitoso!"------------------------------------ */}
               <AlertSuccess
                 visible={SuccessVisible}
                 onCloseSuccess={handleCloseSuccess}
@@ -248,10 +229,7 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
-              {/* -------------------------Código para ejecutar y mostrar el modal "AlertWarning"-------------------------- */}
-              {/* Renderizar componente "AlertWarning" */}
+              {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
               <AlertWarning
                 visible={WarningVisible}
                 onCloseWarning={handleCloseWarning}
@@ -260,10 +238,7 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
-              {/* -------------------------Código para ejecutar y mostrar el modal "AlertFailure"-------------------------- */}
-              {/* Renderizar componente "AlertFailure" */}
+              {/* -----------------------------------Alerta "Credenciales incorrectas"------------------------------------- */}
               <AlertFailure
                 visible={FailureVisible}
                 onCloseFailure={handleCloseFailure}
@@ -272,13 +247,10 @@ const Login = ({ navigation }: LoginProps) => {
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
               />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
-              {/* ---------------------Código para ejecutar y mostrar el modal "AlertInactiveAccount"---------------------- */}
-              {/* Renderizar componente "AlertInactiveAccount" */}
+              {/* ----------------------------------------Alerta "Cuenta inactiva"----------------------------------------- */}
               <AlertInactiveAccount visible={InactiveAccountVisible}
                 onCloseInactiveAccount={handleCloseInactiveAccount}
-                title='Error al iniciar sesión.'
+                title='Cuenta inactiva.'
                 message='El usuario ha eliminado la cuenta.'
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'
@@ -286,17 +258,11 @@ const Login = ({ navigation }: LoginProps) => {
               {/* --------------------------------------------------------------------------------------------------------- */}
 
             </View>
-
           </View>
-
         </SafeAreaView>
-
       </ScrollView>
-
     </>
-
   );
-
 };
 
 export default Login;
@@ -361,8 +327,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: 20,
   },
-  // savePassword: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  // }
 });

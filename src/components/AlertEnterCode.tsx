@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle, TextInput } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface AlertEnterCodeProps {
   visible: boolean;
@@ -13,7 +12,7 @@ interface AlertEnterCodeProps {
 
 const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle, buttonText }: AlertEnterCodeProps) => {
 
-  const [Contrasena, setContrasena] = React.useState('');
+  const [InputOne, setInputOne] = React.useState('');
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -24,36 +23,13 @@ const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle
           <Text style={styles.message}>{message}</Text>
 
           <View style={styles.containerInput}>
-            <View style={styles.contentInput}>
               <TextInput
                 style={styles.input}
                 placeholderTextColor='#4E4E4E'
-                onChangeText={setContrasena}
-                value={Contrasena}
-                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                onChangeText={setInputOne}
+                value={InputOne}
+                keyboardType='numeric'
               />
-              <TextInput
-                style={styles.input}
-                placeholderTextColor='#4E4E4E'
-                onChangeText={setContrasena}
-                value={Contrasena}
-                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              />
-              <TextInput
-                style={styles.input}
-                placeholderTextColor='#4E4E4E'
-                onChangeText={setContrasena}
-                value={Contrasena}
-                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              />
-              <TextInput
-                style={styles.input}
-                placeholderTextColor='#4E4E4E'
-                onChangeText={setContrasena}
-                value={Contrasena}
-                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              />
-            </View>
           </View>
 
           <View style={styles.containerButton}>
@@ -103,13 +79,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 18,
   },
-  contentInput: {
-    flexDirection: 'row',
-    width: 200,
-    justifyContent: 'space-between'
-  },
   input: {
-    width: 40,
+    width: 120,
     height: 50,
     borderWidth: 2,
     borderColor: '#d3d3d3',
@@ -117,8 +88,8 @@ const styles = StyleSheet.create({
     color: '#505050',
     textAlign: 'center',
     fontSize: 18,
-    fontWeight: '400',
-    letterSpacing: 0.5,
+    fontWeight: '500',
+    letterSpacing: 10,
   },
   containerButton: {
     alignItems: 'center',

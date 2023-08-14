@@ -1,4 +1,4 @@
-import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
@@ -22,15 +22,15 @@ type RootStackParamList = {
 type RegistroProps = NativeStackScreenProps<RootStackParamList, 'Registro'>;
 
 const Registro = ({ navigation }: RegistroProps) => {
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
-  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
     }, 800); // Tiempo de carga simulado (en milisegundos)
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Nombre, setNombre] = React.useState('');
@@ -42,20 +42,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const [Correo, setCorreo] = React.useState('');
   const [Contrasena, setContrasena] = React.useState('');
   const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
-  const [showPassword1, setShowPassword1] = useState(false);
-  const [showPassword2, setShowPassword2] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [acceptTerms, setacceptTerms] = useState(false)
-  const togglePasswordVisibility1 = () => {
-    setShowPassword1(!showPassword1);
-  };
-  const togglePasswordVisibility2 = () => {
-    setShowPassword2(!showPassword2);
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -------------------------------------Lógica "Imput Select Modal" "Tipo de documento"--------------------------------------
   const tipoDocumentoOptions = [
@@ -76,9 +62,22 @@ const Registro = ({ navigation }: RegistroProps) => {
       setSelectModalVisible(false);
     }, 500); // Cambia el valor 2000 a la cantidad de milisegundos que deseas esperar antes de ocultar el modal
   };
-  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+
+  const togglePasswordVisibility1 = () => {
+    setShowPassword1(!showPassword1);
+  };
+  const togglePasswordVisibility2 = () => {
+    setShowPassword2(!showPassword2);
+  };
 
   // ------------------------Controla la visibilidad del "Modal" en función del valor de "acceptTerms"-------------------------
+  const [modalVisible, setModalVisible] = useState(false); // Estado modal "Política de privacidad, Términos y condiciones"
+  const [acceptTerms, setacceptTerms] = useState(false) // Estado CheckBox "Política de privacidad, Términos y condiciones"
+
   const handleAcceptTerms = () => {
     setacceptTerms(!acceptTerms);
   };
@@ -90,7 +89,42 @@ const Registro = ({ navigation }: RegistroProps) => {
       setModalVisible(false);
     }
   }, [acceptTerms]);
-  // --------------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------Funcion para validar si el "Documento" ya existe"------------------------------------
+  const getUserDocument = async (Documento: number) => {
+
+    setIsLoading(true); // Activar el preload
+
+    const response = await axios.get('https://api-proyecto-5hms.onrender.com/api/usuario');
+    const { Usuarios } = response.data;
+
+    // Encuentra el usuario con el correo proporcionado
+    const user = Usuarios.find((usuario: { Documento: number; }) => usuario.Documento === Documento);
+
+    if (user) {
+      return user.Estado;
+    } else {
+      return null; // El usuario no existe
+    }
+  };
+
+  // --------------------------------------Funcion para validar si el "Correo" ya existe"--------------------------------------
+  const getUserState = async (Correo: string) => {
+
+    setIsLoading(true); // Activar el preload
+
+    const response = await axios.get('https://api-proyecto-5hms.onrender.com/api/usuario');
+    const { Usuarios } = response.data;
+
+    // Encuentra el usuario con el correo proporcionado
+    const user = Usuarios.find((usuario: { Correo: string; }) => usuario.Correo === Correo);
+
+    if (user) {
+      return user.Estado;
+    } else {
+      return null; // El usuario no existe
+    }
+  };
 
   // --------------------------------------------------Función de (Registro)---------------------------------------------------
   const handleRegister = async () => {
@@ -120,7 +154,7 @@ const Registro = ({ navigation }: RegistroProps) => {
     }
 
     // Validar formato de "Correo electrónico"
-    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.(com|es|net|co|yahoo|outlook|hotmail)$/.test(Correo)) {
+    if (!/^[a-zA-Z0-9._-]+@(yahoo|outlook|hotmail|gmail|mailbox)\.(com|es|net|co)$/.test(Correo)) {
       setEmailVisible(true);
       return;
     }
@@ -134,6 +168,22 @@ const Registro = ({ navigation }: RegistroProps) => {
     // Validar que las contraseñas coincidan
     if (Contrasena !== ConfirmarContrasena) {
       setNotMatchVisible(true); // Mostrar alerta "Las contraseñas no coinciden"
+      return;
+    }
+
+    // Validar si el documento ya existe
+    const userStateDocument = await getUserDocument(parseInt(Documento, 10)); // Obtener el documento antes del registro
+    if (userStateDocument === true) {
+      setExistingDocumentVisible(true);
+      setIsLoading(false); // Activar el preload
+      return;
+    }
+
+    // Validar si el correo ya existe
+    const userState = await getUserState(Correo); // Obtener el correo antes del registro
+    if (userState === true) {
+      setExistingEmailVisible(true);
+      setIsLoading(false); // Activar el preload
       return;
     }
 
@@ -164,7 +214,6 @@ const Registro = ({ navigation }: RegistroProps) => {
       setFailedRegisterVisible(true); // Mostrar alerta "Error de Registro."
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
   const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
@@ -172,7 +221,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseEmptyFields = () => {
     setEmptyFieldsVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Tipo de documento"--------------------------------------------
   const [documentTypeVisible, setDocumentTypeVisible] = useState(false);
@@ -180,7 +228,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseDocumentType = () => {
     setDocumentTypeVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Documento inválido"-------------------------------------------
   const [documentVisible, setDocumentVisible] = useState(false);
@@ -188,7 +235,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseDocument = () => {
     setDocumentVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Teléfono inválido"--------------------------------------------
   const [phoneVisible, setPhoneVisible] = useState(false);
@@ -196,7 +242,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleClosePhone = () => {
     setPhoneVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------------Función alerta "Correo inválido"---------------------------------------------
   const [emailVisible, setEmailVisible] = useState(false);
@@ -204,7 +249,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseEmail = () => {
     setEmailVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
   const [minPasswordVisible, setMinPasswordVisible] = useState(false);
@@ -212,7 +256,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseMinPassword = () => {
     setMinPasswordVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------Función alerta "Las contraseñas no coinciden"--------------------------------------
   const [notMatchVisible, setNotMatchVisible] = useState(false);
@@ -220,24 +263,28 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseNotMatch = () => {
     setNotMatchVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------------Función alerta "Correo ya existe"--------------------------------------------
+  // ------------------------------------------Función alerta "El documento ya existe"-----------------------------------------
+  const [existingDocumentVisible, setExistingDocumentVisible] = useState(false);
+
+  const handleCloseExistingDocument = () => {
+    setExistingDocumentVisible(false);
+  };
+
+  // --------------------------------------------Función alerta "El correo ya existe"------------------------------------------
   const [existingEmailVisible, setExistingEmailVisible] = useState(false);
 
   const handleCloseExistingEmail = () => {
     setExistingEmailVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Registro exitoso"---------------------------------------------
   const [registeredVisible, setRegisteredVisible] = useState(false);
 
   const handleCloseRegistered = () => {
     setRegisteredVisible(false);
-    navigation.navigate('Login');
+    navigation.replace('Login');
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Error de registro"--------------------------------------------
   const [failedRegisterVisible, setFailedRegisterVisible] = useState(false);
@@ -248,16 +295,11 @@ const Registro = ({ navigation }: RegistroProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-
     <>
-
       <LoadingIndicator isLoading={isLoading} />
-
       <HeaderSettingsReturn navigation={navigation} title="Registro" />
-
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
-
         <SafeAreaView>
 
           <View style={styles.contentLogoAccount}>
@@ -272,6 +314,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               placeholderTextColor='#000000'
               onChangeText={setNombre}
               value={Nombre}
+              autoCapitalize="words" // Activa mayúscula inicial para cada palabra
             />
           </View>
 
@@ -283,6 +326,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               placeholderTextColor='#000000'
               onChangeText={setApellido}
               value={Apellido}
+              autoCapitalize="words" // Activa mayúscula inicial para cada palabra
             />
           </View>
 
@@ -459,8 +503,6 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* -------------------------------------Mostrar alerta "Tipo de documento"-------------------------------------- */}
           <AlertWarning
             visible={documentTypeVisible}
@@ -470,8 +512,6 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* ------------------------------------Mostrar alerta "Documento inválido"-------------------------------------- */}
           <AlertWarning
             visible={documentVisible}
@@ -481,8 +521,6 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
           <AlertWarning
             visible={phoneVisible}
@@ -492,9 +530,7 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
-          {/* -------------------------------------Mostrar alerta "Correo inválido"-------------------------------------- */}
+          {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
           <AlertWarning
             visible={emailVisible}
             onCloseWarning={handleCloseEmail}
@@ -503,8 +539,6 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
           <AlertWarning
             visible={minPasswordVisible}
@@ -514,8 +548,6 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
           <AlertWarning
             visible={notMatchVisible}
@@ -525,19 +557,24 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
-          {/* --------------------------------------Mostrar alerta "Correo ya exixte"-------------------------------------- */}
+          {/* -----------------------------------Mostrar alerta "El documento ya exixte"----------------------------------- */}
           <AlertWarning
-            visible={existingEmailVisible}
-            onCloseWarning={handleCloseExistingEmail}
-            title='Correo ya existe.'
-            message='El correo ingresado se encuentra registrado.'
+            visible={existingDocumentVisible}
+            onCloseWarning={handleCloseExistingDocument}
+            title='El documento ya existe.'
+            message='Ya existe una cuenta con este número de documento.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
+          {/* ------------------------------------Mostrar alerta "El correo ya exixte"------------------------------------- */}
+          <AlertWarning
+            visible={existingEmailVisible}
+            onCloseWarning={handleCloseExistingEmail}
+            title='El correo ya existe.'
+            message='Ya existe una cuenta con esta dirección de correo electrónico.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
           {/* --------------------------------------Mostrar alerta "Registro exitoso"-------------------------------------- */}
           <AlertSuccess
             visible={registeredVisible}
@@ -547,8 +584,6 @@ const Registro = ({ navigation }: RegistroProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* -------------------------------------Mostrar alerta "Error de registro"-------------------------------------- */}
           <AlertFailure
             visible={failedRegisterVisible}
@@ -579,13 +614,9 @@ const Registro = ({ navigation }: RegistroProps) => {
           </View>
 
         </SafeAreaView>
-
       </ScrollView>
-
     </>
-
   );
-
 };
 
 export default Registro;

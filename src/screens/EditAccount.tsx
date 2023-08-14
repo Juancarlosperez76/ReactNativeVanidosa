@@ -1,8 +1,7 @@
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AlertWarningConfirm from '../components/AlertWarningConfirm';
-import AlertConfirmPass from '../components/AlertConfirmPass';
+import AlertDeleteAccount from '../components/AlertDeleteAccount';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -29,13 +28,16 @@ type RootStackParamList = {
   StackAccount: undefined;
   EditAccount: undefined;
   AccountHeader: undefined;
+  Login: undefined;
 };
-
 type EditAccountProps = NativeStackScreenProps<RootStackParamList, 'EditAccount'>;
 
 const EditAccount = ({ navigation }: EditAccountProps) => {
+
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
 
   // ----------------------------------------------Estados para campos editables-----------------------------------------------
   const [Nombre, setNombre] = useState('');
@@ -45,7 +47,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   const [Direccion, setDireccion] = useState('');
   const [Telefono, setTelefono] = useState('');
   const [Correo, setCorreo] = useState('');
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
   useEffect(() => {
@@ -83,12 +84,11 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
         }, 500);
 
       } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
+        //console.error('Error al obtener los datos del usuario:', error);
       }
     };
     fetchUserData();
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------------------Editar cuenta de usuario--------------------------------------------------
   const handleEdit = async () => {
@@ -126,6 +126,18 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
       return;
     }
 
+    // Validar cantidad mínima de digitos del "Teléfono"
+    if (!/^\d{10,}$/.test(Telefono)) {
+      setPhoneVisible(true);
+      return
+    }
+
+    // Validar formato de "Correo electrónico"
+    if (!/^[a-zA-Z0-9._-]+@(yahoo|outlook|hotmail|gmail|mailbox)\.(com|es|net|co)$/.test(Correo)) {
+      setEmailVisible(true);
+      return;
+    }
+
     const updatedUserData = { // Crear un objeto con los datos del formulario que serán actualizados
       _id: user._id,
       Nombre: Nombre !== '' ? Nombre : user.Nombre,
@@ -156,90 +168,160 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
       setUser({ ...user, ...updatedUserData }); // Actualizar el estado del usuario con los datos editados
       setSuccessEditVisible(true); // Muestra mensaje "El usuario ha sido actualizado correctamente."
     } else {
-      console.error('Error al editar el usuario:', response.data);
+      //console.error('Error al editar el usuario:', response.data);
     }
   }
-  // --------------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------Función modal "Confirmar identidad"--------------------------------------------
+  const [ContrasenaActual, setContrasenaActual] = React.useState(''); // Estado contraseña de la alerta "Confirma tu identidad"
+  const [validatePassVisible, setValidatePassVisible] = useState(false);
+
+  const handleShowValidatePassVisible = () => {
+    setValidatePassVisible(true);
+  }
+
+  const handleCloseValidatePassVisible = () => {
+    setValidatePassVisible(false);
+  }
+
+  // Mostrar y ocultar "Contraseña"
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  const togglePasswordModalVisibility = () => {
+    setShowPasswordModal(!showPasswordModal);
+  };
+
+  // -------------------------------------------Función validar contraseña de usuario------------------------------------------
+  const validatePassword = async () => {
+    try {
+
+      setIsLoading(true);
+
+      const token = await AsyncStorage.getItem('userToken');
+      const userEmail = await AsyncStorage.getItem('userEmail');
+
+      if (!token || !userEmail) {
+        Alert.alert('Error', 'Por favor inicie sesión para continuar.');
+        return;
+      }
+
+      // Validar campos vacíos
+      if (!ContrasenaActual) {
+        setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
+        setIsLoading(false); // Desactivar el preload
+        return
+      }
+
+      const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', {
+        Correo: userEmail,
+        Contrasena: ContrasenaActual, // Contraseña actual ingresada en el campo
+      });
+
+      if (response.data.token) {
+        handleCloseValidatePassVisible();
+        deactivateAccount(); // Ejecuta la función para desactivar la cuenta
+      } else {
+        setInvalidPassVisible(true);
+      }
+    } catch (error) {
+      setInvalidPassVisible(true);
+      setContrasenaActual(''); // Limpia el campo "Ingrese contraseña", después de cerrar alerta "Contraseña inválida"
+      setIsLoading(false); // Desactivar el preload
+    }
+  };
 
   // ----------------------------------------------Desactivar cuenta de usuario------------------------------------------------
   const deactivateAccount = async () => {
-
-    const token = await AsyncStorage.getItem('userToken');
-    const userEmail = await AsyncStorage.getItem('userEmail');
-
-    if (!token || !userEmail) {
-      Alert.alert('Error', 'Por favor inicie sesión para continuar.');
-      navigation.navigate('StackAccount');
-      return;
-    }
-
-    if (!user || !user._id) {
-      console.error('No se puede desactivar el usuario. El usuario no está definido o no tiene un _id.');
-      return;
-    }
-
-    // Realiza la solicitud de desactivación al servidor
-    const response = await axios.patch(`https://api-proyecto-5hms.onrender.com/api/usuario`, {
-      _id: user._id,
-      Estado: 'false'
-    },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    // Verifica que la respuesta del servidor sea exitosa
-    if (response.status === 200) {
-      await AsyncStorage.removeItem('userToken'); // Elimina el "token" de AsyncStorage
-      await AsyncStorage.removeItem('userEmail'); // Elimina el "Correo" de AsyncStorage
-      setUser(null); // Actualiza el estado de la aplicación para que refleje que el usuario ha sido desactivado
-      setSuccessVisible(true); // Muestra mensaje "El usuario ha eliminado la cuenta."
-    } else {
-      console.error('Error al desactivar el usuario:', response.data);
-    }
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // -------------------------------------Función para botones modal "AlertWarningConfirm"-------------------------------------
-  const handleDeleteAccount = () => {
-    handleCloseWarningConfirm(); // Cierra "AlertWarning" con botón "Cancelar"
-    handleShowConfirmPass(); // Ejecuta "AlertConfirmPass" con botón "Eliminar"
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // ------------------------------------Función para mostrar el modal "AlertWarningConfirm"-----------------------------------
-  const [WarningConfirmVisible, setWarningConfirmVisible] = useState(false);
-
-  const handleShowWarningConfirm = () => {
-    setWarningConfirmVisible(true);
-  };
-
-  const handleCloseWarningConfirm = () => {
-    setWarningConfirmVisible(false);
-  };
-  // --------------------------------------------------------------------------------------------------------------------------
-
-  // ------------------------------------Función para mostrar el modal "AlertConfirmPass"--------------------------------------
-  const [ConfirmPassVisible, setConfirmPassVisible] = useState(false);
-
-  const handleShowConfirmPass = () => {
-    setConfirmPassVisible(true);
-  };
-
-  const handleCloseConfirmPass = async () => {
-    setConfirmPassVisible(false);
     try {
-      await deactivateAccount(); // Espera a que la cuenta se elimine correctamente
-      handleShowSuccess(); // Ejecuta el modal "AlertSuccess" si la cuenta se eliminó correctamente
+
+      setIsLoading(true); // Activar el preload
+
+      const token = await AsyncStorage.getItem('userToken');
+      const userEmail = await AsyncStorage.getItem('userEmail');
+
+      if (!token || !userEmail) {
+        Alert.alert('Error', 'Por favor inicie sesión para continuar.');
+        navigation.navigate('StackAccount');
+        return;
+      }
+
+      if (!user || !user._id) {
+        console.error('No se puede desactivar el usuario. El usuario no está definido o no tiene un _id.');
+        return;
+      }
+
+      // Realiza la solicitud de desactivación al servidor
+      const response = await axios.patch(`https://api-proyecto-5hms.onrender.com/api/usuario`, {
+        _id: user._id,
+        Estado: 'false'
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Verifica que la respuesta del servidor sea exitosa
+      if (response.status === 200) {
+        await AsyncStorage.removeItem('userToken'); // Elimina el "token" de AsyncStorage
+        await AsyncStorage.removeItem('userEmail'); // Elimina el "Correo" de AsyncStorage
+        handleShowSuccess(); // Muestra mensaje "El usuario ha eliminado la cuenta."
+      } else {
+        Alert.alert('Error al eliminar la cuenta')
+      }
     } catch (error) {
-      console.error('Error al eliminar la cuenta:', error);
+      setContrasenaActual(''); // Limpia el campo "Ingrese contraseña", después de cerrar alerta "Contraseña inválida"
+      setIsLoading(false); // Desactivar el preload
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // --------------------------------------Función para mostrar el modal "AlertSuccess"----------------------------------------
+  // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
+  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
+
+  const handleCloseEmptyFields = () => {
+    setEmptyFieldsVisible(false);
+  };
+
+  // --------------------------------------------Función alerta "Teléfono inválido"--------------------------------------------
+  const [phoneVisible, setPhoneVisible] = useState(false);
+
+  const handleClosePhone = () => {
+    setPhoneVisible(false);
+  };
+
+  // ---------------------------------------------Función alerta "Correo inválido"---------------------------------------------
+  const [emailVisible, setEmailVisible] = useState(false);
+
+  const handleCloseEmail = () => {
+    setEmailVisible(false);
+  };
+
+
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [invalidPassVisible, setInvalidPassVisible] = useState(false);
+
+  const handleCloseInvalidPass = () => {
+    setInvalidPassVisible(false);
+  };
+
+  // -------------------------------Función alerta "¿Está seguro que quiere eliminar su cuenta?"-------------------------------
+  const [alertDeleteAccountVisible, setAlertDeleteAccountVisible] = useState(false);
+
+  const handleRunDeleteAccount = () => {
+    handleCloseAlertDeleteAccount(); // Cierra alerta al hacer clic en "Eliminar" 
+    handleShowValidatePassVisible(); // Ejecuta alerta "Confirmar identidad" al hacer clic en "Eliminar"
+  };
+
+  const handleShowAlertDeleteAccount = () => {
+    setAlertDeleteAccountVisible(true); // Ejecuta alerta cuando se invoca la función "handleShowAlertDeleteAccount"
+  };
+
+  const handleCloseAlertDeleteAccount = () => {
+    setAlertDeleteAccountVisible(false); // Cierra alerta desde botón "X" o invocando la función "handleCloseAlertDeleteAccount"
+  };
+
+  // -------------------------------------------Función alerta "Cuenta eliminada"----------------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
 
   const handleShowSuccess = () => {
@@ -248,26 +330,23 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false);
-    navigation.navigate('StackAccount');
+    navigation.replace('Login'); // 'replace' en lugar de 'navigate' recarga la "Vista" y actualiza cambios
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // --------------------------------------Función para mostrar el modal "AlertSuccess"----------------------------------------
+  // ----------------------------------------Función alerta "Información actualizada"------------------------------------------
   const [SuccessEditVisible, setSuccessEditVisible] = useState(false);
 
   const handleCloseSuccessEdit = () => {
     setSuccessEditVisible(false);
     navigation.replace('AccountHeader'); // 'replace' en lugar de 'navigate' recarga la "Vista" y actualiza cambios
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
-  // ---------------------------------------Función para mostrar el modal "AlertWarning"---------------------------------------
+  // ----------------------------------------Función alerta "Información no actualizada"---------------------------------------
   const [WarningEditVisible, setWarningEditVisible] = useState(false);
 
   const handleCloseWarningEdit = () => {
     setWarningEditVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
   const navigateToView = () => {
@@ -276,13 +355,9 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-
     <>
-
       <LoadingIndicator isLoading={isLoading} />
-
       <HeaderReturn handleNavigation={navigateToView} title="Administrar cuenta" />
-
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
 
@@ -304,7 +379,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                   style={styles.input}
                   defaultValue={user.Nombre}
                   onChangeText={setNombre}
-                  autoCapitalize="words"
+                  autoCapitalize="words" // Activa mayúscula inicial para cada palabra
                   editable={true}
                 />
               </View>
@@ -318,7 +393,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                   style={styles.input}
                   defaultValue={user.Apellido}
                   onChangeText={setApellido}
-                  autoCapitalize="words"
+                  autoCapitalize="words" // Activa mayúscula inicial para cada palabra
                   editable={true}
                 />
               </View>
@@ -332,7 +407,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                   style={styles.input}
                   defaultValue={user.Tipo_Documento}
                   onChangeText={setTipo_Documento}
-                  autoCapitalize="words"
                   editable={false}
                 />
               </View>
@@ -418,7 +492,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
           <View style={{ marginBottom: 30 }}>
             <ButtonSecondary
-              onPress={handleShowWarningConfirm} // onPress ejecuta el modal "AlertWarningConfirm"
+              onPress={handleShowAlertDeleteAccount} // onPress ejecuta alerta "¿Está seguro que quiere eliminar su cuenta?"
               width={'100%'}
               height={48}
               backgroundColor={'#00000000'}
@@ -432,30 +506,88 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             />
           </View>
 
-          {/* ---------------------------------Alerta "Ya no podrá recuperar su cuenta"------------------------------------ */}
-          <AlertWarningConfirm
-            visible={WarningConfirmVisible}
-            onCloseWarningConfirm={handleCloseWarningConfirm} // Se ejecuta con botón "Cancelar"
-            onConfirmWarning={handleDeleteAccount} // Se ejecuta con botón "Eliminar"
-            title='¿Está seguro?'
-            message='¡Ya no podrá recuperar su cuenta!'
+          {/* ---------------------------Alerta "¿Está seguro que quiere eliminar su cuenta?"------------------------------ */}
+          <AlertDeleteAccount
+            visible={alertDeleteAccountVisible}
+            onCloseAlertDeleteAccount={handleCloseAlertDeleteAccount} // Se ejecuta con botón "Cancelar"
+            onAlertDeleteAccount={handleRunDeleteAccount} // Ejecuta alerta "Confirmar identidad" al hacer clic en "ELIMINAR"
+            title='¿Está seguro que quiere eliminar su cuenta?'
+            message='¡Ya no podrá recuperarla!'
             buttonConfirmStyle={{ width: 110 }}
-            buttonCancelStyle={{ width: 110 }}
             buttonConfirmText='Eliminar'
-            buttonCancelText='Cancelar'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          {/* ----------------------------------------Alerta "Verifica tu identidad"--------------------------------------- */}
-          <AlertConfirmPass
-            visible={ConfirmPassVisible}
-            onCloseConfirmPass={handleCloseConfirmPass}
-            title='Verifica tu identidad'
-            buttonStyle={{ width: 120 }}
-            buttonText='Aceptar'
+          {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
+          <Modal visible={validatePassVisible} transparent animationType="fade">
+            <View style={styles.modalBackground}>
+              <View style={styles.modalContentAlert}>
+
+                <Text style={styles.title}>Confirma tu identidad</Text>
+
+                <View>
+
+                  <TextInput
+                    style={styles.inputAlert}
+                    placeholder='Ingrese contraseña'
+                    placeholderTextColor='#4E4E4E'
+                    onChangeText={setContrasenaActual}
+                    value={ContrasenaActual}
+                    autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                    secureTextEntry={!showPasswordModal} // Oculta y muestra carácteres de contraseña
+                  />
+                  {ContrasenaActual !== '' && ( // Código cambio de icono de la contraseña
+                    <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordModalVisibility}>
+                      <Ionicons style={styles.iconFormRight} name={showPasswordModal ? 'eye-off-sharp' : 'eye-sharp'} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                <View style={styles.containerButton}>
+                  <TouchableOpacity style={styles.button} onPress={validatePassword}>
+                    <Text style={styles.buttonText}>ENVIAR</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+            </View>
+          </Modal>
+
+          {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
+          <AlertWarning
+            visible={emptyFieldsVisible}
+            onCloseWarning={handleCloseEmptyFields}
+            title='Campos vacíos.'
+            message='Por favor, ingrese la contraseña para continuar.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
+          {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
+          <AlertWarning
+            visible={phoneVisible}
+            onCloseWarning={handleClosePhone}
+            title='Teléfono inválido.'
+            message='El teléfono debe tener al menos 10 números.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
+          <AlertWarning
+            visible={emailVisible}
+            onCloseWarning={handleCloseEmail}
+            title='Correo inválido.'
+            message='Formato de correo incorrecto.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
+          <AlertWarning
+            visible={invalidPassVisible}
+            onCloseWarning={handleCloseInvalidPass}
+            title='Contraseña inválida.'
+            message='La contraseña ingresada es incorrecta.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
           {/* ------------------------------------------Alerta "Cuenta eliminada"------------------------------------------ */}
           <AlertSuccess
             visible={SuccessVisible}
@@ -465,8 +597,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* --------------------------------------Alerta "Información actualizada"--------------------------------------- */}
           <AlertSuccess
             visible={SuccessEditVisible}
@@ -476,8 +606,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* ------------------------------------Alerta "Información no actualizada"-------------------------------------- */}
           <AlertWarning
             visible={WarningEditVisible}
@@ -488,14 +616,11 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             buttonText='OK'
           />
           {/* ------------------------------------------------------------------------------------------------------------- */}
+
         </SafeAreaView>
-
       </ScrollView>
-
     </>
-
   );
-
 };
 
 export default EditAccount;
@@ -606,4 +731,67 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
     fontWeight: '400',
   },
+  // Estilos Modal "Confirmar identidad"
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000080',
+  },
+  modalContentAlert: {
+    width: '80%',
+    paddingTop: 20,
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 8,
+  },
+  title: {
+    fontFamily: 'Montserrat SemiBold',
+    fontSize: 20,
+    marginBottom: 16,
+    color: '#545454',
+    textAlign: 'center',
+    letterSpacing: 0.2,
+  },
+  inputAlert: {
+    height: 48,
+    marginVertical: 18,
+    marginHorizontal: 10,
+    marginBottom: 18,
+    paddingLeft: 8,
+    borderRadius: 3,
+    borderColor: '#d9d9d9',
+    borderWidth: 2,
+    fontWeight: '400',
+    color: '#4E4E4E',
+    letterSpacing: 0.5,
+  },
+  contentIconFormRight: {
+    position: 'absolute',
+    top: 22,
+    right: 12,
+    padding: 10,
+  },
+  iconFormRight: {
+    fontSize: 20,
+    color: '#4e4e4e',
+  },
+  containerButton: {
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#7066e0',
+    padding: 10,
+    borderRadius: 4,
+    borderColor: '#b2abff',
+    borderWidth: 3,
+  },
+  buttonText: {
+    fontFamily: 'Montserrat Medium',
+    color: 'white',
+    fontSize: 16,
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
+  // Fin estilos Modal "Confirmar identidad"
 });

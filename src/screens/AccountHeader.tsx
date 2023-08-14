@@ -1,5 +1,5 @@
-import { launchCamera, CameraOptions, launchImageLibrary, ImageLibraryOptions } from 'react-native-image-picker';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Pressable, Modal, TextInput } from 'react-native';
+import { launchCamera, CameraOptions, launchImageLibrary, ImageLibraryOptions } from 'react-native-image-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -29,27 +29,30 @@ type AccountHeaderProps = NativeStackScreenProps<RootStackParamList, 'AccountHea
 const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   const [user, setUser] = useState<User | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para almacenar la URI de la imagen seleccionada
-  const [modalVisible, setModalVisible] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
+
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
+
+  // ----------------------------------Estado para almacenar la URI de la imagen seleccionada----------------------------------
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  // --------------------------------------Estado para controlar la visibilidad del modal--------------------------------------
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   // ------------------------------Función para abrir modal al hacer clic en la imagen de perfil-------------------------------
   const openModalOptionImageLoad = () => {
     setModalVisible(true);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------------------Función para cerrar modal-------------------------------------------------
   const closeModalOptionImageLoad = () => {
     setModalVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -----------------------------------Función para cerrar modal al dar click fuera de el-------------------------------------
   const handlePressOutsideModal = () => {
     closeModalOptionImageLoad();
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------Función para tomar una imagen con la camara----------------------------------------
   const openCamera = async () => {
@@ -71,7 +74,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       console.error('Error al abrir la cámara:', error);
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------Función para seleccionar una imagen de la galería-------------------------------------
   const openImageLibrary = async () => {
@@ -93,7 +95,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       console.error('Error al abrir la biblioteca de imágenes:', error);
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------------Función para obtener el Correo del usuario----------------------------------------
   useEffect(() => {
@@ -130,14 +131,17 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
     fetchUserData();
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ------------------------------------------Función modal "Confirmar identidad""--------------------------------------------
-  const [ContrasenaActual, setContrasenaActual] = React.useState(''); // Estado contraseña de la alerta "Confirma tu identidad"
+  const [ContrasenaActual, setContrasenaActual] = React.useState(''); // Estado contraseña de alerta "Confirma tu identidad"
   const [validatePassVisible, setValidatePassVisible] = useState(false); // Estado contraseña de la alerta "Confirma tu identidad"
 
   const handleValidatePassVisible = () => {
     setValidatePassVisible(true);
+  }
+
+  const handleCloseValidatePassVisible = () => {
+    setValidatePassVisible(false);
   }
 
   // Mostrar y ocultar "Contraseña"
@@ -146,7 +150,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const togglePasswordModalVisibility = () => {
     setShowPasswordModal(!showPasswordModal);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------Función para validar la contraseña del usuario--------------------------------------
   const validatePassword = async () => {
@@ -175,17 +178,17 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       });
 
       if (response.data.token) {
+        handleCloseValidatePassVisible();
         navigation.navigate('ChangePassword');
       } else {
         setInvalidPassVisible(true);
       }
     } catch (error) {
       setInvalidPassVisible(true);
-      setIsLoading(false); // Desactivar el preload
       setContrasenaActual(''); // Limpia el campo "Ingrese contraseña", después de cerrar alerta "Contraseña inválida"
+      setIsLoading(false); // Desactivar el preload
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
   const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
@@ -193,7 +196,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const handleCloseEmptyFields = () => {
     setEmptyFieldsVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
   const [invalidPassVisible, setInvalidPassVisible] = useState(false);
@@ -201,7 +203,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   const handleCloseInvalidPass = () => {
     setInvalidPassVisible(false);
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // ---------------------------------------------Función para cerrar la "Sesión"----------------------------------------------
   const handleLogout = async () => {
@@ -220,7 +221,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       Alert.alert('Error', 'Ha ocurrido un error al cerrar sesión.');
     }
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Cierre de sesión"---------------------------------------------
   const [SuccessVisible, setSuccessVisible] = useState(false);
@@ -229,7 +229,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
     navigation.navigate('StackAccount');
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
   const [WarningVisible, setWarningVisible] = useState(false);
@@ -238,7 +237,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
     setWarningVisible(false);
     navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
   };
-  // --------------------------------------------------------------------------------------------------------------------------
 
   // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
   const navigateToView = () => {
@@ -247,15 +245,10 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-
     <>
-
       <LoadingIndicator isLoading={isLoading} />
-
       <HeaderReturn handleNavigation={navigateToView} title="Mi cuenta" />
-
       <View style={styles.headerAccountContainer}>
-
         <View style={styles.headerAccountContent}>
 
           {/* -----------------Mostrar imagen seleccionada si hay una, si nó, mostrar imagen predeterminada---------------- */}
@@ -263,7 +256,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             <Image style={styles.profileImage} source={selectedImage ? { uri: selectedImage } : require('../../android/assets/img/profileIcon.png')} />
             <FontAwesome5 style={styles.iconEditImage} name="pencil-alt" solid />
           </TouchableOpacity>
-          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           {/* -----------------------------------Modal para opciones de carga de imagen------------------------------------ */}
           <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={closeModalOptionImageLoad}>
@@ -324,8 +316,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
           <AlertWarning
             visible={invalidPassVisible}
@@ -335,8 +325,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* ------------------------------------------Alerta "Cierre de sesión"------------------------------------------ */}
           <AlertSuccess
             visible={SuccessVisible}
@@ -346,8 +334,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
           {/* -----------------------------------------Alerta "Cuenta eliminada"------------------------------------------- */}
           <AlertWarning
             visible={WarningVisible}
@@ -357,7 +343,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
 
           {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
           <Modal visible={validatePassVisible} transparent animationType="fade">
@@ -369,7 +354,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
                 <View>
 
                   <TextInput
-                    style={styles.input}
+                    style={styles.inputAlert}
                     placeholder='Ingrese contraseña'
                     placeholderTextColor='#4E4E4E'
                     onChangeText={setContrasenaActual}
@@ -396,11 +381,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
         </View>
-
       </View>
     </>
   );
-
 };
 
 export default AccountHeader;
@@ -525,7 +508,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.2,
   },
-  input: {
+  inputAlert: {
     height: 48,
     marginVertical: 18,
     marginHorizontal: 10,

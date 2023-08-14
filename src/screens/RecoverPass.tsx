@@ -5,7 +5,8 @@ import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   Login: undefined;
@@ -16,12 +17,20 @@ type RecoverPassProps = NativeStackScreenProps<RootStackParamList, 'RecoverPass'
 
 const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
-  // Estado de los "Inputs"
-  const [email, setEmail] = useState('');
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+
+  // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [password, setPassword] = useState('');
   const [recoverPassword, setRecoverPasword] = useState('');
 
-  // Mostrar y ocultar "Contraseña"
+  // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
@@ -49,7 +58,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
   return (
 
     <>
-
+      <LoadingIndicator isLoading={isLoading} />
       <HeaderSettingsReturn navigation={navigation} title="Restablecer contraseña" />
 
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
@@ -66,7 +75,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
               </View>
 
               <View>
-              <Ionicons style={styles.iconForm} name='key-outline' />
+                <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Ingrese la nueva contraseña'
@@ -84,7 +93,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
               </View>
 
               <View>
-              <Ionicons style={styles.iconForm} name='key-outline' />
+                <Ionicons style={styles.iconForm} name='key-outline' />
                 <TextInput
                   style={styles.input}
                   placeholder='Confirme la nueva contraseña'

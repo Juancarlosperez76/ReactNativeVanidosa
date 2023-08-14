@@ -2,46 +2,49 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface AlertWarningConfirmProps {
+interface AlertDeleteAccountProps {
   visible: boolean;
-  onCloseWarningConfirm: () => void;
-  onConfirmWarning: () => void;
+  onCloseAlertDeleteAccount: () => void;
+  onAlertDeleteAccount: () => void;
   title: string;
   message: string;
   buttonConfirmStyle?: StyleProp<ViewStyle>;
-  buttonCancelStyle?: StyleProp<ViewStyle>;
   buttonConfirmText: string;
-  buttonCancelText: string;
 }
 
-const AlertWarningConfirm = ({ visible, onCloseWarningConfirm, onConfirmWarning, title, message, buttonConfirmStyle, buttonCancelStyle, buttonConfirmText, buttonCancelText }: AlertWarningConfirmProps) => {
+const AlertDeleteAccount = ({ visible, onCloseAlertDeleteAccount, onAlertDeleteAccount, title, message, buttonConfirmStyle, buttonConfirmText }: AlertDeleteAccountProps) => {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalBackground}>
         <View style={styles.modalContent}>
-          <View style={styles.containerAlertIcon}>
-            <Ionicons style={styles.alertIcon} name="alert-circle-outline" />
+
+          <View style={styles.containerButtonClose}>
+            <TouchableOpacity onPress={onCloseAlertDeleteAccount}>
+              <Ionicons style={styles.buttonClose} name="close-outline" />
+            </TouchableOpacity>
           </View>
+
+          <View style={styles.containerAlertIcon}>
+            <Ionicons style={styles.alertIcon} name="trash-outline" />
+          </View>
+
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
+
           <View style={styles.containerButton}>
-            <View style={styles.contentButton}>
-            <TouchableOpacity style={[styles.buttonCancel, buttonCancelStyle]} onPress={onCloseWarningConfirm}>
-                <Text style={styles.buttonCancelText}>{buttonCancelText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.buttonConfirm, buttonConfirmStyle]} onPress={onConfirmWarning}>
-                <Text style={styles.buttonConfirmText}>{buttonConfirmText}</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={[styles.buttonConfirm, buttonConfirmStyle]} onPress={onAlertDeleteAccount}>
+              <Text style={styles.buttonConfirmText}>{buttonConfirmText}</Text>
+            </TouchableOpacity>
           </View>
+
         </View>
       </View>
     </Modal>
   );
 };
 
-export default AlertWarningConfirm;
+export default AlertDeleteAccount;
 
 const styles = StyleSheet.create({
   modalBackground: {
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     fontSize: 48,
-    color: '#f8bb86',
+    color: '#f27474',
   },
   title: {
     fontFamily: 'Montserrat SemiBold',
@@ -84,23 +87,16 @@ const styles = StyleSheet.create({
   containerButton: {
     alignItems: 'center',
   },
-  contentButton: {
-    flexDirection: 'row',
+  containerButtonClose: {
+    position: 'absolute',
+    right: 5,
+    top: 5,
+    zIndex: 1,
   },
-  buttonCancel: {
-    marginRight: 8,
-    paddingVertical: 10,
-    backgroundColor: '#dc3545',
-    borderWidth: 3,
-    borderColor: '#f36262',
-    borderRadius: 4,
-  },
-  buttonCancelText: {
-    fontFamily: 'Montserrat Medium',
-    fontSize: 16,
-    color: 'white',
-    textAlign: 'center',
-    letterSpacing: 0.3,
+  buttonClose: {
+    padding: 10,
+    color: '#555555',
+    fontSize: 36,
   },
   buttonConfirm: {
     paddingVertical: 10,
