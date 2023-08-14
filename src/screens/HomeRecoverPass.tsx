@@ -99,7 +99,8 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
                 visible={EnterCodeVisible}
                 onCloseEnterCode={handleCloseEnterCode}
                 title='Restablecer contraseña'
-                message={'Introduce el código que acabamos de enviar a'}
+                message={'Ingresa el código que enviamos a'}
+                email={email}
                 buttonText='ENVIAR'
                 buttonStyle={{ width: 120 }}
               />

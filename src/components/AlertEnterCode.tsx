@@ -6,11 +6,12 @@ interface AlertEnterCodeProps {
   onCloseEnterCode: () => void;
   title: string;
   message: string;
+  email: string;
   buttonStyle?: StyleProp<ViewStyle>;
   buttonText: string;
 }
 
-const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle, buttonText }: AlertEnterCodeProps) => {
+const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle, buttonText, email }: AlertEnterCodeProps) => {
 
   const [InputOne, setInputOne] = React.useState('');
 
@@ -20,16 +21,19 @@ const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle
         <View style={styles.modalContent}>
 
           <Text style={styles.title}>{title}</Text>
+
           <Text style={styles.message}>{message}</Text>
+          <Text style={styles.email}>{email}</Text>
 
           <View style={styles.containerInput}>
-              <TextInput
-                style={styles.input}
-                placeholderTextColor='#4E4E4E'
-                onChangeText={setInputOne}
-                value={InputOne}
-                keyboardType='numeric'
-              />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor='#4E4E4E'
+              onChangeText={setInputOne}
+              value={InputOne}
+              keyboardType='numeric'
+              maxLength={4} // Limita a 4 los números ingrsados
+            />
           </View>
 
           <View style={styles.containerButton}>
@@ -63,16 +67,24 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Montserrat SemiBold',
     fontSize: 20,
-    marginBottom: 16,
+    marginBottom: 12,
     color: '#545454',
     textAlign: 'center',
     letterSpacing: 0.2,
   },
   message: {
+    fontFamily: 'Montserrat Medium',
     fontSize: 15,
-    marginBottom: 18,
     color: '#545454',
     letterSpacing: 0.2,
+    textAlign: 'center',
+  },
+  email: {
+    marginBottom: 15,
+    fontSize: 14,
+    color: '#545454',
+    fontWeight: '700',
+    letterSpacing: 0.4,
     textAlign: 'center',
   },
   containerInput: {
@@ -80,14 +92,15 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   input: {
-    width: 120,
+    fontFamily: 'Montserrat Medium',
+    width: 180,
     height: 50,
     borderWidth: 2,
     borderColor: '#d3d3d3',
     borderRadius: 5,
-    color: '#505050',
+    color: '#545454',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '500',
     letterSpacing: 10,
   },
