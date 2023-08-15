@@ -32,12 +32,6 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
-  }, []);
-
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Contrasena, setContrasena] = React.useState('');
   const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
@@ -57,6 +51,9 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   // ----------------------------------------Función para obtener el Correo del usuario----------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
+
+      setIsLoading(true); // Activar el preload
+
       try {
         const token = await AsyncStorage.getItem('userToken');
         const userEmail = await AsyncStorage.getItem('userEmail');
@@ -78,6 +75,11 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
           }
 
         }
+
+        setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
+          setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
+        }, 1000);
+
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }

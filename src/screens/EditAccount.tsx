@@ -51,6 +51,9 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
+
+      setIsLoading(true); // Activar el preload
+
       try {
         const token = await AsyncStorage.getItem('userToken');
         const userEmail = await AsyncStorage.getItem('userEmail');
@@ -81,7 +84,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
         setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
           setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
-        }, 500);
+        }, 1000);
 
       } catch (error) {
         //console.error('Error al obtener los datos del usuario:', error);
@@ -349,7 +352,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  return ( 
+  return (
     <>
       <LoadingIndicator isLoading={isLoading} />
       <HeaderReturn navigation={navigation} title="Administrar cuenta" />

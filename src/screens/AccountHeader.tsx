@@ -33,12 +33,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 1200); // Tiempo de carga simulado (en milisegundos)
-  }, []);
-
   // ----------------------------------Estado para almacenar la URI de la imagen seleccionada----------------------------------
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -105,6 +99,9 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   // ----------------------------------------Función para obtener el Correo del usuario----------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
+
+      setIsLoading(true); // Activar el preload
+
       try {
         const token = await AsyncStorage.getItem('userToken');
         const userEmail = await AsyncStorage.getItem('userEmail');
@@ -125,6 +122,10 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             setWarningVisible(true);
           }
         }
+
+        setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
+          setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
+        }, 1000);
 
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);

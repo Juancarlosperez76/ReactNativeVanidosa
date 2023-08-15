@@ -32,6 +32,9 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
+
+      setIsLoading(true); // Activar el preload
+
       try {
         const token = await AsyncStorage.getItem('userToken');
         const userEmail = await AsyncStorage.getItem('userEmail');
