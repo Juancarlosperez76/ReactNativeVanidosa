@@ -7,6 +7,7 @@ import StackChedule from './StackChedule';
 import StackAccount from './StackAccount';
 import { Text } from 'react-native';
 import StackContact from './StackContact';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function StackMainScreen() { return (<StackMain />); }
 function StackCatalogueScreen() { return (<StackCatalogue />); }
@@ -127,6 +128,22 @@ const StackTabButtom = () => {
             </Text>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: async (event) => {
+            event.preventDefault(); // Prevenir el comportamiento predeterminado del tabPress
+            try {
+              const token = await AsyncStorage.getItem('userToken'); // Obtener el token del AsyncStorage
+              if (token) {
+                navigation.navigate('StackChedule'); // Si hay token, el usuario está logueado
+              } else {
+                navigation.navigate('StackAccount'); // Si no hay token, el usuario no está logueado
+              }
+            } catch (error) {
+              console.error(error);
+              // Manejar el error si es necesario
+            }
+          },
+        })}
       />
 
       <Tab.Screen
@@ -159,6 +176,22 @@ const StackTabButtom = () => {
             </Text>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: async (event) => {
+            event.preventDefault(); // Prevenir el comportamiento predeterminado del tabPress
+            try {
+              const token = await AsyncStorage.getItem('userToken'); // Obtener el token del AsyncStorage
+              if (token) {
+                navigation.navigate('StackAccountHeader'); // Si hay token, el usuario está logueado
+              } else {
+                navigation.navigate('StackAccount'); // Si no hay token, el usuario no está logueado
+              }
+            } catch (error) {
+              console.error(error);
+              // Manejar el error si es necesario
+            }
+          },
+        })}
       />
 
     </Tab.Navigator>

@@ -1,12 +1,11 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from '../screens/Login';
 import StackAccountHeader from '../navigation/StackAccountHeader';
-import Registro from '../screens/Registro';
-import RecoverPass from '../screens/RecoverPass';
-import Main from '../screens/Main';
 import HomeRecoverPass from '../screens/HomeRecoverPass';
-
+import RecoverPass from '../screens/RecoverPass';
+import Registro from '../screens/Registro';
+import Login from '../screens/Login';
+import Main from '../screens/Main';
+import React from 'react';
 
 const Stack = createNativeStackNavigator();
 

@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
-import HeaderReturn from '../components/HeaderReturnut';
+import HeaderReturn from '../components/HeaderReturn';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
@@ -185,17 +185,12 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
     setSuccessVisible(false);
     navigation.navigate('Login');
   };
-
-  // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
-  const navigateToView = () => {
-    navigation.replace('AccountHeader');
-  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
     <>
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderReturn handleNavigation={navigateToView} title="Actualizar contraseña" />
+      <HeaderReturn navigation={navigation} title="Actualizar contraseña" />
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
         <SafeAreaView style={{ flex: 1 }}>

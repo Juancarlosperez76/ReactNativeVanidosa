@@ -1,7 +1,6 @@
 import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, ScrollView, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AlertInactiveAccount from '../components/AlertInactiveAccount';
-import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
@@ -10,26 +9,27 @@ import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
 import AlertWarning from '../components/AlertWarning';
+import HeaderReturn from '../components/HeaderReturn';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 type RootStackParamList = {
-  Login: undefined;
-  Registro: undefined;
   HomeRecoverPass: undefined;
-  Main: undefined;
+  Registro: undefined;
+  Login: undefined;
+  StackMain: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const Login = ({ navigation }: LoginProps) => {
 
   // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
+    }, 1200); // Tiempo de carga simulado (en milisegundos)
   }, []);
 
   // --------------------------------------------------Estado de los input"----------------------------------------------------
@@ -49,7 +49,7 @@ const Login = ({ navigation }: LoginProps) => {
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
     setIsLoading(false); // Mostrar preload mientras se inicia sesión
-    navigation.navigate('Main'); // Redireccionar a "StackMain" después de hacer clic en "OK"
+    navigation.navigate('StackMain'); // Redireccionar a "StackMain" después de hacer clic en "OK"
   }
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
@@ -141,7 +141,7 @@ const Login = ({ navigation }: LoginProps) => {
   return (
     <>
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderSettingsReturn navigation={navigation} title="Iniciar sesión" />
+      <HeaderReturn navigation={navigation} title="Iniciar sesión" />
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
         <SafeAreaView style={{ flex: 1 }}>

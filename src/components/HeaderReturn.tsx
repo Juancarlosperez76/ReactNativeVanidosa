@@ -4,15 +4,22 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface HeaderReturnProps {
   title: string;
-  handleNavigation: () => void; // Función para navegación
+  navigation: {
+    goBack: () => void;
+    navigate: (screen: string) => void;
+  };
 }
 
-const HeaderReturn = ({ title, handleNavigation  }: HeaderReturnProps) => {
+const HeaderReturn = ({ title, navigation, }: HeaderReturnProps) => {
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.contentCustomHeader}>
 
-      <TouchableOpacity style={styles.contentBackIcon} onPress={handleNavigation}>
+      <TouchableOpacity style={styles.contentBackIcon} onPress={handleGoBack}>
         <Ionicons style={styles.backIcon} name="arrow-back-outline" />
       </TouchableOpacity>
 
@@ -32,7 +39,7 @@ const styles = StyleSheet.create({
     height: 70,
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    shadowColor: '#ffffff', // Superpone color "#ffffff" sobre el color por defecto
+    shadowColor: '#6e6e6e', // Superpone color "#ffffff" sobre el color por defecto
     elevation: 5, // Crea efecto boxshadow"
     marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
   },

@@ -5,15 +5,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import HeaderReturn from '../components/HeaderReturnut';
 import AlertSuccess from '../components/AlertSuccess';
+import HeaderReturn from '../components/HeaderReturn';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 type User = {
-  Nombre: string;
   Apellido: string;
+  Nombre: string;
   Correo: string;
 };
 
@@ -30,8 +30,14 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   const [user, setUser] = useState<User | null>(null);
 
-  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 1200); // Tiempo de carga simulado (en milisegundos)
+  }, []);
 
   // ----------------------------------Estado para almacenar la URI de la imagen seleccionada----------------------------------
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -119,10 +125,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             setWarningVisible(true);
           }
         }
-
-        setTimeout(() => {
-          setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-        }, 500); // Tiempo de carga simulado (en milisegundos)
 
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
@@ -237,17 +239,12 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
     setWarningVisible(false);
     navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
   };
-
-  // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
-  const navigateToView = () => {
-    navigation.replace('Main');
-  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
     <>
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderReturn handleNavigation={navigateToView} title="Mi cuenta" />
+      <HeaderReturn navigation={navigation} title="Mi cuenta" />
       <View style={styles.headerAccountContainer}>
         <View style={styles.headerAccountContent}>
 
@@ -393,6 +390,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ffffff',
   },
   headerAccountContent: {
     width: '68%',
@@ -420,7 +418,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: '#ebebeb',
     padding: 25,
     borderRadius: 10,
   },
@@ -459,7 +456,7 @@ const styles = StyleSheet.create({
   },
   emailText: {
     textAlign: 'center',
-    color: '#7e7e7e',
+    color: '#4e4e4e',
     fontSize: 14,
     fontWeight: '400',
   },

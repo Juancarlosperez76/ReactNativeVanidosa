@@ -6,7 +6,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
-import HeaderReturn from '../components/HeaderReturnut';
+import HeaderReturn from '../components/HeaderReturn';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
@@ -347,17 +347,12 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   const handleCloseWarningEdit = () => {
     setWarningEditVisible(false);
   };
-
-  // -----------------------------------Función para navegar a vista desde "HeaderReturnut"------------------------------------
-  const navigateToView = () => {
-    navigation.replace('AccountHeader');
-  };
   // --------------------------------------------------------------------------------------------------------------------------
 
-  return (
+  return ( 
     <>
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderReturn handleNavigation={navigateToView} title="Administrar cuenta" />
+      <HeaderReturn navigation={navigation} title="Administrar cuenta" />
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
 
