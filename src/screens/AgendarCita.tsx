@@ -101,7 +101,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                   style={styles.input}
                   defaultValue={user.Nombre}
                   autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-                  editable={true}
+                  editable={false}
                 />
               </View>
 
@@ -114,7 +114,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                   style={styles.input}
                   defaultValue={user.Apellido}
                   autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-                  editable={true}
+                  editable={false}
                 />
               </View>
 
