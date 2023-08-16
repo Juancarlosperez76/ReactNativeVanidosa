@@ -1,4 +1,4 @@
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,17 +38,17 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       try {
         const token = await AsyncStorage.getItem('userToken');
         const userEmail = await AsyncStorage.getItem('userEmail');
-        
+
         if (token && userEmail) {
           const userResponse = await axios.get('https://api-proyecto-5hms.onrender.com/api/usuario', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-          
+
           const userData = userResponse.data.Usuarios;
           const currentUser = userData.find((user: { Correo: string; }) => user.Correo === userEmail);
-          
+
           if (currentUser) {
             setUser(currentUser);
             console.log('Datos del usuario obtenidos:', currentUser);
@@ -62,11 +62,11 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           // Aquí redirigimos al usuario a la pantalla de inicio de sesión
           //navigation.navigate('StackAccount');
         }
-        
+
         setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
           setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
         }, 1000);
-        
+
       } catch (error) {
         //console.error('Error al obtener los datos del usuario:', error);
       }
@@ -74,6 +74,26 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     fetchUserData();
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------Lógica "Imput Select Modal" "Tipo de documento"--------------------------------------
+  const tipoDocumentoOptions = [
+    { label: 'Cédula de extranjería', value: 'Cédula de extranjería' },
+    { label: 'Cédula de ciudadanía', value: 'Cédula de ciudadanía' },
+    { label: 'Tarjeta de identidad', value: 'Tarjeta de identidad' },
+    { label: 'édula de extranjería', value: 'édula de extranjería' },
+    { label: 'édula de ciudadanía', value: 'édula de ciudadanía' },
+    { label: 'arjeta de identidad', value: 'arjeta de identidad' },
+  ];
+
+  const [selectModalVisible, setSelectModalVisible] = useState(false);
+
+  const handleOpenSelectModal = () => {
+    setSelectModalVisible(true);
+  };
+
+  const handleSelectTipoDocumento = (_value: string) => {
+    setSelectModalVisible(false);
+  };
 
   return (
 
@@ -130,6 +150,23 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                   editable={false}
                 />
               </View>
+
+              <TouchableOpacity style={styles.selectInputContainer} onPress={handleOpenSelectModal}>
+                <Ionicons style={styles.selectIconForm} name="cut-outline" />
+                <Text style={styles.selectInput}>Seleccionar servicios</Text>
+              </TouchableOpacity>
+
+              <Modal visible={selectModalVisible} animationType="fade" transparent>
+                <View style={styles.selectModalContent}>
+                  <ScrollView>
+                    {tipoDocumentoOptions.map((option) => (
+                      <TouchableOpacity key={option.value} style={styles.selectOption} onPress={() => handleSelectTipoDocumento(option.value)}>
+                        <Text style={styles.selectOptionText}>{option.label}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+              </Modal>
 
             </>
           ) : (
@@ -230,6 +267,52 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     fontSize: 13,
   },
+  // Estilos "Input Select" "Tipo de documento"
+  selectInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 8,
+    height: 48,
+    backgroundColor: '#E6E6E6',
+  },
+  selectIconForm: {
+    position: 'absolute',
+    top: 13,
+    left: 6,
+    color: '#000000',
+    fontSize: 22,
+  },
+  selectInput: {
+    paddingLeft: 32,
+    color: '#000000',
+    letterSpacing: 0.5,
+  },
+  // Estilos "Modal" "Seleccione Tipo de documento"
+  selectModalContent: {
+    backgroundColor: '#ffffff',
+    marginHorizontal: 20,
+    top: 439,
+    height: 178,
+    shadowColor: '#3d3d3d',
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  selectOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+  },
+  selectOptionText: {
+    color: '#000000',
+    fontSize: 14,
+    letterSpacing: 0.5,
+    fontWeight: '400',
+  },
+  // ----------------------------------------------
   separator: {
     borderColor: '#d3d3d3',
     borderBottomWidth: 1,
