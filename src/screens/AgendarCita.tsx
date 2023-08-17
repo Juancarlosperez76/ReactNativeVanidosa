@@ -3,7 +3,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
-import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import React, { useEffect, useState } from 'react';
@@ -75,25 +74,28 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   }, []);
   // --------------------------------------------------------------------------------------------------------------------------
 
-  // -------------------------------------Lógica "Imput Select Modal" "Tipo de documento"--------------------------------------
-  const tipoDocumentoOptions = [
-    { label: 'Cédula de extranjería', value: 'Cédula de extranjería' },
-    { label: 'Cédula de ciudadanía', value: 'Cédula de ciudadanía' },
-    { label: 'Tarjeta de identidad', value: 'Tarjeta de identidad' },
-    { label: 'édula de extranjería', value: 'édula de extranjería' },
-    { label: 'édula de ciudadanía', value: 'édula de ciudadanía' },
-    { label: 'arjeta de identidad', value: 'arjeta de identidad' },
+  // ------------------------------------------Función modal "Seleccionar servicios"-------------------------------------------
+  const ServiceOptions = [
+    { label: 'Peluqueria', value: 'Peluqueria' },
+    { label: 'Uñas', value: 'Uñas' },
+    { label: 'Alisados', value: 'Alisados' },
+    { label: 'Cejas / Pestañas', value: 'Cejas / Pestañas' },
+    { label: 'Limpieza facial', value: 'Limpieza facial' },
+    { label: 'Depilación', value: 'Depilación' },
+    { label: 'Novia', value: 'Novia' },
+    { label: 'Quinceañera', value: 'Quinceañera' },
   ];
 
-  const [selectModalVisible, setSelectModalVisible] = useState(false);
+  const [ServiceOptionsVisible, setServiceOptionsVisible] = useState(false);
 
-  const handleOpenSelectModal = () => {
-    setSelectModalVisible(true);
+  const handleOpenServiceOptions = () => {
+    setServiceOptionsVisible(true);
   };
 
-  const handleSelectTipoDocumento = (_value: string) => {
-    setSelectModalVisible(false);
+  const handleCloseServiceOptions = (_value: string) => {
+    setServiceOptionsVisible(false);
   };
+  // --------------------------------------------------------------------------------------------------------------------------
 
   return (
 
@@ -111,7 +113,6 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
           {user ? (
             <>
-
               <View style={styles.fieldContainer}>
                 <View style={styles.iconLabelContainer}>
                   <Ionicons style={styles.iconForm} name='person-outline' />
@@ -150,61 +151,42 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                   editable={false}
                 />
               </View>
-
-              <TouchableOpacity style={styles.selectInputContainer} onPress={handleOpenSelectModal}>
-                <Ionicons style={styles.selectIconForm} name="cut-outline" />
-                <Text style={styles.selectInput}>Seleccionar servicios</Text>
-              </TouchableOpacity>
-
-              <Modal visible={selectModalVisible} animationType="fade" transparent>
-                <View style={styles.selectModalContent}>
-                  <ScrollView>
-                    {tipoDocumentoOptions.map((option) => (
-                      <TouchableOpacity key={option.value} style={styles.selectOption} onPress={() => handleSelectTipoDocumento(option.value)}>
-                        <Text style={styles.selectOptionText}>{option.label}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
-              </Modal>
-
             </>
-          ) : (
-            <Text>No se encontró ningún usuario</Text>
-          )}
+          ) : (<Text>No se encontró ningún usuario</Text>)}
 
-          <View style={{ marginTop: 30 }}>
-            <ButtonPrimary
-              onPress={() => { }}
-              width={'100%'}
-              height={48}
-              backgroundColor={'#5B009D'}
-              borderRadius={0}
-              color={'#ffffff'}
-              fontSize={14}
-              fontWeight={'500'}
-              letterSpacing={0.8}
-              title={'GUARDAR'}
-            />
-          </View>
+          {/* ----------------------------------------Modal "Seleccionar servicios"---------------------------------------- */}
+          <TouchableOpacity style={styles.openServiceOptions} onPress={handleOpenServiceOptions}>
 
-          <View style={styles.separator}></View>
+            <Ionicons style={styles.cut} name="cut-outline" />
+            <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
 
-          <View style={{ marginBottom: 30 }}>
-            <ButtonSecondary
-              onPress={() => { }}
-              width={'100%'}
-              height={48}
-              backgroundColor={'#00000000'}
-              borderWidth={1}
-              borderRadius={0}
-              color={'#E00083'}
-              fontSize={14}
-              fontWeight={'600'}
-              letterSpacing={0.8}
-              title={'ELIMINAR CUENTA'}
-            />
-          </View>
+          </TouchableOpacity>
+
+          <Modal visible={ServiceOptionsVisible} animationType="fade" transparent>
+            <View style={styles.containerServiceOptions}>
+              <ScrollView>
+                {ServiceOptions.map((option) => (
+                  <TouchableOpacity style={styles.closeServiceOptions} key={option.value} onPress={() => handleCloseServiceOptions(option.value)}>
+                    <Text style={styles.serviceOptionText}>{option.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </Modal>
+          {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          <ButtonPrimary
+            onPress={() => { }}
+            width={'100%'}
+            height={48}
+            backgroundColor={'#5B009D'}
+            borderRadius={0}
+            color={'#ffffff'}
+            fontSize={14}
+            fontWeight={'500'}
+            letterSpacing={0.8}
+            title={'AGENDAR'}
+          />
 
         </SafeAreaView>
       </ScrollView>
@@ -239,19 +221,17 @@ const styles = StyleSheet.create({
     borderColor: '#E6E6E6',
   },
   iconLabelContainer: {
-    width: '46%',
-    height: 48,
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    width: '46%',
+    height: 48,
     backgroundColor: '#E6E6E6',
   },
   iconForm: {
-    fontSize: 20,
     paddingLeft: 6,
     paddingRight: 4,
     color: '#000000',
-    zIndex: 1,
+    fontSize: 20,
   },
   label: {
     color: '#000000',
@@ -267,55 +247,45 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     fontSize: 13,
   },
-  // Estilos "Input Select" "Tipo de documento"
-  selectInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
+  // Estilos botón "Seleccionar sevicios"
+  openServiceOptions: {
     height: 48,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 16,
     backgroundColor: '#E6E6E6',
   },
-  selectIconForm: {
-    position: 'absolute',
-    top: 13,
-    left: 6,
+  cut: {
     color: '#000000',
     fontSize: 22,
   },
-  selectInput: {
-    paddingLeft: 32,
+  labelServiceOptions: {
+    paddingLeft: 6,
     color: '#000000',
     letterSpacing: 0.5,
   },
-  // Estilos "Modal" "Seleccione Tipo de documento"
-  selectModalContent: {
-    backgroundColor: '#ffffff',
+  // Estilos modal "Seleccionar sevicios"
+  containerServiceOptions: {
+    backgroundColor: '#3F3F3F',
     marginHorizontal: 20,
     top: 439,
     height: 178,
-    shadowColor: '#3d3d3d',
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 4,
   },
-  selectOption: {
+  closeServiceOptions: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 15,
   },
-  selectOptionText: {
-    color: '#000000',
+  serviceOptionText: {
+    width: '100%',
+    color: '#ffffff',
+    textAlign: 'center',
     fontSize: 14,
     letterSpacing: 0.5,
     fontWeight: '400',
-  },
-  // ----------------------------------------------
-  separator: {
-    borderColor: '#d3d3d3',
-    borderBottomWidth: 1,
-    marginVertical: 20,
   },
 });
