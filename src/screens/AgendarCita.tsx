@@ -2,6 +2,8 @@ import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextIn
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
@@ -95,6 +97,23 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   const handleCloseServiceOptions = (_value: string) => {
     setServiceOptionsVisible(false);
   };
+
+  // -------------------------------------Función selectores fecha y hora "DateTimePicker"-------------------------------------
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const onChangeDate = (event: any, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(false);
+    setDate(currentDate);
+  };
+
+  const [time, setTime] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const onChangeTime = (event: any, selectedTime: Date | undefined) => {
+    const currentTime = selectedTime || time;
+    setShowTimePicker(false);
+    setTime(currentTime);
+  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -155,10 +174,27 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           ) : (<Text>No se encontró ningún usuario</Text>)}
 
           {/* ----------------------------------------Modal "Seleccionar servicios"---------------------------------------- */}
-          <TouchableOpacity style={styles.openServiceOptions} onPress={handleOpenServiceOptions}>
-            <Ionicons style={styles.cut} name="cut-outline" />
-            <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
-          </TouchableOpacity>
+          <View style={styles.containeSeletcServices}>
+
+            <TouchableOpacity onPress={handleOpenServiceOptions}>
+              <View style={styles.containerIconLabel}>
+                <Ionicons style={styles.iconServiceOptions} name="cut-sharp" />
+                <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
+              </View>
+            </TouchableOpacity>
+
+            <View>
+              <View style={styles.containerButtonsOpen}>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)} >
+                  <MaterialIcons style={styles.iconDateTime} name="calendar-month" size={28} color="#0054ad" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowTimePicker(true)}  >
+                  <MaterialIcons style={styles.iconDateTime} name="access-time" size={28} color="#0054ad" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+          </View>
 
           <Modal visible={ServiceOptionsVisible} animationType="fade" transparent>
             <View style={styles.containerServiceOptions}>
@@ -171,6 +207,28 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               </ScrollView>
             </View>
           </Modal>
+
+          {/* ----------------------------------Selectores fecha y hora "DateTimePicker"----------------------------------- */}
+          {showDatePicker && (
+            <DateTimePicker style={{ width: 400 }}
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              display="calendar"
+              onChange={onChangeDate}
+            />
+          )}
+
+          {showTimePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={time}
+              mode="time"
+              is24Hour={false}
+              display="spinner"
+              onChange={onChangeTime}
+            />
+          )}
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
           <ButtonPrimary
@@ -226,14 +284,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#E6E6E6',
   },
   iconForm: {
-    paddingLeft: 6,
-    paddingRight: 4,
+    marginLeft: 6,
+    marginRight: 4,
     color: '#000000',
-    fontSize: 20,
+    fontSize: 22,
   },
   label: {
     color: '#000000',
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: 0.5,
   },
   input: {
@@ -243,26 +301,40 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontWeight: '400',
     letterSpacing: 0.5,
-    fontSize: 13,
+    fontSize: 14,
   },
   // Estilos botón "Seleccionar sevicios"
-  openServiceOptions: {
-    height: 48,
+  containeSeletcServices: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    height: 48,
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 8,
     marginBottom: 16,
     backgroundColor: '#E6E6E6',
   },
-  cut: {
+  containerIconLabel: {
+    flexDirection: 'row',
+  },
+  iconServiceOptions: {
+    marginLeft: 6,
+    marginRight: 4,
     color: '#000000',
     fontSize: 22,
   },
   labelServiceOptions: {
-    paddingLeft: 6,
+    fontSize: 14,
     color: '#000000',
     letterSpacing: 0.5,
+  },
+  // Estilos selectores fecha y hora "DateTimePicker"
+  containerButtonsOpen: {
+    flexDirection: 'row',
+    marginRight: 8,
+  },
+  iconDateTime: {
+    marginLeft: 6,
+    padding: 4,
   },
   // Estilos modal "Seleccionar sevicios"
   containerServiceOptions: {
