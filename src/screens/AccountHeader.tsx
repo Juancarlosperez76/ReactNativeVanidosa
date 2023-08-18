@@ -3,6 +3,7 @@ import { launchCamera, CameraOptions, launchImageLibrary, ImageLibraryOptions } 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertSuccess from '../components/AlertSuccess';
@@ -261,12 +262,12 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
               <View style={styles.modalContent}>
 
                 <TouchableOpacity style={styles.modalItem} onPress={() => { openCamera(); closeModalOptionImageLoad(); }}>
-                  <FontAwesome5 style={styles.modalIcon} name="camera" solid />
+                  <FontAwesome style={styles.modalIcon} name="camera" size={24} />
                   <Text style={styles.modalItemText}>Tomar una foto</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.modalItem} onPress={() => { openImageLibrary(); closeModalOptionImageLoad(); }}>
-                  <Ionicons style={styles.modalIcon} name="images-sharp" />
+                  <Ionicons style={styles.modalIcon} name="images-sharp" size={24} />
                   <Text style={styles.modalItemText}>Seleccionar de galería</Text>
                 </TouchableOpacity>
 
@@ -421,6 +422,7 @@ const styles = StyleSheet.create({
   modalContent: {
     padding: 25,
     borderRadius: 10,
+    backgroundColor: '#3F3F3F',
   },
   modalItem: {
     flexDirection: 'row',
@@ -428,13 +430,12 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   modalIcon: {
-    color: "#6e6e6e",
-    fontSize: 24,
+    color: "#e4e4e4",
   },
   modalItemText: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#4e4e4e",
+    color: "#ffffff",
     letterSpacing: 0.3,
   },
   modalCancel: {

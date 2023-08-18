@@ -156,10 +156,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
           {/* ----------------------------------------Modal "Seleccionar servicios"---------------------------------------- */}
           <TouchableOpacity style={styles.openServiceOptions} onPress={handleOpenServiceOptions}>
-
             <Ionicons style={styles.cut} name="cut-outline" />
             <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
-
           </TouchableOpacity>
 
           <Modal visible={ServiceOptionsVisible} animationType="fade" transparent>
