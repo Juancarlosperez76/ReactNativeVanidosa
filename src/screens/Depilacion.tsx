@@ -5,26 +5,28 @@ import ButtonSecondary from '../components/ButtonSecondary';
 import React from 'react';
 
 type RootStackParamList = {
-  Unas: undefined;
+  AgendarCita: undefined;
+  Peluqueria: undefined;
+  Depilacion: undefined;
 };
-type UnasProps = NativeStackScreenProps<RootStackParamList, 'Unas'>;
+type DepilacionProps = NativeStackScreenProps<RootStackParamList, 'Depilacion'>;
 
-const Unas = ({ navigation }: UnasProps) => {
+const Depilacion = ({ navigation }: DepilacionProps) => {
 
   return (
     <>
-      <HeaderSettingsReturn navigation={navigation} title="Uñas" />
+      <HeaderSettingsReturn navigation={navigation} title="Depilación" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.contentHair}>
 
           <View style={styles.containerDescriptionImg}>
-            <Image style={styles.descriptionImg} source={require('../../android/assets/img/categorias/unas.png')} />
+            <Image style={styles.descriptionImg} source={require('../../android/assets/img/categorias/depilacion.png')} />
           </View>
 
-          <Text style={styles.descriptionTitle}>Uñas</Text>
+          <Text style={styles.descriptionTitle}>Depilación</Text>
 
           <Text style={styles.descriptionText}>
-            Descubre la auténtica expresión de estilo a través de tus uñas. Desde diseños clásicos hasta expresiones vanguardistas. Cada trazo es una ventana a tu personalidad, como un detalle que refleja distinción y pasión. Te invitamos a unirte a esta travesía de autoexpresión, donde cada aspecto habla por sí mismo. Desde la primera pincelada hasta el último detalle,
+            Descubre la suavidad en su máxima expresión. Luce una piel increíblemente suave y libre de preocupaciones. Liberate de la rutina diaria. Siéntete segura y cómoda en tu propia piel, lista para enfrentar cada día con confianza. Sumérgete en la experiencia de la depilación y descubre una nueva dimensión de comodidad y belleza.
           </Text>
 
           <View style={styles.separator}></View>
@@ -156,10 +158,11 @@ const Unas = ({ navigation }: UnasProps) => {
         </View>
       </ScrollView>
     </>
+
   );
 };
 
-export default Unas;
+export default Depilacion;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({

@@ -4,16 +4,16 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 
 type RootStackParamList = {
-  Novias: undefined;
+  Novia: undefined;
 };
-type NoviasProps = NativeStackScreenProps<RootStackParamList, 'Novias'>;
+type NoviaProps = NativeStackScreenProps<RootStackParamList, 'Novia'>;
 
-const Novias = ({ navigation }: NoviasProps) => {
+const Novia = ({ navigation }: NoviaProps) => {
 
   return (
 
     <>
-      <HeaderSettingsReturn navigation={navigation} title="Novias" />
+      <HeaderSettingsReturn navigation={navigation} title="Novia" />
       <View style={styles.contentBrides}></View>
     </>
 
@@ -21,7 +21,7 @@ const Novias = ({ navigation }: NoviasProps) => {
 
 };
 
-export default Novias;
+export default Novia;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({

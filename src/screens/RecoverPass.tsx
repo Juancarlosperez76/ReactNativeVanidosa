@@ -3,10 +3,10 @@ import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, ScrollView
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import React, { useEffect, useState } from 'react';
-import LoadingIndicator from '../components/LoadingIndicator';
 
 type RootStackParamList = {
   Login: undefined;

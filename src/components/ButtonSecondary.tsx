@@ -4,11 +4,17 @@ import { TouchableOpacity, Text } from 'react-native';
 // Solución "El elemento de enlace '' tiene un tipo 'any' implícito."
 interface ButtonSecondaryProps {
   onPress: () => void;
-  width: string,
+  width: number | string,
   height: number,
   backgroundColor: string;
   borderWidth: number,
+  borderColor: string,
   borderRadius: number;
+  borderTopLeftRadius: number;
+  borderTopRightRadius: number;
+  borderBottomLeftRadius: number;
+  borderBottomRightRadius: number;
+  fontFamily: string;
   color: string;
   fontSize: number,
   fontWeight: 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900' | undefined;
@@ -16,7 +22,24 @@ interface ButtonSecondaryProps {
   title: string;
 }
 
-const ButtonSecondary = ({ onPress, width, height, backgroundColor, borderWidth, borderRadius, color, fontSize, fontWeight, letterSpacing, title }: ButtonSecondaryProps) => {
+const ButtonSecondary = ({
+  onPress,
+  width,
+  height,
+  backgroundColor,
+  borderWidth,
+  borderColor,
+  borderRadius,
+  borderTopLeftRadius,
+  borderTopRightRadius,
+  borderBottomRightRadius,
+  borderBottomLeftRadius,
+  fontFamily,
+  color,
+  fontSize,
+  fontWeight,
+  letterSpacing,
+  title }: ButtonSecondaryProps) => {
 
   return (
 
@@ -26,11 +49,16 @@ const ButtonSecondary = ({ onPress, width, height, backgroundColor, borderWidth,
       justifyContent: 'center',
       backgroundColor: backgroundColor,
       borderWidth: borderWidth,
-      borderColor: '#E00083',
+      borderColor: borderColor,
       borderRadius: borderRadius,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
     }} onPress={onPress}
     >
       <Text style={{
+        fontFamily: fontFamily,
         textAlign: 'center',
         color: color,
         fontSize: fontSize,

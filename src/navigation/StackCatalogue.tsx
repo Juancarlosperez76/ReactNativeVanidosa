@@ -5,9 +5,12 @@ import Maquillaje from '../screens/Maquillaje';
 import Cabello from '../screens/Cabello';
 import Unas from '../screens/Unas';
 import Pestanas from '../screens/Pestanas';
-import Novias from '../screens/Novias';
 import Quinceanera from '../screens/Quinceanera';
 import StackAccountHeader from './StackAccountHeader';
+import Peluqueria from '../screens/Peluqueria';
+import Depilacion from '../screens/Depilacion';
+import Piel from '../screens/Piel';
+import Novia from '../screens/Novia';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,8 +27,8 @@ const StackCatalogue = () => {
       />
 
       <Stack.Screen
-        name="StackAccountHeader"
-        component={StackAccountHeader as React.ComponentType<any>}
+        name="Cabello"
+        component={Cabello as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
@@ -36,14 +39,14 @@ const StackCatalogue = () => {
       />
 
       <Stack.Screen
-        name="Cabello"
-        component={Cabello as React.ComponentType<any>}
+        name="Unas"
+        component={Unas as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
-        name="Unas"
-        component={Unas as React.ComponentType<any>}
+        name="Depilacion"
+        component={Depilacion as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
@@ -54,14 +57,32 @@ const StackCatalogue = () => {
       />
 
       <Stack.Screen
-        name="Novias"
-        component={Novias as React.ComponentType<any>}
+        name="Piel"
+        component={Piel as React.ComponentType<any>}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="Peluqueria"
+        component={Peluqueria as React.ComponentType<any>}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="Novia"
+        component={Novia as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Quinceanera"
         component={Quinceanera as React.ComponentType<any>}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="StackAccountHeader"
+        component={StackAccountHeader as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

@@ -1,4 +1,4 @@
-import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
@@ -603,8 +603,14 @@ const Registro = ({ navigation }: RegistroProps) => {
               width={'100%'}
               height={48}
               backgroundColor={'#00000000'}
+              borderColor={'#E00083'}
               borderWidth={1}
               borderRadius={0}
+              borderTopLeftRadius={0}
+              borderTopRightRadius={0}
+              borderBottomRightRadius={0}
+              borderBottomLeftRadius={0}
+              fontFamily={''}
               color={'#E00083'}
               fontSize={14}
               fontWeight={'600'}

@@ -210,14 +210,20 @@ const Login = ({ navigation }: LoginProps) => {
                   width={'100%'}
                   height={48}
                   backgroundColor={'#00000000'}
+                  borderColor={'#E00083'}                  
                   borderWidth={1}
                   borderRadius={0}
+                  borderTopLeftRadius={0}
+                  borderTopRightRadius={0}
+                  borderBottomRightRadius={0}
+                  borderBottomLeftRadius={0}
+                  fontFamily={''}
                   color={'#E00083'}
                   fontSize={14}
                   fontWeight={'600'}
                   letterSpacing={0.8}
-                  title={'CREAR CUENTA'}
-                />
+                  title={'CREAR CUENTA'} 
+                  />
               </View>
 
               {/* ----------------------------------Alerta "¡Inicio de sesión exitoso!"------------------------------------ */}
