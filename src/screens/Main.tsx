@@ -27,9 +27,12 @@ const Main = ({ navigation }: MainProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   const images = [
-    require('../../android/assets/img/img-main-1.png'),
-    require('../../android/assets/img/img-main-2.png'),
-    require('../../android/assets/img/img-main-3.png'),
+    require('../../android/assets/img/main/main1.png'),
+    require('../../android/assets/img/main/main2.png'),
+    require('../../android/assets/img/main/main3.png'),
+    require('../../android/assets/img/main/main4.png'),
+    require('../../android/assets/img/main/main5.png'),
+    require('../../android/assets/img/main/main6.png'),
   ];
 
   return (
@@ -54,33 +57,11 @@ const Main = ({ navigation }: MainProps) => {
 
           <View style={styles.contentMain}>
 
-            <TouchableOpacity style={styles.containerImage} onPress={() => navigation.navigate('Maquillaje')}>
-              <View style={styles.contentImage}>
-                <Ionicons style={styles.secondaryImage} name="hand-left-outline" />
-              </View>
-              <Text style={styles.textImage}>Maquillaje</Text>
-            </TouchableOpacity>
+            <Text style={styles.mainTitle}>NUEVO EXCELLENCE SIN AMONÍACO</Text>
 
-            <TouchableOpacity style={styles.containerImage} onPress={() => navigation.navigate('Cabello')}>
-              <View style={styles.contentImage}>
-                <Ionicons style={styles.secondaryImage} name="planet-outline" />
-              </View>
-              <Text style={styles.textImage}>Cabello</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.containerImage} onPress={() => navigation.navigate('Unas')}>
-              <View style={styles.contentImage}>
-                <Ionicons style={styles.secondaryImage} name="gift-outline" />
-              </View>
-              <Text style={styles.textImage}>Uñas</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.containerImage} onPress={() => navigation.navigate('Pestanas')}>
-              <View style={styles.contentImage}>
-                <Ionicons style={styles.secondaryImage} name="beer-outline" />
-              </View>
-              <Text style={styles.textImage}>Pestañas</Text>
-            </TouchableOpacity>
+            <Text style={styles.mainText}>
+              Nuestra primera coloración permanente sin amoniaco. Con el triple cuidado que ya conoces de Excellence Creme y el 100% cobertura de canas, ¡ahora sin Amoníaco y adicionado con ceramidas para un 98% menos quiebre..
+            </Text>
 
           </View>
 
@@ -99,61 +80,37 @@ export default Main;
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
   contentImageMain: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '96%',
-    marginHorizontal: '2%',
-    marginTop: 10,
-    aspectRatio: 1 * 1.43, // Convertir pixeles de imágen a "Relación Aspecto" 
+    width: '100%',
+    aspectRatio: 1 * 1, // Convertir pixeles de imágen a "Relación Aspecto" 
+    marginBottom: 20,
+    //borderWidth: 1,
   },
   imageMain: {
     width: '100%',
     height: '100%',
-    padding: 10,
-    resizeMode: 'cover',
-    borderRadius: 15,
   },
   containerMain: {
-    flex: 1,
-    justifyContent: 'center',
+    width: '90%',
+    marginHorizontal: '5%',
     backgroundColor: '#00000000',
+    //borderWidth: 1,
   },
   contentMain: {
-    flexDirection: 'row', // Posisiona elementos en fila
-    flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
-    justifyContent: 'center',
     backgroundColor: '#00000000',
   },
-  containerImage: {
-    width: 150,
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 40,
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
+  mainTitle: {
+    marginVertical: 20,
+    fontFamily: 'Aspira W05 Bold',
+    color: '#000000',
+    fontSize: 20,
+    //letterSpacing: 0.3
+    //borderWidth: 1,
   },
-  contentImage: {
-    width: 80,
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: '#d7c6f7',
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 15,
-  },
-  secondaryImage: {
-    fontSize: 35,
-    color: '#5e5e5e',
-  },
-  textImage: {
-    fontFamily: 'Futura PT Medium',
-    marginTop: 10,
-    color: '#4e4e4e',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.5,
+  mainText: {
+    marginBottom: 30,
+    fontFamily: 'Futura PT Book',
+    color: '#000000',
+    fontSize: 17,
+    letterSpacing: 0.3,
   },
 });

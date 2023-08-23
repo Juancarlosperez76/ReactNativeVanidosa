@@ -1,7 +1,6 @@
 import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,6 +12,7 @@ import AlertFailure from '../components/AlertFailure';
 import React, { useEffect, useState } from 'react';
 import { RadioButton } from 'react-native-paper';
 import axios from 'axios';
+import HeaderReturn from '../components/HeaderReturn';
 
 type RootStackParamList = {
   Login: undefined;
@@ -297,7 +297,7 @@ const Registro = ({ navigation }: RegistroProps) => {
   return (
     <>
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderSettingsReturn navigation={navigation} title="Registro" />
+      <HeaderReturn navigation={navigation} title="Registro" />
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
         <SafeAreaView>

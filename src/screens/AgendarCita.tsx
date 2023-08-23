@@ -117,7 +117,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-
+ 
     <>
       <LoadingIndicator isLoading={isLoading} />
       <HeaderSettingsReturn navigation={navigation} title="Agendar cita" />

@@ -36,7 +36,7 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
       <HeaderSettingsReturn navigation={navigation} title="Catálogo" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.contentImgCatalogo}>
-          <Image style={styles.imgCatalogo} source={require('../../android/assets/img/img-catalogo-2.png')} />
+          <Image style={styles.imgCatalogo} source={require('../../android/assets/img/catalogo/catalogo.png')} />
         </View>
         <View style={styles.contentCatalog}>
 
@@ -124,45 +124,43 @@ const styles = StyleSheet.create({
   },
   contentImgCatalogo: {
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
-    marginTop: 10,
-    aspectRatio: 1 * 1.67, // Convertir pixeles de imágen a "Relación Aspecto" 
+    //marginTop: 10,
+    aspectRatio: 1 * 1.333, // Convertir pixeles de imágen a "Relación Aspecto" 
     backgroundColor: '#00000000',
   },
   imgCatalogo: {
-    width: '90%',
-    height: '90%',
-    resizeMode: 'cover',
-    borderRadius: 15,
+    width: '100%',
+    height: '100%',
+    //borderRadius: 15,
   },
   contentCatalog: {
-    width: '86%',
-    marginHorizontal: '7%',
+    width: '80%',
+    marginHorizontal: '10%',
     backgroundColor: '#00000000',
   },
   catalog: {
     flexDirection: 'row', // Posisiona elementos en fila
     flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 15,
     backgroundColor: '#00000000',
   },
   contentCategory: {
     alignItems: 'center',
     marginVertical: 20,
+    marginHorizontal: 10,
   },
   contentIconCatalogo: {
-    width: 90,
-    height: 90,
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 50,
+    //borderRadius: 50,
   },
   iconCatalogo: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
   },
   textCategory: {
     fontFamily: 'Futura PT Medium',

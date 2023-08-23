@@ -64,9 +64,9 @@ const styles = StyleSheet.create({
     height: 70,
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    shadowColor: '#6e6e6e', // Superpone color "#ffffff" sobre el color por defecto
-    elevation: 5, // Crea efecto boxshadow"
-    marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
+    //shadowColor: '#6e6e6e', // Superpone color "#ffffff" sobre el color por defecto
+    //elevation: 5, // Crea efecto boxshadow"
+    //marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
   },
   contentBackIcon: {
     display: 'flex',

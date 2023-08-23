@@ -58,9 +58,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    shadowColor: '#9e9e9e', // Superpone color "#ffffff" sobre el color por defecto
-    elevation: 5, // Crea efecto boxshadow"
-    marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
   },
   logo: {
     width: 100,
