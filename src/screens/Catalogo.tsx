@@ -35,75 +35,68 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
       <LoadingIndicator isLoading={isLoading} />
       <HeaderSettingsReturn navigation={navigation} title="Catálogo" />
       <ScrollView contentContainerStyle={styles.container}>
+
         <View style={styles.contentImgCatalogo}>
           <Image style={styles.imgCatalogo} source={require('../../android/assets/img/catalogo/catalogo.png')} />
         </View>
-        <View style={styles.contentCatalog}>
 
+        <View style={styles.contentCatalog}>
           <View style={styles.catalog}>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Cabello')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#efe7fd' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/cabello.png')} />
               </View>
-              <Text style={styles.textCategory}>Cabello</Text>
+              <Text style={styles.textCategory}>CABELLO</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Maquillaje')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#d0fcea' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/maquillaje.png')} />
               </View>
-              <Text style={styles.textCategory}>Maquillaje</Text>
+              <Text style={styles.textCategory}>MAQUILLAJE</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Unas')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#ffe8f2' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/unas.png')} />
               </View>
-              <Text style={styles.textCategory}>Uñas</Text>
+              <Text style={styles.textCategory}>UÑAS</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Depilacion')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#d6efff' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/depilacion.png')} />
               </View>
-              <Text style={styles.textCategory}>Depilación</Text>
+              <Text style={styles.textCategory}>DEPILACIÓN</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Pestanas')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#fdfdd6' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/cejas-pestanas.png')} />
               </View>
-              <Text style={styles.textCategory}>Cejas y{'\n'}Pestañas</Text>
+              <Text style={styles.textCategory}>CEJAS Y{'\n'}PESTAÑAS</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Piel')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#fcdfd9' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
-                <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/skin-care.png')} />
+              <View style={styles.contentIconCatalogo}>
+                <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/cuidado-piel.png')} />
               </View>
-              <Text style={styles.textCategory}>Cuidado de{'\n'}la piel</Text>
+              <Text style={styles.textCategory}>CUIDADO DE PIEL</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Quinceanera')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#efe7fd' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/quiceanera.png')} />
               </View>
-              <Text style={styles.textCategory}>Quinceañera</Text>
+              <Text style={styles.textCategory}>QUINCEAÑERA</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Novia')}>
-              <View style={[styles.contentIconCatalogo, { backgroundColor: '#d6efff' }]}>
-                {/* <View style={styles.contentIconCatalogo}> */}
+              <View style={styles.contentIconCatalogo}>
                 <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/novia.png')} />
               </View>
-              <Text style={styles.textCategory}>Novia</Text>
+              <Text style={styles.textCategory}>NOVIA</Text>
             </TouchableOpacity>
 
           </View>
@@ -120,53 +113,51 @@ export default Catalogo;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F3ECE6',
   },
   contentImgCatalogo: {
     display: 'flex',
     width: '100%',
-    //marginTop: 10,
-    aspectRatio: 1 * 1.333, // Convertir pixeles de imágen a "Relación Aspecto" 
+    aspectRatio: 1 * 1.2, // Convertir pixeles de imágen a "Relación Aspecto" 
     backgroundColor: '#00000000',
   },
   imgCatalogo: {
     width: '100%',
     height: '100%',
-    //borderRadius: 15,
   },
   contentCatalog: {
-    width: '80%',
-    marginHorizontal: '10%',
-    backgroundColor: '#00000000',
+    width: '90%',
+    marginHorizontal: '5%',
+    backgroundColor: '#F3ECE6',
   },
   catalog: {
     flexDirection: 'row', // Posisiona elementos en fila
     flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
-    justifyContent: 'center',
-    marginTop: 15,
-    backgroundColor: '#00000000',
+    backgroundColor: '#F3ECE6',
+    marginBottom: 20,
   },
   contentCategory: {
+    width: '33.3%',
     alignItems: 'center',
-    marginVertical: 20,
-    marginHorizontal: 10,
+    marginTop: 40,
   },
   contentIconCatalogo: {
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 90,
     justifyContent: 'center',
     alignItems: 'center',
-    //borderRadius: 50,
+    backgroundColor: '#ffffff',
+    borderRadius: 50,
   },
   iconCatalogo: {
-    width: 50,
-    height: 50,
+    width: 55,
+    height: 55,
   },
   textCategory: {
     fontFamily: 'Futura PT Medium',
-    height: 44,
+    width: '100%',
     color: '#3d3d3d',
-    fontSize: 14,
+    fontSize: 12,
     marginTop: 10,
     fontWeight: '500',
     textAlign: 'center',

@@ -6,6 +6,7 @@ import Cabello from '../screens/Cabello';
 import Unas from '../screens/Unas';
 import Pestanas from '../screens/Pestanas';
 import StackAccountHeader from './StackAccountHeader';
+import AgendarCita from '../screens/AgendarCita';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,12 @@ const StackMain = () => {
       <Stack.Screen
         name="Pestanas"
         component={Pestanas as React.ComponentType<any>}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="AgendarCita"
+        component={AgendarCita as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
