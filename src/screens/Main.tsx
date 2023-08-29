@@ -47,7 +47,7 @@ const Main = ({ navigation }: MainProps) => {
   const serviceTexts = [
     'Maquillaje profesional',
     'Depilación',
-    'Manicure y Pedicure',
+    'Uñas',
     'Cabello',
     'Cejas y Pestañas',
     'Cuidado de la piel',
@@ -80,15 +80,15 @@ const Main = ({ navigation }: MainProps) => {
 
             <View style={styles.separator}></View>
 
-            <View style={styles.containerTextOne}>
-              <Text style={styles.mainTitleOne}>PASIÓN POR LA BELLEZA</Text>
-              <Text style={styles.mainTextOne}>
-                Descubra nuestra amplia gama de servicios, en Vanidosa Salon y SPA, Somos profesionales apasiondos por el cuidado personal y la belleza, dispuestos a brindarle la mejor atención.
+            <View style={styles.containerText}>
+              <Text style={styles.mainTitle}>PASIÓN POR LA BELLEZA</Text>
+              <Text style={[styles.mainText, { marginBottom: 20 }]}>
+                Descubre nuestra amplia gama de servicios, en Vanidosa SPA y Belleza, Somos profesionales apasiondos por la belleza y el cuidado personal, dispuestos a brindarte la mejor atención.
               </Text>
             </View>
 
             <View style={styles.containerServices}>
-              <Text style={styles.titleServices}>NUESTROS SERVICIOS</Text>
+              <Text style={[styles.mainTitle, { marginTop: 0, marginBottom: 30 }]}>NUESTROS SERVICIOS</Text>
 
               <Swiper
                 style={styles.containerSwiper}
@@ -118,13 +118,26 @@ const Main = ({ navigation }: MainProps) => {
 
             <View style={styles.separator}></View>
 
-            <View style={styles.containerTextThree}>
-              <Text style={styles.mainTitleThree}>PERFECCIÓN EN BELLEZA Y CUIDADO PERSONAL</Text>
-              <Text style={styles.mainTextThree}>
-                Descubre la excelencia en cuidado personal en Vnidosa SPA y belleza, donde fusionamos la innovación estética con técnicas vanguardistas. Nuestro equipo de estilistas altamente calificados te brindará una experiencia inolvidable.
+            <View style={styles.containerText}>
+              <Text style={styles.mainTitle}>PERFECCIÓN EN BELLEZA Y CUIDADO PERSONAL</Text>
+              <Text style={styles.mainText}>
+                Descubre la excelencia en cuidado personal en Vnidosa SPA y belleza. Fusionamos la innovación estética con técnicas vanguardistas. Nuestro equipo de estilistas altamente calificados te brindará una experiencia inolvidable.
               </Text>
             </View>
 
+            <View style={{ width: '80%', marginTop: 40, marginHorizontal: '10%', borderBottomWidth: 1, borderColor: '#9e9e9e', }}></View>
+
+            <View style={styles.containerImageSpa}>
+              <Image style={styles.imageSpa} source={require('../../android/assets/img/main/spa.png')} />
+            </View>
+
+
+            <View style={styles.containerText}>
+              <Text style={styles.mainTitle}>ACERCA DE VANIDOSA SPA Y BELLEZA</Text>
+              <Text style={[styles.mainText]}>
+                Vanidosa SPA y Belleza es un salón especializado en ofrecer servicios de alte calidad en el área de la belleza y cuidado personal. Cuenta con un equipo de profesionales altamente calificados, dedicados a resaltar la belleza en su máxima expresión. Nuestro enfoque abarca mucho más que un salón de belleza.
+              </Text>
+            </View>
 
           </View>
 
@@ -144,6 +157,7 @@ export default Main;
 const styles = StyleSheet.create({
   contentImageMain: {
     width: '100%',
+    marginBottom: 8,
     aspectRatio: 1 * 1, // Convertir pixeles de imágen a "Relación Aspecto" 
   },
   imageMain: {
@@ -153,10 +167,10 @@ const styles = StyleSheet.create({
   buttonSchedule: {
     position: 'absolute',
     justifyContent: 'center',
-    width: '50%',
+    width: '60%',
     height: 45,
     bottom: 25,
-    marginHorizontal: '25%',
+    marginHorizontal: '20%',
     backgroundColor: '#e00083aa',
   },
   buttonScheduleText: {
@@ -168,6 +182,7 @@ const styles = StyleSheet.create({
   },
   containerMain: {
     width: '100%',
+    marginBottom: 30,
     backgroundColor: '#00000000',
   },
   contentMain: {
@@ -178,16 +193,14 @@ const styles = StyleSheet.create({
     width: '24%',
     marginTop: 40,
     marginHorizontal: '38%',
-    marginBottom: 20,
-    borderColor: '#7c7c7c',
+    borderColor: '#5B009D',
     borderBottomWidth: 2,
   },
-  containerTextOne: {
-    marginTop: 10,
-    paddingBottom: 10,
+  containerText: {
     paddingHorizontal: 25,
   },
-  mainTitleOne: {
+  mainTitle: {
+    marginTop: 25,
     marginBottom: 20,
     fontFamily: 'Aspira W05 Demi',
     textAlign: 'center',
@@ -195,7 +208,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0.3
   },
-  mainTextOne: {
+  mainText: {
     fontFamily: 'Futura PT Book',
     textAlign: 'center',
     color: '#000000',
@@ -258,20 +271,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Demi',
     width: '100%',
     textAlign: 'center',
-    color: '#000000',
-    fontSize: 22,
+    color: '#5e5e5e',
+    fontSize: 20,
     letterSpacing: 0.3,
-    marginTop: 6,
+    marginTop: 8,
   },
   buttonScheduleServices: {
     justifyContent: 'center',
-    width: '56%',
-    height: 55,
-    marginTop: 40,
-    marginHorizontal: '22%',
+    width: '60%',
+    height: 50,
+    marginTop: 30,
+    marginBottom: 5,
+    marginHorizontal: '20%',
     backgroundColor: '#ffffff00',
     borderWidth: 2,
-    borderColor: '#29344A'
+    borderColor: '#E00083'
   },
   buttonScheduleServicesText: {
     fontFamily: 'Aspira W05 Demi',
@@ -280,24 +294,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     letterSpacing: 0.3,
   },
-  containerTextThree: {
-    marginTop: 0,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
+  containerImageSpa: {
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: -10,
   },
-  mainTitleThree: {
-    marginBottom: 15,
-    fontFamily: 'Aspira W05 Demi',
-    textAlign: 'center',
-    color: '#585858',
-    fontSize: 20,
-    letterSpacing: 0.3,
-  },
-  mainTextThree: {
-    fontFamily: 'Futura PT Book',
-    textAlign: 'center',
-    color: '#000000',
-    fontSize: 17,
-    letterSpacing: 0.3,
+  imageSpa: {
+
   },
 });
