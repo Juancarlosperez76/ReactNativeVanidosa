@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     color: '#f27474',
   },
   title: {
-    fontFamily: 'Montserrat SemiBold',
+    fontFamily: 'Aspira W05 Demi',
     marginBottom: 6,
     fontSize: 20,
     color: '#545454',

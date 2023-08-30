@@ -22,7 +22,7 @@ type RootStackParamList = {
   AccountHeader: undefined;
   EditAccount: undefined;
   ChangePassword: undefined;
-  StackAccount: undefined;
+  Login: undefined;
   Main: undefined;
 };
 type AccountHeaderProps = NativeStackScreenProps<RootStackParamList, 'AccountHeader'>;
@@ -117,11 +117,17 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           const userData = userResponse.data.Usuarios;
           const currentUser = userData.find((user: { Correo: string; }) => user.Correo === userEmail);
 
+          // Valida si la cuenta ha sido eliminada o el correo ha sido modificado.
           if (currentUser) {
             setUser(currentUser);
           } else {
-            setWarningVisible(true);
+            // Destruir la sesión y redirigir al login
+            await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('userEmail');
+            navigation.replace('Login'); // Reemplaza la pantalla actual por la pantalla de inicio de sesión
           }
+
+
         }
 
         setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
@@ -231,7 +237,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
-    navigation.navigate('StackAccount');
+    navigation.navigate('Login');
   };
 
   // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
@@ -239,7 +245,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   const handleCloseWarning = () => {
     setWarningVisible(false);
-    navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
+    navigation.navigate('Login'); // Redireccionar a "StackAccount"
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -338,7 +344,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             visible={WarningVisible}
             onCloseWarning={handleCloseWarning}
             title='Cuenta eliminada.'
-            message='La cuenta no exixte o fué eliminada.'
+            message='La cuenta no existe o fue eliminada.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />

@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   title: {
-    fontFamily: 'Montserrat SemiBold',
+    fontFamily: 'Aspira W05 Demi',
     fontSize: 20,
     marginBottom: 16,
     color: '#545454',

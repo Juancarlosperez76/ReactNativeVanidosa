@@ -42,8 +42,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   // ----------------------------------------------Estados para campos editables-----------------------------------------------
   const [Nombre, setNombre] = useState('');
   const [Apellido, setApellido] = useState('');
-  const [Tipo_Documento, setTipo_Documento] = useState('');
-  const [Documento, setDocumento] = useState('');
   const [Direccion, setDireccion] = useState('');
   const [Telefono, setTelefono] = useState('');
   const [Correo, setCorreo] = useState('');
@@ -71,15 +69,19 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           if (currentUser) {
             setUser(currentUser);
             console.log('Datos del usuario obtenidos:', currentUser);
+
+            // Inicializa estado de campos editables, con valores del usuario logueado, "Cambia estado de vacío a lleno"
+            setNombre(currentUser.Nombre);
+            setApellido(currentUser.Apellido);
+            setDireccion(currentUser.Direccion);
+            setTelefono(currentUser.Telefono.toString());
+            setCorreo(currentUser.Correo);
+
           } else {
             console.error('Usuario actual no encontrado en la lista de usuarios');
             // Aquí redirigimos al usuario a la pantalla de inicio de sesión
             navigation.navigate('StackAccount');
           }
-        } else {
-          Alert.alert('Error', 'Por favor inicie sesión para continuar.');
-          // Aquí redirigimos al usuario a la pantalla de inicio de sesión
-          navigation.navigate('StackAccount');
         }
 
         setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
@@ -101,30 +103,16 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
       return;
     }
 
-    let hasChanges = false;
-
-    // Verificar si algún campo del formulario ha sido editado
-    if (Nombre !== '' && Nombre !== user.Nombre) {
-      hasChanges = true;
+    // Validación de campos vacíos
+    if (Nombre === '' || Apellido === '' || Direccion === '' || Telefono === '' || Correo === '') {
+      setEmptyInputVisible(true); // Muestra alerta de "Campos vacíos"
+      return
     }
 
-    if (Apellido !== '' && Apellido !== user.Apellido) {
-      hasChanges = true;
-    }
-
-    if (Direccion !== '' && Direccion !== user.Direccion) {
-      hasChanges = true;
-    }
-
-    if (Telefono !== '' && Telefono.toString() !== user.Telefono.toString()) {
-      hasChanges = true;
-    }
-
-    if (Correo !== '' && Correo !== user.Correo) {
-      hasChanges = true;
-    }
-
-    if (!hasChanges) {
+    // Validar si se realizaron cambios en la información
+    if (Nombre !== user.Nombre || Apellido !== user.Apellido || Direccion !== user.Direccion || Telefono.toString() !== user.Telefono.toString() || Correo !== user.Correo) {
+      console.log('Se realizaron cambios en la información')
+    } else {
       setWarningEditVisible(true);
       return;
     }
@@ -145,8 +133,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
       _id: user._id,
       Nombre: Nombre !== '' ? Nombre : user.Nombre,
       Apellido: Apellido !== '' ? Apellido : user.Apellido,
-      Documento: Documento !== '' ? parseInt(Documento, 10) : user.Documento, // Convierte la cadena en tipo numérico "number"
-      Tipo_Documento: Tipo_Documento !== '' ? Tipo_Documento : user.Tipo_Documento,
       Direccion: Direccion !== '' ? Direccion : user.Direccion,
       Telefono: Telefono !== '' ? parseInt(Telefono, 10) : user.Telefono, // Convierte la cadena en tipo numérico "number"
       Correo: Correo !== '' ? Correo : user.Correo,
@@ -169,7 +155,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
     if (response.status === 200) { // Verificar que la respuesta del servidor sea exitosa
       setUser({ ...user, ...updatedUserData }); // Actualizar el estado del usuario con los datos editados
-      setSuccessEditVisible(true); // Muestra mensaje "El usuario ha sido actualizado correctamente."
+      setSuccessEditVisible(true); // Muestra alerta "La información se ha actualizado correctamente."
     } else {
       //console.error('Error al editar el usuario:', response.data);
     }
@@ -210,7 +196,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
       // Validar campos vacíos
       if (!ContrasenaActual) {
-        setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
+        setEmptyPasswordInputVisible(true); // Mostrar alerta "Campos vacíos"
         setIsLoading(false); // Desactivar el preload
         return
       }
@@ -280,10 +266,17 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   };
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
-  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
+  const [emptyInputVisible, setEmptyInputVisible] = useState(false);
 
-  const handleCloseEmptyFields = () => {
-    setEmptyFieldsVisible(false);
+  const handleCloseEmptyInput = () => {
+    setEmptyInputVisible(false);
+  };
+
+  // ------------------------------------------Función alerta "Campo Contraseña vacío"-----------------------------------------
+  const [emptyPasswordInputVisible, setEmptyPasswordInputVisible] = useState(false);
+
+  const handleCloseEmptyPasswordInput = () => {
+    setEmptyPasswordInputVisible(false);
   };
 
   // --------------------------------------------Función alerta "Teléfono inválido"--------------------------------------------
@@ -404,7 +397,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 <TextInput
                   style={styles.input}
                   defaultValue={user.Tipo_Documento}
-                  onChangeText={setTipo_Documento}
                   editable={false}
                 />
               </View>
@@ -417,7 +409,6 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                 <TextInput
                   style={styles.input}
                   defaultValue={user.Documento.toString()}
-                  onChangeText={setDocumento}
                   keyboardType='numeric'
                   editable={false}
                 />
@@ -494,21 +485,21 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
               width={'100%'}
               height={48}
               backgroundColor={'#00000000'}
-              borderColor={'#E00083'} 
+              borderColor={'#E00083'}
               borderWidth={1}
               borderRadius={0}
-              borderTopLeftRadius={0} 
-              borderTopRightRadius={0} 
-              borderBottomRightRadius={0} 
-              borderBottomLeftRadius={0} 
-              fontFamily={''}            
+              borderTopLeftRadius={0}
+              borderTopRightRadius={0}
+              borderBottomRightRadius={0}
+              borderBottomLeftRadius={0}
+              fontFamily={''}
               color={'#E00083'}
               fontSize={14}
               fontWeight={'600'}
               letterSpacing={0.8}
-              title={'ELIMINAR CUENTA'} 
+              title={'ELIMINAR CUENTA'}
 
-              />
+            />
           </View>
 
           {/* ---------------------------Alerta "¿Está seguro que quiere eliminar su cuenta?"------------------------------ */}
@@ -559,8 +550,18 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
           {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
           <AlertWarning
-            visible={emptyFieldsVisible}
-            onCloseWarning={handleCloseEmptyFields}
+            visible={emptyInputVisible}
+            onCloseWarning={handleCloseEmptyInput}
+            title='Campos vacíos.'
+            message='Por favor, complete los campos vacíos.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* ---------------------------------------Alerta "Campo Contraseña vacío"--------------------------------------- */}
+          <AlertWarning
+            visible={emptyPasswordInputVisible}
+            onCloseWarning={handleCloseEmptyPasswordInput}
             title='Campos vacíos.'
             message='Por favor, ingrese la contraseña para continuar.'
             buttonStyle={{ width: 70 }}
@@ -570,8 +571,8 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
           <AlertWarning
             visible={phoneVisible}
             onCloseWarning={handleClosePhone}
-            title='Teléfono inválido.'
-            message='El teléfono debe tener al menos 10 números.'
+            title='Número inválido.'
+            message='El número de teléfono debe contener al menos 10 dígitos.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />

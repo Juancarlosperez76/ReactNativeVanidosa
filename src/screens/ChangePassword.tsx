@@ -293,7 +293,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
               <AlertWarning
                 visible={notMatchVisible}
                 onCloseWarning={handleCloseNotMatch}
-                title='Las contraseñas no coinciden.'
+                title='Contraseñas no coinciden.'
                 message='Las contraseñas ingresadas deben coincidir.'
                 buttonStyle={{ width: 70 }}
                 buttonText='OK'

@@ -17,7 +17,7 @@ type RootStackParamList = {
   HomeRecoverPass: undefined;
   Registro: undefined;
   Login: undefined;
-  StackMain: undefined;
+  Main: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -49,7 +49,7 @@ const Login = ({ navigation }: LoginProps) => {
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
     setIsLoading(false); // Mostrar preload mientras se inicia sesión
-    navigation.navigate('StackMain'); // Redireccionar a "StackMain" después de hacer clic en "OK"
+    navigation.navigate('Main'); // Redireccionar a "StackMain" después de hacer clic en "OK"
   }
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
