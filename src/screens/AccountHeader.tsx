@@ -126,8 +126,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             await AsyncStorage.removeItem('userEmail');
             navigation.replace('Login'); // Reemplaza la pantalla actual por la pantalla de inicio de sesión
           }
-
-
         }
 
         setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
