@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import ButtonSecondary from '../components/ButtonSecondary';
 
 type User = {
   _id: User | null;
@@ -30,11 +31,14 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
   // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
-
-      setIsLoading(true); // Activar el preload
 
       try {
         const token = await AsyncStorage.getItem('userToken');
@@ -63,10 +67,6 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           // Aquí redirigimos al usuario a la pantalla de inicio de sesión
           //navigation.navigate('StackAccount');
         }
-
-        setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
-          setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
-        }, 1000);
 
       } catch (error) {
         //console.error('Error al obtener los datos del usuario:', error);
@@ -117,7 +117,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
- 
+
     <>
       <LoadingIndicator isLoading={isLoading} />
       <HeaderSettingsReturn navigation={navigation} title="Agendar cita" />
@@ -186,25 +186,26 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             <View>
               <View style={styles.containerButtonsOpen}>
                 <TouchableOpacity onPress={() => setShowDatePicker(true)} >
-                  <MaterialIcons style={styles.iconDateTime} name="calendar-month" size={28} color="#0054ad" />
+                  <MaterialIcons style={styles.iconDateTime} name="calendar-month" size={24} color="#585858" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setShowTimePicker(true)}  >
-                  <MaterialIcons style={styles.iconDateTime} name="access-time" size={28} color="#0054ad" />
+                  <MaterialIcons style={styles.iconDateTime} name="access-time" size={24} color="#585858" />
                 </TouchableOpacity>
               </View>
             </View>
-
           </View>
 
           <Modal visible={ServiceOptionsVisible} animationType="fade" transparent>
             <View style={styles.containerServiceOptions}>
-              <ScrollView>
-                {ServiceOptions.map((option) => (
-                  <TouchableOpacity style={styles.closeServiceOptions} key={option.value} onPress={() => handleCloseServiceOptions(option.value)}>
-                    <Text style={styles.serviceOptionText}>{option.label}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+              <View style={styles.contentServiceOptions}>
+                <ScrollView>
+                  {ServiceOptions.map((option) => (
+                    <TouchableOpacity style={styles.closeServiceOptions} key={option.value} onPress={() => handleCloseServiceOptions(option.value)}>
+                      <Text style={styles.serviceOptionText}>{option.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
             </View>
           </Modal>
 
@@ -231,17 +232,60 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           )}
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
+          <View style={styles.contentselectedProducts}>
+            <Text style={styles.titleSelectedProducts}>Servicios seleccionados</Text>
+          </View>
+
+
+          <View style={styles.containerServicesTitle}>
+            <Text style={styles.idTitle}>N&#8304;</Text>
+            <Text style={styles.serviceTitle}>Servicio</Text>
+          </View>
+
+          <View style={styles.containerServicesText}>
+            <Text style={styles.idText}>1</Text>
+            <Text style={styles.serviceText}>Corte de cabello</Text>
+            <TouchableOpacity style={styles.containerServiceIcon} onPress={handleOpenServiceOptions}>
+              <Ionicons style={styles.serviceIcon} name="trash-outline" />
+            </TouchableOpacity>
+          </View>
+
           <ButtonPrimary
             onPress={() => { }}
             width={'100%'}
             height={48}
+            marginTop={15}
+            marginBottom={0}
             backgroundColor={'#5B009D'}
             borderRadius={0}
+            fontFamily={'Aspira W05 Demi'}
             color={'#ffffff'}
             fontSize={14}
             fontWeight={'500'}
-            letterSpacing={0.8}
+            letterSpacing={0.3}
             title={'AGENDAR'}
+          />
+
+          <ButtonSecondary
+            onPress={() => navigation.navigate('MisCitas')}
+            width={'100%'}
+            height={48}
+            marginTop={20}
+            marginBottom={0}
+            backgroundColor={'#00000000'}
+            borderColor={'#E00083'}
+            borderWidth={2}
+            borderRadius={0}
+            borderTopLeftRadius={0}
+            borderTopRightRadius={0}
+            borderBottomRightRadius={0}
+            borderBottomLeftRadius={0}
+            fontFamily={'Aspira W05 Demi'}
+            color={'#29344A'}
+            fontSize={14}
+            fontWeight={'600'}
+            letterSpacing={0.3}
+            title={'CITAS AGENDADAS'}
           />
 
         </SafeAreaView>
@@ -286,22 +330,22 @@ const styles = StyleSheet.create({
   iconForm: {
     marginLeft: 6,
     marginRight: 4,
-    color: '#000000',
     fontSize: 22,
+    color: '#000000',
   },
   label: {
-    color: '#000000',
     fontSize: 14,
+    color: '#000000',
     letterSpacing: 0.5,
   },
   input: {
     width: '54%',
     height: 48,
     paddingLeft: 10,
+    fontSize: 14,
     color: '#000000',
     fontWeight: '400',
     letterSpacing: 0.5,
-    fontSize: 14,
   },
   // Estilos botón "Seleccionar sevicios"
   containeSeletcServices: {
@@ -310,7 +354,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 8,
-    marginBottom: 16,
+    marginBottom: 30,
     backgroundColor: '#E6E6E6',
   },
   containerIconLabel: {
@@ -319,8 +363,8 @@ const styles = StyleSheet.create({
   iconServiceOptions: {
     marginLeft: 6,
     marginRight: 4,
-    color: '#000000',
     fontSize: 22,
+    color: '#000000',
   },
   labelServiceOptions: {
     fontSize: 14,
@@ -338,24 +382,103 @@ const styles = StyleSheet.create({
   },
   // Estilos modal "Seleccionar sevicios"
   containerServiceOptions: {
-    backgroundColor: '#3F3F3F',
-    marginHorizontal: 20,
-    top: 439,
-    height: 178,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000080',
+  },
+  contentServiceOptions: {
+    width: '70%',
+    height: 300,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    paddingVertical: 15,
   },
   closeServiceOptions: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 12,
-    paddingHorizontal: 15,
   },
   serviceOptionText: {
+    fontFamily: 'Aspira W05 Medium',
     width: '100%',
-    color: '#ffffff',
+    fontSize: 15,
+    color: '#000000',
     textAlign: 'center',
-    fontSize: 14,
     letterSpacing: 0.5,
     fontWeight: '400',
+  },
+  contentselectedProducts: {
+
+  },
+  titleSelectedProducts: {
+    fontFamily: 'Aspira W05 Demi',
+    marginBottom: 10,
+    fontSize: 20,
+    color: '#585858',
+    textAlign: 'center',
+    letterSpacing: 0.2,
+  },
+
+
+  containerServicesTitle: {
+    flexDirection: 'row',
+    backgroundColor: '#E6E6E6',
+  },
+  idTitle: {
+    fontFamily: 'Aspira W05 Demi',
+    width: '12%',
+    paddingVertical: 11,
+    fontSize: 16,
+    color: '#585858',
+    textAlign: 'center',
+    borderRightWidth: 1,
+    borderColor: '#ffffff',
+    letterSpacing: 0.3,
+  },
+  serviceTitle: {
+    fontFamily: 'Aspira W05 Demi',
+    width: '88%',
+    paddingVertical: 11,
+    fontSize: 16,
+    color: '#585858',
+    textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  containerServicesText: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+  },
+  idText: {
+    fontFamily: 'Aspira W05 Medium',
+    width: '12%',
+    paddingVertical: 11,
+    fontSize: 15,
+    color: '#585858',
+    textAlign: 'center',
+    borderRightWidth: 1,
+    borderColor: '#E6E6E6',
+    letterSpacing: 0.3,
+  },
+  serviceText: {
+    fontFamily: 'Aspira W05 Medium',
+    width: '76%',
+    paddingVertical: 11,
+    paddingLeft: 10,
+    fontSize: 15,
+    color: '#585858',
+    letterSpacing: 0.3,
+  },
+  containerServiceIcon: {
+    width: '12%',
+  },
+  serviceIcon: {
+    paddingVertical: 11,
+    fontSize: 23,
+    color: '#585858',
+    textAlign: 'center',
+    letterSpacing: 0.3,
   },
 });

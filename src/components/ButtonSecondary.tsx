@@ -5,7 +5,9 @@ import { TouchableOpacity, Text } from 'react-native';
 interface ButtonSecondaryProps {
   onPress: () => void;
   width: number | string,
-  height: number,
+  height: number | string,
+  marginTop: number,
+  marginBottom: number,
   backgroundColor: string;
   borderWidth: number,
   borderColor: string,
@@ -26,6 +28,8 @@ const ButtonSecondary = ({
   onPress,
   width,
   height,
+  marginTop,
+  marginBottom,
   backgroundColor,
   borderWidth,
   borderColor,
@@ -39,14 +43,17 @@ const ButtonSecondary = ({
   fontSize,
   fontWeight,
   letterSpacing,
-  title }: ButtonSecondaryProps) => {
+  title }:
+  ButtonSecondaryProps) => {
 
   return (
 
     <TouchableOpacity style={{
+      justifyContent: 'center',
       width: width,
       height: height,
-      justifyContent: 'center',
+      marginTop: marginTop,
+      marginBottom: marginBottom,
       backgroundColor: backgroundColor,
       borderWidth: borderWidth,
       borderColor: borderColor,

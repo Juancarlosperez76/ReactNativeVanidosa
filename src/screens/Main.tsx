@@ -83,7 +83,7 @@ const Main = ({ navigation }: MainProps) => {
             <View style={styles.containerText}>
               <Text style={styles.mainTitle}>PASIÓN POR LA BELLEZA</Text>
               <Text style={[styles.mainText, { marginBottom: 20 }]}>
-                Descubre nuestra amplia gama de servicios, en Vanidosa SPA y Belleza, Somos profesionales apasiondos por la belleza y el cuidado personal, dispuestos a brindarte la mejor atención.
+                En Vanidosa SPA y Belleza, somos profesionales apasiondos por el arte de la belleza y el cuidado personal, explora nuestra amplia gama de servicios diseñados para ti, estamos compromrtidos y dispuestos a brindarte la mejor atención.
               </Text>
             </View>
 
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Demi',
     color: '#ffffff',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 15,
     letterSpacing: 0.3,
   },
   containerMain: {
@@ -205,14 +205,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Demi',
     textAlign: 'center',
     color: '#585858',
-    fontSize: 20,
+    fontSize: 17,
     letterSpacing: 0.3
   },
   mainText: {
     fontFamily: 'Futura PT Book',
     textAlign: 'center',
     color: '#000000',
-    fontSize: 17,
+    fontSize: 16,
     letterSpacing: 0.4,
   },
   containerServices: {
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   // Estilos personalizados "Librería Swiper"
   paginationStyle: {
-    bottom: -5,
+    bottom: -2,
   },
   dotStyle: {
     backgroundColor: '#a0a0a0',
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     color: '#5e5e5e',
-    fontSize: 20,
+    fontSize: 18,
     letterSpacing: 0.3,
     marginTop: 8,
   },
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Demi',
     color: '#29344A',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 15,
     letterSpacing: 0.3,
   },
   containerImageSpa: {
@@ -300,6 +300,7 @@ const styles = StyleSheet.create({
     marginBottom: -10,
   },
   imageSpa: {
-
+    width: 80,
+    height: 51,
   },
 });

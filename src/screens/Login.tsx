@@ -188,6 +188,8 @@ const Login = ({ navigation }: LoginProps) => {
                   onPress={handleLogin} // Llamar a la función handleLogin al presionar el botón
                   width={'100%'}
                   height={48}
+                  marginTop={0} 
+                  marginBottom={0} 
                   backgroundColor={'#5B009D'}
                   borderRadius={0}
                   color={'#ffffff'}
@@ -209,6 +211,8 @@ const Login = ({ navigation }: LoginProps) => {
                   onPress={() => navigation.navigate('Registro')}
                   width={'100%'}
                   height={48}
+                  marginTop={0} 
+                  marginBottom={0} 
                   backgroundColor={'#00000000'}
                   borderColor={'#E00083'}                  
                   borderWidth={1}

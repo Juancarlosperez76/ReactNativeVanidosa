@@ -479,21 +479,22 @@ const Registro = ({ navigation }: RegistroProps) => {
 
           <TermsAndConditionsModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
-          <View style={{ marginTop: 30 }}>
             <ButtonPrimary
               onPress={handleRegister}
               width={'100%'}
               height={48}
+              marginTop={30}
+              marginBottom={0}
               backgroundColor={'#5B009D'}
               borderRadius={0}
+              fontFamily={''}
               color={'#FFFFFF'}
               fontSize={14}
               fontWeight={'500'}
               letterSpacing={0.8}
               title={'CREAR CUENTA'}
             />
-          </View>
-
+          
           {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
           <AlertWarning
             visible={emptyFieldsVisible}
@@ -597,11 +598,12 @@ const Registro = ({ navigation }: RegistroProps) => {
 
           <View style={styles.separator}></View>
 
-          <View style={{ marginBottom: 30 }}>
             <ButtonSecondary
               onPress={() => navigation.navigate('Login')}
               width={'100%'}
               height={48}
+              marginTop={0}
+              marginBottom={30}
               backgroundColor={'#00000000'}
               borderColor={'#E00083'}
               borderWidth={1}
@@ -617,7 +619,6 @@ const Registro = ({ navigation }: RegistroProps) => {
               letterSpacing={0.8}
               title={'INICIAR SESIÓN'}
             />
-          </View>
 
         </SafeAreaView>
       </ScrollView>
