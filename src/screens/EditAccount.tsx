@@ -276,7 +276,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
     setEmptyInputVisible(false);
   };
 
-  // ------------------------------------------Función alerta "Campo Contraseña vacío"-----------------------------------------
+  // ------------------------------------------Función alerta "Se requiere contraseña"-----------------------------------------
   const [emptyPasswordInputVisible, setEmptyPasswordInputVisible] = useState(false);
 
   const handleCloseEmptyPasswordInput = () => {
@@ -573,11 +573,11 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
               buttonText='OK'
             />
 
-            {/* ---------------------------------------Alerta "Campo Contraseña vacío"--------------------------------------- */}
+            {/* ---------------------------------------Alerta "Se requiere contraseña"--------------------------------------- */}
             <AlertWarning
               visible={emptyPasswordInputVisible}
               onCloseWarning={handleCloseEmptyPasswordInput}
-              title='Campos vacíos.'
+              title='Se requiere contraseña.'
               message='Por favor, ingrese la contraseña para continuar.'
               buttonStyle={{ width: 70 }}
               buttonText='OK'

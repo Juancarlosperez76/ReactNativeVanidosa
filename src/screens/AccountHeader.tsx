@@ -203,7 +203,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
     }
   };
 
-  // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
+  // -----------------------------------------Función alerta "Se requiere contraseña"------------------------------------------
   const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
 
   const handleCloseEmptyFields = () => {
@@ -318,11 +318,11 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
           <View style={styles.separator}></View>
 
-          {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
+          {/* ---------------------------------------Alerta "Se requiere contraseña"--------------------------------------- */}
           <AlertWarning
             visible={emptyFieldsVisible}
             onCloseWarning={handleCloseEmptyFields}
-            title='Campos vacíos.'
+            title='Se requiere contraseña.'
             message='Por favor, ingrese la contraseña para continuar.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'

@@ -1,4 +1,4 @@
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -29,7 +29,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
   const [user, setUser] = useState<User | null>(null);
 
-  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
@@ -88,7 +88,7 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
     fetchUserData();
   }, []);
 
-  // --------------------------------------Función para cambiar la contraseña del usuario--------------------------------------
+  // ---------------------------------------Función para cambiar la contraseña de usuario--------------------------------------
   const changePass = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
