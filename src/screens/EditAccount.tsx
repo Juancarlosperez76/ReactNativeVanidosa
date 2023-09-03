@@ -1,4 +1,4 @@
-import { Alert, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertDeleteAccount from '../components/AlertDeleteAccount';
@@ -180,6 +180,10 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
     setShowPasswordModal(!showPasswordModal);
   };
 
+  // Función para cerrar "Modal" al hacer clic fuera de él
+  const onCloseConfirmPassOutside = () => {
+    setValidatePassVisible(false);
+  };
   // -------------------------------------------Función validar contraseña de usuario------------------------------------------
   const validatePassword = async () => {
     try {
@@ -516,8 +520,17 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
             />
 
             {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
-            <Modal visible={validatePassVisible} transparent animationType="fade">
-              <View style={styles.modalBackground}>
+            <Modal
+              visible={validatePassVisible}
+              transparent
+              animationType="fade"
+            >
+
+              <Pressable
+                style={styles.modalBackground}
+                onPress={onCloseConfirmPassOutside} // Cerrar "Modal" al hacer clic fuera de él 
+              >
+
                 <View style={styles.modalContentAlert}>
 
                   <Text style={styles.title}>Confirma tu identidad</Text>
@@ -547,7 +560,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
                   </View>
 
                 </View>
-              </View>
+              </Pressable>
             </Modal>
 
             {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}

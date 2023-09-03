@@ -1,8 +1,9 @@
+import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle, TextInput, Pressable } from 'react-native';
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle, TextInput } from 'react-native';
 
 interface AlertEnterCodeProps {
   visible: boolean;
+  onCloseEnterCodeOutside: () => void; // Función para cerrar "Modal" al hacer clic fuera de él
   onCloseEnterCode: () => void;
   title: string;
   message: string;
@@ -11,13 +12,22 @@ interface AlertEnterCodeProps {
   buttonText: string;
 }
 
-const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle, buttonText, email }: AlertEnterCodeProps) => {
+const AlertEnterCode = ({ visible, onCloseEnterCodeOutside, onCloseEnterCode, title, message, buttonStyle, buttonText, email }: AlertEnterCodeProps) => {
 
   const [InputOne, setInputOne] = React.useState('');
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.modalBackground}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+    >
+
+      <Pressable
+        style={styles.modalBackground}
+        onPress={onCloseEnterCodeOutside} // Cerrar "Modal" al hacer clic fuera de él 
+      >
+
         <View style={styles.modalContent}>
 
           <Text style={styles.title}>{title}</Text>
@@ -43,7 +53,9 @@ const AlertEnterCode = ({ visible, onCloseEnterCode, title, message, buttonStyle
           </View>
 
         </View>
-      </View>
+
+      </Pressable>
+
     </Modal>
   );
 };

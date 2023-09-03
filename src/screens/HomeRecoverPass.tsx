@@ -41,6 +41,11 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
     setEnterCodeVisible(false);
     navigation.navigate('RecoverPass');
   };
+  
+  // Función para cerrar "Modal" al hacer clic fuera de él
+  const handleCloseEnterCodeOutside = () => {
+    setEnterCodeVisible(false);
+  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -49,7 +54,7 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
 
       <LoadingIndicator isLoading={isLoading} />
 
-      <HeaderReturn navigation={navigation} title="Validar correo" />
+      <HeaderReturn navigation={navigation} title="Restablecer contraseña" />
 
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
       <View style={styles.scrollView}>
@@ -97,12 +102,13 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
             {/* Renderizar componente "AlertEnterCode" */}
             <AlertEnterCode
               visible={EnterCodeVisible}
+              onCloseEnterCodeOutside={handleCloseEnterCodeOutside} // Función para cerrar "Modal" al hacer clic fuera de él
               onCloseEnterCode={handleCloseEnterCode}
               title='Restablecer contraseña'
               message={'Ingresa el código que enviamos a'}
               email={email}
-              buttonText='ENVIAR'
               buttonStyle={{ width: 120 }}
+              buttonText='ENVIAR'
             />
             {/* ------------------------------------------------------------------------------------------------------------- */}
 

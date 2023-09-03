@@ -160,6 +160,10 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
     setShowPasswordModal(!showPasswordModal);
   };
 
+    // Función para cerrar "Modal" al hacer clic fuera de él
+    const onCloseConfirmPassOutside = () => {
+      setValidatePassVisible(false);
+    };
   // --------------------------------------Función para validar la contraseña del usuario--------------------------------------
   const validatePassword = async () => {
     try {
@@ -352,8 +356,17 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           />
 
           {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
-          <Modal visible={validatePassVisible} transparent animationType="fade">
-            <View style={styles.modalBackground}>
+          <Modal
+            visible={validatePassVisible}
+            transparent
+            animationType="fade"
+          >
+
+            <Pressable
+              style={styles.modalBackground}
+              onPress={onCloseConfirmPassOutside} // Cerrar "Modal" al hacer clic fuera de él 
+            >
+
               <View style={styles.modalContentAlert}>
 
                 <Text style={styles.title}>Confirma tu identidad</Text>
@@ -383,7 +396,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
                 </View>
 
               </View>
-            </View>
+            </Pressable>
           </Modal>
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
