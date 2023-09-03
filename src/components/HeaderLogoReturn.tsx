@@ -1,8 +1,8 @@
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 
-interface HeaderReturnProps {
+interface HeaderLogoReturnProps {
   title: string;
   navigation: {
     goBack: () => void;
@@ -10,13 +10,14 @@ interface HeaderReturnProps {
   };
 }
 
-const HeaderReturn = ({ title, navigation, }: HeaderReturnProps) => {
+const HeaderLogoReturn = ({ navigation, title }: HeaderLogoReturnProps) => {
 
   const handleGoBack = () => {
     navigation.goBack();
   };
 
   return (
+
     <View style={styles.contentCustomHeader}>
 
       <TouchableOpacity style={styles.contentBackIcon} onPress={handleGoBack}>
@@ -25,12 +26,17 @@ const HeaderReturn = ({ title, navigation, }: HeaderReturnProps) => {
 
       <Text style={styles.customHeaderText}>{title}</Text>
 
+      <TouchableOpacity style={styles.contentLogo} onPress={() => navigation.navigate('StackMain')}>
+        <Image style={styles.logo} source={require('../../android/assets/img//form/spa.png')} />
+      </TouchableOpacity>
+
     </View>
+
   );
 
 };
 
-export default HeaderReturn;
+export default HeaderLogoReturn;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
@@ -58,5 +64,13 @@ const styles = StyleSheet.create({
     color: '#4e4e4e',
     fontSize: 22,
     letterSpacing: 0.3,
+  },
+  contentLogo: {
+    position: 'absolute',
+    right: 26,
+  },
+  logo: {
+    width: 52,
+    height: 33,
   },
 });

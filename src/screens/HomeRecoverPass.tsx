@@ -45,96 +45,92 @@ const HomeRecoverPass = ({ navigation }: HomeRecoverPassProps) => {
 
   return (
 
-    <>
+    <View style={styles.generalContainer}>
+
       <LoadingIndicator isLoading={isLoading} />
+
       <HeaderReturn navigation={navigation} title="Validar correo" />
 
-      <ScrollView contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="always" // Evita que el teclado se oculte al hacer clic fuera del campo
-      >
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <View style={styles.scrollView}>
 
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.contentMain}>
 
-          <View style={styles.containerForm}>
-
-            <View style={styles.contentForm}>
-
-              <View style={styles.contentLogoAccount}>
-                <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-              </View>
-
-              <View>
-                <Ionicons style={styles.iconForm} name='at-outline' />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Ingrese E-mail para continuar'
-                  placeholderTextColor='#000000'
-                  // textAlignVertical='bottom'
-                  onChangeText={setEmail}
-                  value={email}
-                  autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-                  keyboardType='email-address' />
-              </View>
-
-              <View style={styles.separator}></View>
-
-              <View style={{ marginBottom: 30 }}>
-                <ButtonPrimary
-                  onPress={handleShowEnterCode}
-                  width={'100%'}
-                  height={48}
-                  backgroundColor={'#5B009D'}
-                  borderRadius={0}
-                  color={'#ffffff'}
-                  fontSize={14}
-                  fontWeight={'500'}
-                  letterSpacing={0.8}
-                  title={'ENVIAR'}
-                />
-              </View>
-
-              {/* -------------------------Código para ejecutar y mostrar el modal "AlertEnterCode"-------------------------- */}
-              {/* Renderizar componente "AlertEnterCode" */}
-              <AlertEnterCode
-                visible={EnterCodeVisible}
-                onCloseEnterCode={handleCloseEnterCode}
-                title='Restablecer contraseña'
-                message={'Ingresa el código que enviamos a'}
-                email={email}
-                buttonText='ENVIAR'
-                buttonStyle={{ width: 120 }}
-              />
-              {/* ------------------------------------------------------------------------------------------------------------- */}
-
-            </View>
-
+          <View style={styles.contentLogoAccount}>
+            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
           </View>
 
-        </SafeAreaView>
+          <SafeAreaView>
 
-      </ScrollView>
+            <View>
+              <Ionicons style={styles.iconForm} name='at-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Ingrese E-mail para continuar'
+                placeholderTextColor='#000000'
+                // textAlignVertical='bottom'
+                onChangeText={setEmail}
+                value={email}
+                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                keyboardType='email-address' />
+            </View>
 
-    </>
+            <View style={styles.separator}></View>
 
+            <ButtonPrimary
+              onPress={handleShowEnterCode}
+              width={'100%'}
+              height={48}
+              marginTop={0}
+              marginBottom={30}
+              backgroundColor={'#5B009D'}
+              borderRadius={0}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#ffffff'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
+              title={'ENVIAR'}
+            />
+
+            {/* -------------------------Código para ejecutar y mostrar el modal "AlertEnterCode"-------------------------- */}
+            {/* Renderizar componente "AlertEnterCode" */}
+            <AlertEnterCode
+              visible={EnterCodeVisible}
+              onCloseEnterCode={handleCloseEnterCode}
+              title='Restablecer contraseña'
+              message={'Ingresa el código que enviamos a'}
+              email={email}
+              buttonText='ENVIAR'
+              buttonStyle={{ width: 120 }}
+            />
+            {/* ------------------------------------------------------------------------------------------------------------- */}
+
+          </SafeAreaView>
+        </View>
+      </View>
+    </View>
   );
-
 };
 
 export default HomeRecoverPass;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  generalContainer: {
+    flex: 1,
+    width: '100%',
     backgroundColor: '#ffffff',
   },
-  containerForm: {
+  scrollView: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    backgroundColor: '#ffffff',
   },
-  contentForm: {
-    // borderWidth: 1
+  contentMain: {
+    width: '86%',
+    marginHorizontal: '7%',
+    backgroundColor: '#ffffff',
   },
   contentLogoAccount: {
     alignItems: 'center',

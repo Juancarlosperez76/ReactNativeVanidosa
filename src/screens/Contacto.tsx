@@ -1,4 +1,4 @@
-import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -64,19 +64,23 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
   return (
 
-    <>
+    <View style={styles.generalContainer}>
 
       <LoadingIndicator isLoading={isLoading} />
 
       <HeaderSettingsReturn navigation={navigation} title="Contacto" />
 
-      <View style={styles.containerContact}>
+      <View style={styles.scrollView}>
 
-        <View style={styles.contentContact}>
+        <View style={styles.contentLogoAccount}>
+          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
+        </View>
+
+        <View style={styles.contentMain}>
 
           <View style={styles.contentContactOption}>
             <TouchableOpacity onPress={handleMapsPress}>
-              <View style={styles.contactOption}>
+              <View style={[styles.contactOption, { marginRight: 8, marginBottom: 8 }]}>
                 <Ionicons style={styles.contactOptionIcon} name="map-outline" />
                 <View style={styles.contentTitleText}>
                   <Text style={styles.titleContactOption}>NUESTRA SEDE</Text>
@@ -90,10 +94,10 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
           <View style={styles.contentContactOption}>
             <TouchableOpacity onPress={handlePhoneCallPress}>
-              <View style={styles.contactOption}>
+              <View style={[styles.contactOption, { marginLeft: 8, marginBottom: 8 }]}>
                 <Ionicons style={styles.contactOptionIcon} name="call" />
                 <View style={styles.contentTitleText}>
-                  <Text style={styles.titleContactOption}>TELÉFONO{'\n'}DE CONTACTO</Text>
+                  <Text style={styles.titleContactOption}>TELÉFONO</Text>
                   <Text style={styles.textContactOption}>604-4212500</Text>
                   <Text style={styles.textContactOption}>+57 3117795670</Text>
                 </View>
@@ -103,7 +107,7 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
           <View style={styles.contentContactOption}>
             <TouchableOpacity onPress={handleWhatsAppPress}>
-              <View style={styles.contactOption}>
+              <View style={[styles.contactOption, { marginRight: 8, marginTop: 8 }]}>
                 <Ionicons style={styles.contactOptionIcon} name="logo-whatsapp" />
                 <View style={styles.contentTitleText}>
                   <Text style={styles.titleContactOption}>WHATSAPP</Text>
@@ -115,10 +119,10 @@ const Contacto = ({ navigation }: ContactoProps) => {
 
           <View style={styles.contentContactOption}>
             <TouchableOpacity onPress={handleEmailPress}>
-              <View style={styles.contactOption}>
+              <View style={[styles.contactOption, { marginLeft: 8, marginTop: 8 }]}>
                 <Ionicons style={styles.contactOptionIcon} name="mail" />
                 <View style={styles.contentTitleText}>
-                  <Text style={styles.titleContactOption}>CORREO{'\n'}ELECTRÓNICO</Text>
+                  <Text style={styles.titleContactOption}>E-MAIL</Text>
                   <Text style={styles.textContactOption}>vanidosaspa@gmail.com</Text>
                 </View>
               </View>
@@ -126,58 +130,70 @@ const Contacto = ({ navigation }: ContactoProps) => {
           </View>
 
         </View>
-
       </View>
-
-    </>
-
+    </View>
   );
-
 };
 
 export default Contacto;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  containerContact: {
+  generalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 15,
+    width: '100%',
     backgroundColor: '#E5E5E5',
-    borderColor: '#ffffff',
   },
-  contentContact: {
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  contentLogoAccount: {
+    width: '86%',
+    marginHorizontal: '7%',
+    marginVertical: 40,
+    backgroundColor: '#E5E5E5',
+    alignItems: 'center',
+  },
+  logoAccount: {
+    width: 120,
+    height: 72,
+  },
+  contentMain: {
     flexDirection: 'row', // Posisiona elementos en fila
     flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
+    width: '86%',
+    marginHorizontal: '7%',
+    backgroundColor: '#E5E5E5',
   },
   contentContactOption: {
     width: '50%',
   },
   contactOption: {
-    margin: 6,
     alignItems: 'center',
     backgroundColor: '#ffffff',
   },
   contactOptionIcon: {
     fontSize: 50,
     marginVertical: 20,
-    color: '#5C54DB',
+    color: '#7870e2',
   },
   contentTitleText: {
     height: 100,
     marginBottom: 20,
   },
   titleContactOption: {
-    fontSize: 14,
-    marginBottom: 12,
+    fontFamily: 'Aspira W05 Bold',
+    marginBottom: 10,
+    fontSize: 17,
     textAlign: 'center',
-    fontWeight: '800',
     color: '#3b3b3b',
   },
   textContactOption: {
+    fontFamily: 'Aspira W05 Medium',
     marginBottom: 2,
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: 15,
     color: '#3b3b3b',
   },
 });

@@ -202,17 +202,17 @@ const styles = StyleSheet.create({
   mainTitle: {
     marginTop: 25,
     marginBottom: 20,
-    fontFamily: 'Aspira W05 Demi',
+    fontFamily: 'Futura PT Demi',
     textAlign: 'center',
     color: '#585858',
-    fontSize: 17,
+    fontSize: 18,
     letterSpacing: 0.3
   },
   mainText: {
     fontFamily: 'Futura PT Book',
     textAlign: 'center',
     color: '#000000',
-    fontSize: 16,
+    fontSize: 17,
     letterSpacing: 0.4,
   },
   containerServices: {

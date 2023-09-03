@@ -1,4 +1,4 @@
-import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, ScrollView, Image } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AlertInactiveAccount from '../components/AlertInactiveAccount';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +17,7 @@ type RootStackParamList = {
   HomeRecoverPass: undefined;
   Registro: undefined;
   Login: undefined;
-  Main: undefined;
+  StackMain: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -29,7 +29,7 @@ const Login = ({ navigation }: LoginProps) => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 1200); // Tiempo de carga simulado (en milisegundos)
+    }, 800); // Tiempo de carga simulado (en milisegundos)
   }, []);
 
   // --------------------------------------------------Estado de los input"----------------------------------------------------
@@ -49,7 +49,7 @@ const Login = ({ navigation }: LoginProps) => {
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
     setIsLoading(false); // Mostrar preload mientras se inicia sesión
-    navigation.navigate('Main'); // Redireccionar a "StackMain" después de hacer clic en "OK"
+    navigation.navigate('StackMain'); // Usar "StackMain" para actualizar las pestañas, "Main" no actualiza las pestañas
   }
 
   // ----------------------------------------------Función alerta "Campos vacíos"----------------------------------------------
@@ -139,139 +139,139 @@ const Login = ({ navigation }: LoginProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-    <>
+    <View style={styles.generalContainer}>
+
       <LoadingIndicator isLoading={isLoading} />
+
       <HeaderReturn navigation={navigation} title="Iniciar sesión" />
+
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.containerForm}>
-            <View style={styles.contentForm}>
+      <View style={styles.scrollView}>
 
-              <View style={styles.contentLogoAccount}>
-                <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-              </View>
+        <View style={styles.contentMain}>
 
-              <View>
-                <Ionicons style={styles.iconForm} name='at-outline' />
-                <TextInput
-                  style={styles.input}
-                  placeholder="E-mail"
-                  placeholderTextColor="#000000"
-                  onChangeText={setCorreo}
-                  value={Correo}
-                  autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
-                  keyboardType="email-address"
-                />
-              </View>
-
-              <View>
-                <Ionicons style={styles.iconForm} name='key-outline' />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Contraseña"
-                  placeholderTextColor="#000000"
-                  onChangeText={setContrasena}
-                  value={Contrasena}
-                  autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
-                  secureTextEntry={!showPassword} // Oculta y muestra carácteres de contraseña
-                />
-                {Contrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility}>
-                    <Ionicons style={styles.iconFormRight} name={showPassword ? 'eye-off-sharp' : 'eye-sharp'} />
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={{ marginTop: 30 }}>
-                <ButtonPrimary
-                  onPress={handleLogin} // Llamar a la función handleLogin al presionar el botón
-                  width={'100%'}
-                  height={48}
-                  marginTop={0} 
-                  marginBottom={0} 
-                  backgroundColor={'#5B009D'}
-                  borderRadius={0}
-                  color={'#ffffff'}
-                  fontSize={14}
-                  fontWeight={'500'}
-                  letterSpacing={0.8}
-                  title={'INICIAR SESIÓN'}
-                />
-              </View>
-
-              <TouchableOpacity onPress={() => navigation.navigate('HomeRecoverPass')}>
-                <Text style={styles.recoverPassword}>Restablecer la contraseña</Text>
-              </TouchableOpacity>
-
-              <View style={styles.separator}></View>
-
-              <View>
-                <ButtonSecondary
-                  onPress={() => navigation.navigate('Registro')}
-                  width={'100%'}
-                  height={48}
-                  marginTop={0} 
-                  marginBottom={0} 
-                  backgroundColor={'#00000000'}
-                  borderColor={'#E00083'}                  
-                  borderWidth={1}
-                  borderRadius={0}
-                  borderTopLeftRadius={0}
-                  borderTopRightRadius={0}
-                  borderBottomRightRadius={0}
-                  borderBottomLeftRadius={0}
-                  fontFamily={''}
-                  color={'#E00083'}
-                  fontSize={14}
-                  fontWeight={'600'}
-                  letterSpacing={0.8}
-                  title={'CREAR CUENTA'} 
-                  />
-              </View>
-
-              {/* ----------------------------------Alerta "¡Inicio de sesión exitoso!"------------------------------------ */}
-              <AlertSuccess
-                visible={SuccessVisible}
-                onCloseSuccess={handleCloseSuccess}
-                title='Inicio de sesión.'
-                message='¡Inicio de sesión exitoso!'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
-              <AlertWarning
-                visible={WarningVisible}
-                onCloseWarning={handleCloseWarning}
-                title='Campos vacíos.'
-                message='Por favor, complete todos los campos.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* -----------------------------------Alerta "Credenciales incorrectas"------------------------------------- */}
-              <AlertFailure
-                visible={FailureVisible}
-                onCloseFailure={handleCloseFailure}
-                title='Error al iniciar sesión.'
-                message='Credenciales incorrectas.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* ----------------------------------------Alerta "Cuenta inactiva"----------------------------------------- */}
-              <AlertInactiveAccount visible={InactiveAccountVisible}
-                onCloseInactiveAccount={handleCloseInactiveAccount}
-                title='Cuenta inactiva.'
-                message='El usuario ha eliminado la cuenta.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
-            </View>
+          <View style={styles.contentLogoAccount}>
+            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
           </View>
-        </SafeAreaView>
-      </ScrollView>
-    </>
+
+          <SafeAreaView>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='at-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder="E-mail"
+                placeholderTextColor="#000000"
+                onChangeText={setCorreo}
+                value={Correo}
+                autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
+                keyboardType="email-address"
+              />
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='key-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                placeholderTextColor="#000000"
+                onChangeText={setContrasena}
+                value={Contrasena}
+                autoCapitalize="none" // Evita que la primera letra ingresada sea mayúscula
+                secureTextEntry={!showPassword} // Oculta y muestra carácteres de contraseña
+              />
+              {Contrasena !== '' && ( // Código cambio de icono de la contraseña
+                <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility}>
+                  <Ionicons style={styles.iconFormRight} name={showPassword ? 'eye-off-sharp' : 'eye-sharp'} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <ButtonPrimary
+              onPress={handleLogin} // Llamar a la función handleLogin al presionar el botón
+              width={'100%'}
+              height={48}
+              marginTop={30}
+              marginBottom={0}
+              backgroundColor={'#5B009D'}
+              borderRadius={0}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#ffffff'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
+              title={'INICIAR SESIÓN'}
+            />
+
+            <TouchableOpacity onPress={() => navigation.navigate('HomeRecoverPass')}>
+              <Text style={styles.recoverPassword}>Restablecer la contraseña</Text>
+            </TouchableOpacity>
+
+            <View style={styles.separator}></View>
+
+            <ButtonSecondary
+              onPress={() => navigation.navigate('Registro')}
+              width={'100%'}
+              height={48}
+              marginTop={0}
+              marginBottom={0}
+              backgroundColor={'#00000000'}
+              borderColor={'#E00083'}
+              borderWidth={2}
+              borderRadius={0}
+              borderTopLeftRadius={0}
+              borderTopRightRadius={0}
+              borderBottomRightRadius={0}
+              borderBottomLeftRadius={0}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#29344A'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
+              title={'CREAR CUENTA'}
+            />
+
+            {/* ----------------------------------Alerta "¡Inicio de sesión exitoso!"------------------------------------ */}
+            <AlertSuccess
+              visible={SuccessVisible}
+              onCloseSuccess={handleCloseSuccess}
+              title='Inicio de sesión.'
+              message='¡Inicio de sesión exitoso!'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
+            <AlertWarning
+              visible={WarningVisible}
+              onCloseWarning={handleCloseWarning}
+              title='Campos vacíos.'
+              message='Por favor, complete todos los campos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -----------------------------------Alerta "Credenciales incorrectas"------------------------------------- */}
+            <AlertFailure
+              visible={FailureVisible}
+              onCloseFailure={handleCloseFailure}
+              title='Error al iniciar sesión.'
+              message='Credenciales incorrectas.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ----------------------------------------Alerta "Cuenta inactiva"----------------------------------------- */}
+            <AlertInactiveAccount visible={InactiveAccountVisible}
+              onCloseInactiveAccount={handleCloseInactiveAccount}
+              title='Cuenta inactiva.'
+              message='El usuario ha eliminado la cuenta.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------------------------------------------------------------------------------- */}
+
+          </SafeAreaView>
+        </View>
+      </View>
+    </View>
   );
 };
 
@@ -279,17 +279,21 @@ export default Login;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  generalContainer: {
+    flex: 1,
+    width: '100%',
     backgroundColor: '#ffffff',
   },
-  containerForm: {
+  scrollView: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    backgroundColor: '#ffffff',
   },
-  contentForm: {
-    // borderWidth: 1
+  contentMain: {
+    width: '86%',
+    marginHorizontal: '7%',
+    marginBottom: 20,
+    backgroundColor: '#ffffff',
   },
   contentLogoAccount: {
     alignItems: 'center',

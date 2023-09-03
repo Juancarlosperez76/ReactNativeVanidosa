@@ -5,9 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LoadingIndicator from '../components/LoadingIndicator';
+import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertSuccess from '../components/AlertSuccess';
-import HeaderReturn from '../components/HeaderReturn';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -22,6 +22,7 @@ type RootStackParamList = {
   AccountHeader: undefined;
   EditAccount: undefined;
   ChangePassword: undefined;
+  StackAccount: undefined;
   Login: undefined;
   Main: undefined;
 };
@@ -235,7 +236,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
-    navigation.navigate('Login');
+    navigation.navigate('StackAccount'); // Usar "StackAccount" evita volver a "AccountHeader" al hacer clic en flecha "Ir atrás"
   };
 
   // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
@@ -250,8 +251,11 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   return (
     <>
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderReturn navigation={navigation} title="Mi cuenta" />
+
+      <HeaderLogoReturn navigation={navigation} title="Mi cuenta" />
+
       <View style={styles.headerAccountContainer}>
+
         <View style={styles.headerAccountContent}>
 
           {/* -----------------Mostrar imagen seleccionada si hay una, si nó, mostrar imagen predeterminada---------------- */}

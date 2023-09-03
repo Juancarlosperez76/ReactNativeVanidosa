@@ -190,130 +190,138 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-    <>
+    <View style={styles.generalContainer}>
+
       <LoadingIndicator isLoading={isLoading} />
+
       <HeaderReturn navigation={navigation} title="Actualizar contraseña" />
-      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="always" >
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.containerForm}>
-            <View style={styles.contentForm}>
 
-              <View style={styles.contentLogoAccount}>
-                <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-              </View>
+      <View style={styles.scrollView}>
 
-              <View style={styles.containerInfoAccount}>
-                <View style={styles.containerNameText}>
-                  <Text style={styles.nameText}>{user?.Nombre} </Text>
-                  <Text style={styles.nameText}>{user?.Apellido}</Text>
-                </View>
-                <Text style={styles.emailText}>{user?.Correo}</Text>
-              </View>
+        <View style={styles.contentMain}>
 
-              <View>
-                <Ionicons style={styles.iconForm} name='key-outline' />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Contraseña nueva'
-                  placeholderTextColor='#000000'
-                  onChangeText={setContrasena}
-                  value={Contrasena}
-                  autoCapitalize='none'
-                  secureTextEntry={!showPasswordUno} />
-                {Contrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityUno}>
-                    <Ionicons style={styles.iconFormRight} name={showPasswordUno ? 'eye-off-sharp' : 'eye-sharp'} />
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View>
-                <Ionicons style={styles.iconForm} name='key-outline' />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Confirmar contraseña nueva'
-                  placeholderTextColor='#000000'
-                  onChangeText={setConfirmarContrasena}
-                  value={ConfirmarContrasena}
-                  autoCapitalize='none'
-                  secureTextEntry={!showPasswordDos} />
-                {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
-                  <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityDos}>
-                    <Ionicons style={styles.iconFormRight} name={showPasswordDos ? 'eye-off-sharp' : 'eye-sharp'} />
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={styles.separator}></View>
-
-              <View style={{ marginBottom: 30 }}>
-                <ButtonPrimary
-                  onPress={changePass}
-                  width={'100%'}
-                  height={48}
-                  backgroundColor={'#5B009D'}
-                  borderRadius={0}
-                  color={'#ffffff'}
-                  fontSize={14}
-                  fontWeight={'500'}
-                  letterSpacing={0.8}
-                  title={'ENVIAR'}
-                />
-              </View>
-
-              {/* --------------------------------------Alerta "Contraseña inválida"--------------------------------------- */}
-              <AlertWarning
-                visible={invalidPassVisible}
-                onCloseWarning={handleCloseInvalidPass}
-                title='Contraseña inválida.'
-                message='La contraseña ingresada es incorrecta.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
-              <AlertWarning
-                visible={emptyFieldsVisible}
-                onCloseWarning={handleCloseEmptyFields}
-                title='Campos vacíos.'
-                message='Por favor, complete todos los campos.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* ---------------------------Alerta "Contraseña inválida, mínimo de caracteres"---------------------------- */}
-              <AlertWarning
-                visible={minPasswordVisible}
-                onCloseWarning={handleCloseMinPassword}
-                title='Contraseña inválida.'
-                message='La contraseña debe tener al menos 8 caractéres.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* ----------------------------------Alerta "Las contraseñas no coinciden"---------------------------------- */}
-              <AlertWarning
-                visible={notMatchVisible}
-                onCloseWarning={handleCloseNotMatch}
-                title='Contraseñas no coinciden.'
-                message='Las contraseñas ingresadas deben coincidir.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* -------------------------------------Alerta "Actualización exitosa"-------------------------------------- */}
-              <AlertSuccess
-                visible={SuccessVisible}
-                onCloseSuccess={handleCloseSuccess}
-                title='Actualización exitosa.'
-                message='La contraseña se ha actualizado correctamente.'
-                buttonStyle={{ width: 70 }}
-                buttonText='OK'
-              />
-              {/* --------------------------------------------------------------------------------------------------------- */}
-
-            </View>
+          <View style={styles.contentLogoAccount}>
+            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
           </View>
-        </SafeAreaView>
-      </ScrollView>
-    </>
+
+          <SafeAreaView>
+
+            <View style={styles.containerInfoAccount}>
+              <View style={styles.containerNameText}>
+                <Text style={styles.nameText}>{user?.Nombre} </Text>
+                <Text style={styles.nameText}>{user?.Apellido}</Text>
+              </View>
+              <Text style={styles.emailText}>{user?.Correo}</Text>
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='key-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Contraseña nueva'
+                placeholderTextColor='#000000'
+                onChangeText={setContrasena}
+                value={Contrasena}
+                autoCapitalize='none'
+                secureTextEntry={!showPasswordUno} />
+              {Contrasena !== '' && ( // Código cambio de icono de la contraseña
+                <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityUno}>
+                  <Ionicons style={styles.iconFormRight} name={showPasswordUno ? 'eye-off-sharp' : 'eye-sharp'} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='key-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Confirmar contraseña nueva'
+                placeholderTextColor='#000000'
+                onChangeText={setConfirmarContrasena}
+                value={ConfirmarContrasena}
+                autoCapitalize='none'
+                secureTextEntry={!showPasswordDos} />
+              {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
+                <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibilityDos}>
+                  <Ionicons style={styles.iconFormRight} name={showPasswordDos ? 'eye-off-sharp' : 'eye-sharp'} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.separator}></View>
+
+            <ButtonPrimary
+              onPress={changePass}
+              width={'100%'}
+              height={48}
+              marginTop={0}
+              marginBottom={30}
+              backgroundColor={'#5B009D'}
+              borderRadius={0}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#ffffff'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
+              title={'ENVIAR'}
+            />
+
+            {/* --------------------------------------Alerta "Contraseña inválida"--------------------------------------- */}
+            <AlertWarning
+              visible={invalidPassVisible}
+              onCloseWarning={handleCloseInvalidPass}
+              title='Contraseña inválida.'
+              message='La contraseña ingresada es incorrecta.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -----------------------------------------Alerta "Campos vacíos"------------------------------------------ */}
+            <AlertWarning
+              visible={emptyFieldsVisible}
+              onCloseWarning={handleCloseEmptyFields}
+              title='Campos vacíos.'
+              message='Por favor, complete todos los campos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ---------------------------Alerta "Contraseña inválida, mínimo de caracteres"---------------------------- */}
+            <AlertWarning
+              visible={minPasswordVisible}
+              onCloseWarning={handleCloseMinPassword}
+              title='Contraseña inválida.'
+              message='La contraseña debe tener al menos 8 caractéres.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ----------------------------------Alerta "Las contraseñas no coinciden"---------------------------------- */}
+            <AlertWarning
+              visible={notMatchVisible}
+              onCloseWarning={handleCloseNotMatch}
+              title='Contraseñas no coinciden.'
+              message='Las contraseñas ingresadas deben coincidir.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -------------------------------------Alerta "Actualización exitosa"-------------------------------------- */}
+            <AlertSuccess
+              visible={SuccessVisible}
+              onCloseSuccess={handleCloseSuccess}
+              title='Actualización exitosa.'
+              message='La contraseña se ha actualizado correctamente.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------------------------------------------------------------------------------- */}
+
+          </SafeAreaView>
+
+        </View>
+
+
+      </View>
+
+
+    </View>
   );
 };
 
@@ -321,17 +329,20 @@ export default ChangePassword;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
+  generalContainer: {
+    flex: 1,
+    width: '100%',
     backgroundColor: '#ffffff',
   },
-  containerForm: {
+  scrollView: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    backgroundColor: '#ffffff',
   },
-  contentForm: {
-    // borderWidth: 1
+  contentMain: {
+    width: '86%',
+    marginHorizontal: '7%',
+    backgroundColor: '#ffffff',
   },
   contentLogoAccount: {
     alignItems: 'center',

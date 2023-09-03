@@ -1,12 +1,12 @@
-import { Alert, Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertDeleteAccount from '../components/AlertDeleteAccount';
 import LoadingIndicator from '../components/LoadingIndicator';
+import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
-import HeaderReturn from '../components/HeaderReturn';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
@@ -346,290 +346,289 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-    <>
+    <View style={styles.generalContainer}>
+
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderReturn navigation={navigation} title="Administrar cuenta" />
+
+      <HeaderLogoReturn navigation={navigation} title="Administrar cuenta" />
+
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
-      <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">
 
-        <View style={styles.contentLogoAccount}>
-          <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-        </View>
+        <View style={styles.contentMain}>
 
-        <SafeAreaView>
+          <SafeAreaView>
 
-          {user ? (
-            <>
+            {user ? (
+              <>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='person-outline' />
-                  <Text style={styles.label}>Nombre:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='person-outline' />
+                    <Text style={styles.label}>Nombre:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Nombre}
+                    onChangeText={setNombre}
+                    autoCapitalize="words" // Activa mayúscula inicial para cada palabra
+                    editable={true}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Nombre}
-                  onChangeText={setNombre}
-                  autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-                  editable={true}
-                />
-              </View>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='people-outline' />
-                  <Text style={styles.label}>Apellidos:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='people-outline' />
+                    <Text style={styles.label}>Apellidos:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Apellido}
+                    onChangeText={setApellido}
+                    autoCapitalize="words" // Activa mayúscula inicial para cada palabra
+                    editable={true}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Apellido}
-                  onChangeText={setApellido}
-                  autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-                  editable={true}
-                />
-              </View>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='card-outline' />
-                  <Text style={styles.label}>Tipo documento:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='card-outline' />
+                    <Text style={styles.label}>Tipo documento:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Tipo_Documento}
+                    editable={false}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Tipo_Documento}
-                  editable={false}
-                />
-              </View>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='id-card-outline' />
-                  <Text style={styles.label}>Documento:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='id-card-outline' />
+                    <Text style={styles.label}>Documento:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Documento.toString()}
+                    keyboardType='numeric'
+                    editable={false}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Documento.toString()}
-                  keyboardType='numeric'
-                  editable={false}
-                />
-              </View>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='home-outline' />
-                  <Text style={styles.label}>Dirección:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='home-outline' />
+                    <Text style={styles.label}>Dirección:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Direccion}
+                    onChangeText={setDireccion}
+                    keyboardType='default'
+                    editable={true}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Direccion}
-                  onChangeText={setDireccion}
-                  keyboardType='default'
-                  editable={true}
-                />
-              </View>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='call-outline' />
-                  <Text style={styles.label}>Teléfono:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='call-outline' />
+                    <Text style={styles.label}>Teléfono:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Telefono.toString()}
+                    onChangeText={setTelefono}
+                    keyboardType='numeric'
+                    editable={true}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Telefono.toString()}
-                  onChangeText={setTelefono}
-                  keyboardType='numeric'
-                  editable={true}
-                />
-              </View>
 
-              <View style={styles.fieldContainer}>
-                <View style={styles.iconLabelContainer}>
-                  <Ionicons style={styles.iconForm} name='at-sharp' />
-                  <Text style={styles.label}>Correo:</Text>
+                <View style={styles.fieldContainer}>
+                  <View style={styles.iconLabelContainer}>
+                    <Ionicons style={styles.iconForm} name='at-sharp' />
+                    <Text style={styles.label}>Correo:</Text>
+                  </View>
+                  <TextInput
+                    style={styles.input}
+                    defaultValue={user.Correo}
+                    onChangeText={setCorreo}
+                    autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                    keyboardType='email-address'
+                    editable={true}
+                  />
                 </View>
-                <TextInput
-                  style={styles.input}
-                  defaultValue={user.Correo}
-                  onChangeText={setCorreo}
-                  autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-                  keyboardType='email-address'
-                  editable={true}
-                />
-              </View>
 
-            </>
-          ) : (
-            <Text>No se encontró ningún usuario</Text>
-          )}
+              </>
+            ) : (
+              <Text>No se encontró ningún usuario</Text>
+            )}
 
-          <View style={{ marginTop: 30 }}>
             <ButtonPrimary
               onPress={handleEdit}
               width={'100%'}
               height={48}
-              marginTop={0} 
-              marginBottom={0} 
+              marginTop={30}
+              marginBottom={0}
               backgroundColor={'#5B009D'}
               borderRadius={0}
+              fontFamily={'Aspira W05 Demi'}
               color={'#ffffff'}
-              fontSize={14}
-              fontWeight={'500'}
-              letterSpacing={0.8}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
               title={'GUARDAR'}
             />
-          </View>
 
-          <View style={styles.separator}></View>
+            <View style={styles.separator}></View>
 
-          <View style={{ marginBottom: 30 }}>
             <ButtonSecondary
               onPress={handleShowAlertDeleteAccount} // onPress ejecuta alerta "¿Está seguro que quiere eliminar su cuenta?"
               width={'100%'}
               height={48}
-              marginTop={0} 
-              marginBottom={0}  
+              marginTop={0}
+              marginBottom={30}
               backgroundColor={'#00000000'}
               borderColor={'#E00083'}
-              borderWidth={1}
+              borderWidth={2}
               borderRadius={0}
               borderTopLeftRadius={0}
               borderTopRightRadius={0}
               borderBottomRightRadius={0}
               borderBottomLeftRadius={0}
-              fontFamily={''}
-              color={'#E00083'}
-              fontSize={14}
-              fontWeight={'600'}
-              letterSpacing={0.8}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#29344A'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
               title={'ELIMINAR CUENTA'}
 
             />
-          </View>
 
-          {/* ---------------------------Alerta "¿Está seguro que quiere eliminar su cuenta?"------------------------------ */}
-          <AlertDeleteAccount
-            visible={alertDeleteAccountVisible}
-            onCloseAlertDeleteAccount={handleCloseAlertDeleteAccount} // Se ejecuta con botón "Cancelar"
-            onAlertDeleteAccount={handleRunDeleteAccount} // Ejecuta alerta "Confirmar identidad" al hacer clic en "ELIMINAR"
-            title='¿Está seguro que quiere eliminar su cuenta?'
-            message='¡Ya no podrá recuperarla!'
-            buttonConfirmStyle={{ width: 110 }}
-            buttonConfirmText='Eliminar'
-          />
+            {/* ---------------------------Alerta "¿Está seguro que quiere eliminar su cuenta?"------------------------------ */}
+            <AlertDeleteAccount
+              visible={alertDeleteAccountVisible}
+              onCloseAlertDeleteAccount={handleCloseAlertDeleteAccount} // Se ejecuta con botón "Cancelar"
+              onAlertDeleteAccount={handleRunDeleteAccount} // Ejecuta alerta "Confirmar identidad" al hacer clic en "ELIMINAR"
+              title='¿Está seguro que quiere eliminar su cuenta?'
+              message='¡Ya no podrá recuperarla!'
+              buttonConfirmStyle={{ width: 110 }}
+              buttonConfirmText='Eliminar'
+            />
 
-          {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
-          <Modal visible={validatePassVisible} transparent animationType="fade">
-            <View style={styles.modalBackground}>
-              <View style={styles.modalContentAlert}>
+            {/* -----------------------------------------Modal "Confirmar identidad"----------------------------------------- */}
+            <Modal visible={validatePassVisible} transparent animationType="fade">
+              <View style={styles.modalBackground}>
+                <View style={styles.modalContentAlert}>
 
-                <Text style={styles.title}>Confirma tu identidad</Text>
+                  <Text style={styles.title}>Confirma tu identidad</Text>
 
-                <View>
+                  <View>
 
-                  <TextInput
-                    style={styles.inputAlert}
-                    placeholder='Ingrese contraseña'
-                    placeholderTextColor='#4E4E4E'
-                    onChangeText={setContrasenaActual}
-                    value={ContrasenaActual}
-                    autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-                    secureTextEntry={!showPasswordModal} // Oculta y muestra carácteres de contraseña
-                  />
-                  {ContrasenaActual !== '' && ( // Código cambio de icono de la contraseña
-                    <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordModalVisibility}>
-                      <Ionicons style={styles.iconFormRight} name={showPasswordModal ? 'eye-off-sharp' : 'eye-sharp'} />
+                    <TextInput
+                      style={styles.inputAlert}
+                      placeholder='Ingrese contraseña'
+                      placeholderTextColor='#4E4E4E'
+                      onChangeText={setContrasenaActual}
+                      value={ContrasenaActual}
+                      autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                      secureTextEntry={!showPasswordModal} // Oculta y muestra carácteres de contraseña
+                    />
+                    {ContrasenaActual !== '' && ( // Código cambio de icono de la contraseña
+                      <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordModalVisibility}>
+                        <Ionicons style={styles.iconFormRight} name={showPasswordModal ? 'eye-off-sharp' : 'eye-sharp'} />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+
+                  <View style={styles.containerButton}>
+                    <TouchableOpacity style={styles.button} onPress={validatePassword}>
+                      <Text style={styles.buttonText}>ENVIAR</Text>
                     </TouchableOpacity>
-                  )}
-                </View>
+                  </View>
 
-                <View style={styles.containerButton}>
-                  <TouchableOpacity style={styles.button} onPress={validatePassword}>
-                    <Text style={styles.buttonText}>ENVIAR</Text>
-                  </TouchableOpacity>
                 </View>
-
               </View>
-            </View>
-          </Modal>
+            </Modal>
 
-          {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
-          <AlertWarning
-            visible={emptyInputVisible}
-            onCloseWarning={handleCloseEmptyInput}
-            title='Campos vacíos.'
-            message='Por favor, complete los campos vacíos.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
+            {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
+            <AlertWarning
+              visible={emptyInputVisible}
+              onCloseWarning={handleCloseEmptyInput}
+              title='Campos vacíos.'
+              message='Por favor, complete los campos vacíos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
 
-          {/* ---------------------------------------Alerta "Campo Contraseña vacío"--------------------------------------- */}
-          <AlertWarning
-            visible={emptyPasswordInputVisible}
-            onCloseWarning={handleCloseEmptyPasswordInput}
-            title='Campos vacíos.'
-            message='Por favor, ingrese la contraseña para continuar.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
-          <AlertWarning
-            visible={phoneVisible}
-            onCloseWarning={handleClosePhone}
-            title='Número inválido.'
-            message='El número de teléfono debe contener al menos 10 dígitos.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
-          <AlertWarning
-            visible={emailVisible}
-            onCloseWarning={handleCloseEmail}
-            title='Correo inválido.'
-            message='Formato de correo incorrecto.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
-          <AlertWarning
-            visible={invalidPassVisible}
-            onCloseWarning={handleCloseInvalidPass}
-            title='Contraseña inválida.'
-            message='La contraseña ingresada es incorrecta.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------------Alerta "Cuenta eliminada"------------------------------------------ */}
-          <AlertSuccess
-            visible={SuccessVisible}
-            onCloseSuccess={handleCloseSuccess}
-            title='Cuenta eliminada.'
-            message='La cuenta ha sido eliminada con éxito.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* --------------------------------------Alerta "Información actualizada"--------------------------------------- */}
-          <AlertSuccess
-            visible={SuccessEditVisible}
-            onCloseSuccess={handleCloseSuccessEdit}
-            title='Información actualizada.'
-            message='La información se ha actualizado correctamente.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------Alerta "Información no actualizada"-------------------------------------- */}
-          <AlertWarning
-            visible={WarningEditVisible}
-            onCloseWarning={handleCloseWarningEdit}
-            title='Información no actualizada.'
-            message='El usuario no ha modificado la información.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
+            {/* ---------------------------------------Alerta "Campo Contraseña vacío"--------------------------------------- */}
+            <AlertWarning
+              visible={emptyPasswordInputVisible}
+              onCloseWarning={handleCloseEmptyPasswordInput}
+              title='Campos vacíos.'
+              message='Por favor, ingrese la contraseña para continuar.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
+            <AlertWarning
+              visible={phoneVisible}
+              onCloseWarning={handleClosePhone}
+              title='Número inválido.'
+              message='El número de teléfono debe contener al menos 10 dígitos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
+            <AlertWarning
+              visible={emailVisible}
+              onCloseWarning={handleCloseEmail}
+              title='Correo inválido.'
+              message='Formato de correo incorrecto.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
+            <AlertWarning
+              visible={invalidPassVisible}
+              onCloseWarning={handleCloseInvalidPass}
+              title='Contraseña inválida.'
+              message='La contraseña ingresada es incorrecta.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------------Alerta "Cuenta eliminada"------------------------------------------ */}
+            <AlertSuccess
+              visible={SuccessVisible}
+              onCloseSuccess={handleCloseSuccess}
+              title='Cuenta eliminada.'
+              message='La cuenta ha sido eliminada con éxito.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------------Alerta "Información actualizada"--------------------------------------- */}
+            <AlertSuccess
+              visible={SuccessEditVisible}
+              onCloseSuccess={handleCloseSuccessEdit}
+              title='Información actualizada.'
+              message='La información se ha actualizado correctamente.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------Alerta "Información no actualizada"-------------------------------------- */}
+            <AlertWarning
+              visible={WarningEditVisible}
+              onCloseWarning={handleCloseWarningEdit}
+              title='Información no actualizada.'
+              message='El usuario no ha modificado la información.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------------------------------------------------------------------------------- */}
 
-        </SafeAreaView>
+          </SafeAreaView>
+        </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -637,13 +636,23 @@ export default EditAccount;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  contentForm: {
+  generalContainer: {
     flex: 1,
+    width: '100%',
     backgroundColor: '#ffffff',
-    paddingHorizontal: 20,
+  },
+  scrollView: {
+    flexGrow: 1,
+    backgroundColor: '#ffffff',
+  },
+  contentMain: {
+    width: '86%',
+    marginTop: 30,
+    marginHorizontal: '7%',
+    backgroundColor: '#ffffff',
   },
   contentLogoAccount: {
-    marginVertical: 20,
+    marginVertical: 40,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',

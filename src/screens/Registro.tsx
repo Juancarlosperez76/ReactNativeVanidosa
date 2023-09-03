@@ -1,7 +1,8 @@
-import { Image, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingIndicator from '../components/LoadingIndicator';
+import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
@@ -12,7 +13,6 @@ import AlertFailure from '../components/AlertFailure';
 import React, { useEffect, useState } from 'react';
 import { RadioButton } from 'react-native-paper';
 import axios from 'axios';
-import HeaderReturn from '../components/HeaderReturn';
 
 type RootStackParamList = {
   Login: undefined;
@@ -129,6 +129,7 @@ const Registro = ({ navigation }: RegistroProps) => {
   // --------------------------------------------------Función de (Registro)---------------------------------------------------
   const handleRegister = async () => {
 
+
     // Validar campos vacíos
     if (!Nombre || !Apellido || !Documento || !Direccion || !Telefono || !Correo || !Contrasena || !ConfirmarContrasena) {
       setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
@@ -171,11 +172,18 @@ const Registro = ({ navigation }: RegistroProps) => {
       return;
     }
 
+    // Validar aceptación de "Términos y condiciones"
+    if (!acceptTerms) {
+      setAcceptTermsVisible(true);
+      setIsLoading(false);
+      return;
+    }
+
     // Validar si el documento ya existe
     const userStateDocument = await getUserDocument(parseInt(Documento, 10)); // Obtener el documento antes del registro
     if (userStateDocument === true) {
       setExistingDocumentVisible(true);
-      setIsLoading(false); // Activar el preload
+      setIsLoading(false);
       return;
     }
 
@@ -183,11 +191,9 @@ const Registro = ({ navigation }: RegistroProps) => {
     const userState = await getUserState(Correo); // Obtener el correo antes del registro
     if (userState === true) {
       setExistingEmailVisible(true);
-      setIsLoading(false); // Activar el preload
+      setIsLoading(false);
       return;
     }
-
-    setIsLoading(true); // Activar el preload
 
     try {
       // Crear un objeto con los datos del formulario
@@ -278,12 +284,11 @@ const Registro = ({ navigation }: RegistroProps) => {
     setExistingEmailVisible(false);
   };
 
-  // --------------------------------------------Función alerta "Registro exitoso"---------------------------------------------
-  const [registeredVisible, setRegisteredVisible] = useState(false);
+  // ------------------------------------------Función alerta "Términos y condiciones"-----------------------------------------
+  const [acceptTermsVisible, setAcceptTermsVisible] = useState(false);
 
-  const handleCloseRegistered = () => {
-    setRegisteredVisible(false);
-    navigation.replace('Login');
+  const handleCloseAcceptTerms = () => {
+    setAcceptTermsVisible(false);
   };
 
   // --------------------------------------------Función alerta "Error de registro"--------------------------------------------
@@ -292,192 +297,202 @@ const Registro = ({ navigation }: RegistroProps) => {
   const handleCloseFailedRegister = () => {
     setFailedRegisterVisible(false);
   };
+
+  // --------------------------------------------Función alerta "Registro exitoso"---------------------------------------------
+  const [registeredVisible, setRegisteredVisible] = useState(false);
+
+  const handleCloseRegistered = () => {
+    setRegisteredVisible(false);
+    navigation.replace('Login');
+  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
-    <>
+    <View style={styles.generalContainer}>
+
       <LoadingIndicator isLoading={isLoading} />
-      <HeaderReturn navigation={navigation} title="Registro" />
+
+      <HeaderLogoReturn navigation={navigation} title="Registro" />
+
       {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
-      <ScrollView style={styles.contentForm} keyboardShouldPersistTaps="always">
-        <SafeAreaView>
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">
 
-          <View style={styles.contentLogoAccount}>
-            <Image style={styles.logoAccount} source={require('../../android/assets/img/logo.png')} />
-          </View>
+        <View style={styles.contentMain}>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='person-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Nombre'
-              placeholderTextColor='#000000'
-              onChangeText={setNombre}
-              value={Nombre}
-              autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-            />
-          </View>
+          <SafeAreaView>
 
-          <View>
-            <Ionicons style={styles.iconForm} name='people-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Apellidos'
-              placeholderTextColor='#000000'
-              onChangeText={setApellido}
-              value={Apellido}
-              autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-            />
-          </View>
+            <View>
+              <Ionicons style={styles.iconForm} name='person-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Nombre'
+                placeholderTextColor='#000000'
+                onChangeText={setNombre}
+                value={Nombre}
+                autoCapitalize="words" // Activa mayúscula inicial para cada palabra
+              />
+            </View>
 
-          {/* ------------------------------------------Campo "Tipo de documento"------------------------------------------ */}
-          <TouchableOpacity style={styles.selectInputContainer} onPress={handleOpenSelectModal}>
-            <Ionicons style={styles.selectIconForm} name="card-outline" />
-            <Text style={styles.selectInput}>{selectedTipoDocumento ? selectedTipoDocumento : 'Tipo de documento'}</Text>
-          </TouchableOpacity>
+            <View>
+              <Ionicons style={styles.iconForm} name='people-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Apellidos'
+                placeholderTextColor='#000000'
+                onChangeText={setApellido}
+                value={Apellido}
+                autoCapitalize="words" // Activa mayúscula inicial para cada palabra
+              />
+            </View>
 
-          {/* -------------------------------------"Modal" opciones "Tipo de documento"------------------------------------ */}
-          <Modal visible={selectModalVisible} animationType="slide" transparent={true}>
-            <View style={styles.selectModalContainer}>
-              <View style={styles.selectModalContent}>
-                <Text style={styles.modalTitle}>Seleccione tipo de documento</Text>
-                {tipoDocumentoOptions.map((option) => (
-                  <TouchableOpacity
-                    key={option.value}
-                    style={styles.selectOption}
-                    onPress={() => handleSelectTipoDocumento(option.value)}
-                  >
-                    <Text style={styles.selectOptionText}>{option.label}</Text>
-                    <RadioButton
-                      value={option.value}
-                      status={selectedTipoDocumento === option.value ? 'checked' : 'unchecked'}
+            {/* ------------------------------------------Campo "Tipo de documento"------------------------------------------ */}
+            <TouchableOpacity style={styles.selectInputContainer} onPress={handleOpenSelectModal}>
+              <Ionicons style={styles.selectIconForm} name="card-outline" />
+              <Text style={styles.selectInput}>{selectedTipoDocumento ? selectedTipoDocumento : 'Tipo de documento'}</Text>
+            </TouchableOpacity>
+
+            {/* -------------------------------------"Modal" opciones "Tipo de documento"------------------------------------ */}
+            <Modal visible={selectModalVisible} animationType="slide" transparent={true}>
+              <View style={styles.selectModalContainer}>
+                <View style={styles.selectModalContent}>
+                  <Text style={styles.modalTitle}>Seleccione tipo de documento</Text>
+                  {tipoDocumentoOptions.map((option) => (
+                    <TouchableOpacity
+                      key={option.value}
+                      style={styles.selectOption}
                       onPress={() => handleSelectTipoDocumento(option.value)}
-                      uncheckedColor='#FFFFFF'
-                      color='#E00083'
-                    />
-                  </TouchableOpacity>
-                ))}
+                    >
+                      <Text style={styles.selectOptionText}>{option.label}</Text>
+                      <RadioButton
+                        value={option.value}
+                        status={selectedTipoDocumento === option.value ? 'checked' : 'unchecked'}
+                        onPress={() => handleSelectTipoDocumento(option.value)}
+                        uncheckedColor='#FFFFFF'
+                        color='#E00083'
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </Modal>
+            {/* ------------------------------------------------------------------------------------------------------------- */}
+
+            <View>
+              <Ionicons style={styles.iconForm} name='id-card-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Documento'
+                placeholderTextColor='#000000'
+                onChangeText={(text) => {
+                  // Validación para campo númerico
+                  const numericValue = text.replace(/[^0-9]/g, '');
+                  setDocumento(numericValue);
+                }}
+                value={Documento}
+                keyboardType='numeric'
+              />
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='home-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Dirección'
+                placeholderTextColor='#000000'
+                onChangeText={setDireccion}
+                value={Direccion}
+              />
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='call-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Teléfono'
+                placeholderTextColor='#000000'
+                onChangeText={(text) => {
+                  // Validación para campo númerico
+                  const numericValue = text.replace(/[^0-9]/g, '');
+                  setTelefono(numericValue);
+                }}
+                value={Telefono}
+                keyboardType='numeric'
+              />
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='at-sharp' />
+              <TextInput
+                style={styles.input}
+                placeholder='E-mail'
+                placeholderTextColor='#000000'
+                onChangeText={setCorreo}
+                value={Correo}
+                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                keyboardType='email-address'
+              />
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='key-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Contraseña'
+                placeholderTextColor='#000000'
+                onChangeText={setContrasena}
+                value={Contrasena}
+                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                secureTextEntry={!showPassword1} // Oculta y muestra carácteres de contraseña
+              />
+              {Contrasena !== '' && ( // Código cambio de icono de la contraseña
+                <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
+                  <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View>
+              <Ionicons style={styles.iconForm} name='key-outline' />
+              <TextInput
+                style={styles.input}
+                placeholder='Confirmar contraseña'
+                placeholderTextColor='#000000'
+                onChangeText={setConfirmarContrasena}
+                value={ConfirmarContrasena}
+                autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
+                secureTextEntry={!showPassword2} // Oculta y muestra carácteres de contraseña
+              />
+              {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
+                <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
+                  <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* ----------------------------Código "CheckBox" "Política de privacidad y Términos"---------------------------- */}
+            <View style={styles.checkboxAcceptTerms}>
+              <CheckBox
+                disabled={false}
+                value={acceptTerms}
+                onValueChange={handleAcceptTerms}
+                tintColors={{ true: '#5B009D', false: '#7e7e7e' }} />
+              <View style={styles.containerAcceptTerms}>
+
+                <View style={styles.contentAcceptTerms}>
+                  <Text style={styles.acceptTermsText}>He leído y acepto la </Text>
+                  <Text style={styles.textTermsConditions}>Política de Privacidad</Text>
+                </View>
+
+                <View style={styles.contentAcceptTerms}>
+                  <Text style={styles.acceptTermsText}>y </Text>
+                  <Text style={styles.textTermsConditions}>Términos y Condiciones</Text>
+                </View>
+
               </View>
             </View>
-          </Modal>
-          {/* ------------------------------------------------------------------------------------------------------------- */}
+            {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          <View>
-            <Ionicons style={styles.iconForm} name='id-card-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Documento'
-              placeholderTextColor='#000000'
-              onChangeText={(text) => {
-                // Validación para campo númerico
-                const numericValue = text.replace(/[^0-9]/g, '');
-                setDocumento(numericValue);
-              }}
-              value={Documento}
-              keyboardType='numeric'
-            />
-          </View>
-
-          <View>
-            <Ionicons style={styles.iconForm} name='home-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Dirección'
-              placeholderTextColor='#000000'
-              onChangeText={setDireccion}
-              value={Direccion}
-            />
-          </View>
-
-          <View>
-            <Ionicons style={styles.iconForm} name='call-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Teléfono'
-              placeholderTextColor='#000000'
-              onChangeText={(text) => {
-                // Validación para campo númerico
-                const numericValue = text.replace(/[^0-9]/g, '');
-                setTelefono(numericValue);
-              }}
-              value={Telefono}
-              keyboardType='numeric'
-            />
-          </View>
-
-          <View>
-            <Ionicons style={styles.iconForm} name='at-sharp' />
-            <TextInput
-              style={styles.input}
-              placeholder='E-mail'
-              placeholderTextColor='#000000'
-              onChangeText={setCorreo}
-              value={Correo}
-              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              keyboardType='email-address'
-            />
-          </View>
-
-          <View>
-            <Ionicons style={styles.iconForm} name='key-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Contraseña'
-              placeholderTextColor='#000000'
-              onChangeText={setContrasena}
-              value={Contrasena}
-              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              secureTextEntry={!showPassword1} // Oculta y muestra carácteres de contraseña
-            />
-            {Contrasena !== '' && ( // Código cambio de icono de la contraseña
-              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility1}>
-                <Ionicons style={styles.iconFormRight} name={showPassword1 ? 'eye-off-sharp' : 'eye-sharp'} />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          <View>
-            <Ionicons style={styles.iconForm} name='key-outline' />
-            <TextInput
-              style={styles.input}
-              placeholder='Confirmar contraseña'
-              placeholderTextColor='#000000'
-              onChangeText={setConfirmarContrasena}
-              value={ConfirmarContrasena}
-              autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
-              secureTextEntry={!showPassword2} // Oculta y muestra carácteres de contraseña
-            />
-            {ConfirmarContrasena !== '' && ( // Código cambio de icono de la contraseña
-              <TouchableOpacity style={styles.contentIconFormRight} onPress={togglePasswordVisibility2}>
-                <Ionicons style={styles.iconFormRight} name={showPassword2 ? 'eye-off-sharp' : 'eye-sharp'} />
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* ----------------------------Código "CheckBox" "Política de privacidad y Términos"---------------------------- */}
-          <View style={styles.checkboxAcceptTerms}>
-            <CheckBox
-              disabled={false}
-              value={acceptTerms}
-              onValueChange={handleAcceptTerms}
-              tintColors={{ true: '#5B009D', false: '#7e7e7e' }} />
-            <View style={styles.containerAcceptTerms}>
-
-              <View style={styles.contentAcceptTerms}>
-                <Text style={styles.acceptTermsText}>He leído y acepto la </Text>
-                <Text style={styles.textTermsConditions}>Política de Privacidad</Text>
-              </View>
-
-              <View style={styles.contentAcceptTerms}>
-                <Text style={styles.acceptTermsText}>y </Text>
-                <Text style={styles.textTermsConditions}>Términos y Condiciones</Text>
-              </View>
-
-            </View>
-          </View>
-          {/* ------------------------------------------------------------------------------------------------------------- */}
-
-          <TermsAndConditionsModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+            <TermsAndConditionsModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
             <ButtonPrimary
               onPress={handleRegister}
@@ -487,116 +502,125 @@ const Registro = ({ navigation }: RegistroProps) => {
               marginBottom={0}
               backgroundColor={'#5B009D'}
               borderRadius={0}
-              fontFamily={''}
+              fontFamily={'Aspira W05 Demi'}
               color={'#FFFFFF'}
-              fontSize={14}
-              fontWeight={'500'}
-              letterSpacing={0.8}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
               title={'CREAR CUENTA'}
             />
-          
-          {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
-          <AlertWarning
-            visible={emptyFieldsVisible}
-            onCloseWarning={handleCloseEmptyFields}
-            title='Campos vacíos.'
-            message='Por favor, complete todos los campos.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* -------------------------------------Mostrar alerta "Tipo de documento"-------------------------------------- */}
-          <AlertWarning
-            visible={documentTypeVisible}
-            onCloseWarning={handleCloseDocumentType}
-            title='Tipo de documento.'
-            message='Seleccione el tipo de documento.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------Mostrar alerta "Documento inválido"-------------------------------------- */}
-          <AlertWarning
-            visible={documentVisible}
-            onCloseWarning={handleCloseDocument}
-            title='Documento inválido.'
-            message='El documento debe tener al menos 8 números.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
-          <AlertWarning
-            visible={phoneVisible}
-            onCloseWarning={handleClosePhone}
-            title='Teléfono inválido.'
-            message='El teléfono debe tener al menos 10 números.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
-          <AlertWarning
-            visible={emailVisible}
-            onCloseWarning={handleCloseEmail}
-            title='Correo inválido.'
-            message='Formato de correo incorrecto.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
-          <AlertWarning
-            visible={minPasswordVisible}
-            onCloseWarning={handleCloseMinPassword}
-            title='Contraseña inválida.'
-            message='La contraseña debe tener al menos 8 caractéres.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
-          <AlertWarning
-            visible={notMatchVisible}
-            onCloseWarning={handleCloseNotMatch}
-            title='Las contraseñas no coinciden.'
-            message='Las contraseñas ingresadas deben coincidir.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* -----------------------------------Mostrar alerta "El documento ya exixte"----------------------------------- */}
-          <AlertWarning
-            visible={existingDocumentVisible}
-            onCloseWarning={handleCloseExistingDocument}
-            title='El documento ya existe.'
-            message='Ya existe una cuenta con este número de documento.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------Mostrar alerta "El correo ya exixte"------------------------------------- */}
-          <AlertWarning
-            visible={existingEmailVisible}
-            onCloseWarning={handleCloseExistingEmail}
-            title='El correo ya existe.'
-            message='Ya existe una cuenta con esta dirección de correo electrónico.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* --------------------------------------Mostrar alerta "Registro exitoso"-------------------------------------- */}
-          <AlertSuccess
-            visible={registeredVisible}
-            onCloseSuccess={handleCloseRegistered}
-            title='Registro exitoso.'
-            message='La cuenta se ha creado exitosamente.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* -------------------------------------Mostrar alerta "Error de registro"-------------------------------------- */}
-          <AlertFailure
-            visible={failedRegisterVisible}
-            onCloseFailure={handleCloseFailedRegister}
-            title='Error de registro.'
-            message='El registro no se pudo completar debido a un error.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
-          {/* ------------------------------------------------------------------------------------------------------------- */}
 
-          <View style={styles.separator}></View>
+            {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
+            <AlertWarning
+              visible={emptyFieldsVisible}
+              onCloseWarning={handleCloseEmptyFields}
+              title='Campos vacíos.'
+              message='Por favor, complete todos los campos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -------------------------------------Mostrar alerta "Tipo de documento"-------------------------------------- */}
+            <AlertWarning
+              visible={documentTypeVisible}
+              onCloseWarning={handleCloseDocumentType}
+              title='Tipo de documento.'
+              message='Seleccione el tipo de documento.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------Mostrar alerta "Documento inválido"-------------------------------------- */}
+            <AlertWarning
+              visible={documentVisible}
+              onCloseWarning={handleCloseDocument}
+              title='Documento inválido.'
+              message='El número de documento debe contener al menos 8 dígitos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
+            <AlertWarning
+              visible={phoneVisible}
+              onCloseWarning={handleClosePhone}
+              title='Teléfono inválido.'
+              message='El número de teléfono debe contener al menos 10 dígitos.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
+            <AlertWarning
+              visible={emailVisible}
+              onCloseWarning={handleCloseEmail}
+              title='Correo inválido.'
+              message='Formato de correo incorrecto.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
+            <AlertWarning
+              visible={minPasswordVisible}
+              onCloseWarning={handleCloseMinPassword}
+              title='Contraseña inválida.'
+              message='La contraseña debe contener al menos 8 caractéres.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
+            <AlertWarning
+              visible={notMatchVisible}
+              onCloseWarning={handleCloseNotMatch}
+              title='Las contraseñas no coinciden.'
+              message='Las contraseñas ingresadas deben coincidir.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -----------------------------------Mostrar alerta "El documento ya exixte"----------------------------------- */}
+            <AlertWarning
+              visible={existingDocumentVisible}
+              onCloseWarning={handleCloseExistingDocument}
+              title='El documento ya existe.'
+              message='Ya existe una cuenta con este número de documento.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------Mostrar alerta "El correo ya exixte"------------------------------------- */}
+            <AlertWarning
+              visible={existingEmailVisible}
+              onCloseWarning={handleCloseExistingEmail}
+              title='El correo ya existe.'
+              message='Ya existe una cuenta con esta dirección de correo electrónico.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ----------------------------------Mostrar alerta "Términos y condiciones"------------------------------------ */}
+            <AlertWarning
+              visible={acceptTermsVisible}
+              onCloseWarning={handleCloseAcceptTerms}
+              title='Términos y condiciones.'
+              message='Debe aceptar los términos y condiciones para continuar con el registro.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* -------------------------------------Mostrar alerta "Error de registro"-------------------------------------- */}
+            <AlertFailure
+              visible={failedRegisterVisible}
+              onCloseFailure={handleCloseFailedRegister}
+              title='Error de registro.'
+              message='El registro no se pudo completar debido a un error.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* --------------------------------------Mostrar alerta "Registro exitoso"-------------------------------------- */}
+            <AlertSuccess
+              visible={registeredVisible}
+              onCloseSuccess={handleCloseRegistered}
+              title='Registro exitoso.'
+              message='La cuenta se ha creado exitosamente.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ------------------------------------------------------------------------------------------------------------- */}
+
+            <View style={styles.separator}></View>
 
             <ButtonSecondary
               onPress={() => navigation.navigate('Login')}
@@ -606,23 +630,24 @@ const Registro = ({ navigation }: RegistroProps) => {
               marginBottom={30}
               backgroundColor={'#00000000'}
               borderColor={'#E00083'}
-              borderWidth={1}
+              borderWidth={2}
               borderRadius={0}
               borderTopLeftRadius={0}
               borderTopRightRadius={0}
               borderBottomRightRadius={0}
               borderBottomLeftRadius={0}
-              fontFamily={''}
-              color={'#E00083'}
-              fontSize={14}
-              fontWeight={'600'}
-              letterSpacing={0.8}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#29344A'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
               title={'INICIAR SESIÓN'}
             />
 
-        </SafeAreaView>
+          </SafeAreaView>
+        </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -630,13 +655,23 @@ export default Registro;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  contentForm: {
+  generalContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 30,
+    width: '100%',
+    backgroundColor: '#ffffff',
+  },
+  scrollView: {
+    flexGrow: 1,
+    backgroundColor: '#ffffff',
+  },
+  contentMain: {
+    width: '86%',
+    marginTop: 30,
+    marginHorizontal: '7%',
+    backgroundColor: '#ffffff',
   },
   contentLogoAccount: {
-    marginVertical: 20,
+    marginVertical: 40,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
@@ -747,19 +782,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.6,
     fontWeight: '400',
-  },
-  // Estilos "openAlertSuccess"
-  openAlertSuccess: {
-    width: 100,
-    alignItems: 'center',
-    margin: 10,
-    paddingVertical: 10,
-    backgroundColor: '#28a745',
-    borderRadius: 8,
-  },
-  openAlertSuccessText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
   },
 });

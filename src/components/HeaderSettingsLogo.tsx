@@ -1,7 +1,7 @@
-import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import React from 'react';
 
 interface HeaderSettingsLogoProps {
   title: string;
@@ -32,7 +32,7 @@ const HeaderSettingsLogo = ({ navigation }: HeaderSettingsLogoProps) => {
 
   return (
 
-    <View>
+    <View style={styles.contentCustomHeader}>
 
       <View style={styles.contentLogo}>
         <Image style={styles.logo} source={require('../../android/assets/img/logo.png')} />
@@ -52,12 +52,13 @@ export default HeaderSettingsLogo;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  contentLogo: {
-    flexDirection: 'row',
+  contentCustomHeader: {
     height: 70,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#ffffff',
+  },
+  contentLogo: {
+    alignItems: 'center',
   },
   logo: {
     width: 100,
@@ -65,7 +66,6 @@ const styles = StyleSheet.create({
   },
   contentAccountIcon: {
     position: 'absolute',
-    top: 14,
     right: 16,
     padding: 10,
     zIndex: 1,

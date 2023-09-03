@@ -1,16 +1,17 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Catalogo from '../screens/Catalogo';
-import Maquillaje from '../screens/Maquillaje';
-import Cabello from '../screens/Cabello';
-import Unas from '../screens/Unas';
-import Pestanas from '../screens/Pestanas';
-import Quinceanera from '../screens/Quinceanera';
 import StackAccountHeader from './StackAccountHeader';
+import Quinceanera from '../screens/Quinceanera';
+import AgendarCita from '../screens/AgendarCita';
+import Maquillaje from '../screens/Maquillaje';
 import Peluqueria from '../screens/Peluqueria';
 import Depilacion from '../screens/Depilacion';
-import Piel from '../screens/Piel';
+import Catalogo from '../screens/Catalogo';
+import Pestanas from '../screens/Pestanas';
+import Cabello from '../screens/Cabello';
 import Novia from '../screens/Novia';
+import Unas from '../screens/Unas';
+import Piel from '../screens/Piel';
+import React from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -83,6 +84,12 @@ const StackCatalogue = () => {
       <Stack.Screen
         name="StackAccountHeader"
         component={StackAccountHeader as React.ComponentType<any>}
+        options={{ headerShown: false, }}
+      />
+
+      <Stack.Screen
+        name="AgendarCita"
+        component={AgendarCita as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

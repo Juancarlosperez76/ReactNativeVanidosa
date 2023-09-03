@@ -2,24 +2,66 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import ButtonSecondary from '../components/ButtonSecondary';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingIndicator from '../components/LoadingIndicator';
+import AlertWarning from '../components/AlertWarning';
 
 type RootStackParamList = {
   Pestanas: undefined;
+  AgendarCita: undefined;
+  StackAccount: undefined;
 };
 type PestanasProps = NativeStackScreenProps<RootStackParamList, 'Pestanas'>;
 
 const Pestanas = ({ navigation }: PestanasProps) => {
 
-  return (
-    <>
-      <HeaderSettingsReturn navigation={navigation} title="Cejas y Pestañas" />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.contentHair}>
+  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
 
-          <View style={styles.containerDescriptionImg}>
-            <Image style={styles.descriptionImg} source={require('../../android/assets/img/categorias/pestanas.png')} />
-          </View>
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+
+  // ------------------------Función para validar si usuario está logueado y redirigir a "Agendar cita"------------------------
+  const checkLogin = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken'); // Obtener el token del AsyncStorage
+      if (token) {
+        navigation.navigate('AgendarCita'); // Si hay token, el usuario está logueado
+      } else {
+        setRequiredLoginVisible(true); // Muestra alerta "Inicio de sesión requerido"
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  // ----------------------------------------Función alerta "Inicio de sesión requerido"---------------------------------------
+  const [requiredLoginVisible, setRequiredLoginVisible] = useState(false);
+
+  const handleCloseRequiredLogin = () => {
+    setRequiredLoginVisible(false);
+    navigation.navigate('StackAccount')
+  };
+  // --------------------------------------------------------------------------------------------------------------------------
+
+  return (
+    <View style={styles.generalContainer}>
+
+      <HeaderSettingsReturn navigation={navigation} title="Cejas y Pestañas" />
+
+      <LoadingIndicator isLoading={isLoading} />
+
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">
+
+        <View style={styles.containerMainImage}>
+          <Image style={styles.mainImage} source={require('../../android/assets/img/categorias/pestanas.png')} />
+        </View>
+
+        <View style={styles.contentMain}>
 
           <Text style={styles.descriptionTitle}>Cejas y Pestañas</Text>
 
@@ -40,13 +82,16 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 <Image style={styles.imgService} source={require('../../android/assets/img/servicios/corte.png')} />
               </View>
               <Text style={styles.textService}>DESCUBRE EL PODER DE UN CABELLO DESLUMBRANTE.</Text>
+
               <ButtonSecondary
-                onPress={() => { }}
+                onPress={checkLogin}
                 width={'100%'}
                 height={40}
+                marginTop={0}
+                marginBottom={0}
                 backgroundColor={'#00000000'}
                 borderColor={'#E00083'}
-                borderWidth={1}
+                borderWidth={2}
                 borderRadius={0}
                 borderTopLeftRadius={0}
                 borderTopRightRadius={0}
@@ -54,9 +99,9 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 borderBottomLeftRadius={0}
                 fontFamily={'Aspira W05 Demi'}
                 color={'#E00083'}
-                fontSize={14}
+                fontSize={15}
                 fontWeight={undefined}
-                letterSpacing={0.5}
+                letterSpacing={0.3}
                 title={'AGENDAR CITA'}
               />
             </View>
@@ -70,13 +115,16 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 <Image style={styles.imgService} source={require('../../android/assets/img/servicios/peinado.png')} />
               </View>
               <Text style={styles.textService}>EXPRESA TU ESTILO CON UN LOOK INIGUALABLE</Text>
+
               <ButtonSecondary
-                onPress={() => { }}
+                onPress={checkLogin}
                 width={'100%'}
                 height={40}
+                marginTop={0}
+                marginBottom={0}
                 backgroundColor={'#00000000'}
                 borderColor={'#E00083'}
-                borderWidth={1}
+                borderWidth={2}
                 borderRadius={0}
                 borderTopLeftRadius={0}
                 borderTopRightRadius={0}
@@ -84,9 +132,9 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 borderBottomLeftRadius={0}
                 fontFamily={'Aspira W05 Demi'}
                 color={'#E00083'}
-                fontSize={14}
+                fontSize={15}
                 fontWeight={undefined}
-                letterSpacing={0.5}
+                letterSpacing={0.3}
                 title={'AGENDAR CITA'}
               />
             </View>
@@ -100,13 +148,16 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 <Image style={styles.imgService} source={require('../../android/assets/img/servicios/alisado.png')} />
               </View>
               <Text style={styles.textService}>TRANSFORMA TU CABELLO CON UN ALISADO PERFECTO.</Text>
+
               <ButtonSecondary
-                onPress={() => { }}
+                onPress={checkLogin}
                 width={'100%'}
                 height={40}
+                marginTop={0}
+                marginBottom={0}
                 backgroundColor={'#00000000'}
                 borderColor={'#E00083'}
-                borderWidth={1}
+                borderWidth={2}
                 borderRadius={0}
                 borderTopLeftRadius={0}
                 borderTopRightRadius={0}
@@ -114,9 +165,9 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 borderBottomLeftRadius={0}
                 fontFamily={'Aspira W05 Demi'}
                 color={'#E00083'}
-                fontSize={14}
+                fontSize={15}
                 fontWeight={undefined}
-                letterSpacing={0.5}
+                letterSpacing={0.3}
                 title={'AGENDAR CITA'}
               />
             </View>
@@ -130,13 +181,16 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 <Image style={styles.imgService} source={require('../../android/assets/img/servicios/tinturado.png')} />
               </View>
               <Text style={styles.textService}>EXPRESA TU ESTILO CON UN CAMBIO DE COLOR ÚNICO</Text>
+
               <ButtonSecondary
-                onPress={() => { }}
+                onPress={checkLogin}
                 width={'100%'}
                 height={40}
+                marginTop={0}
+                marginBottom={0}
                 backgroundColor={'#00000000'}
                 borderColor={'#E00083'}
-                borderWidth={1}
+                borderWidth={2}
                 borderRadius={0}
                 borderTopLeftRadius={0}
                 borderTopRightRadius={0}
@@ -144,18 +198,29 @@ const Pestanas = ({ navigation }: PestanasProps) => {
                 borderBottomLeftRadius={0}
                 fontFamily={'Aspira W05 Demi'}
                 color={'#E00083'}
-                fontSize={14}
+                fontSize={15}
                 fontWeight={undefined}
-                letterSpacing={0.5}
+                letterSpacing={0.3}
                 title={'AGENDAR CITA'}
               />
             </View>
 
           </View>
-
         </View>
       </ScrollView>
-    </>
+
+      {/* -----------------------------------Mostrar alerta "Inicio de sesión requerido"------------------------------------- */}
+      <AlertWarning
+        visible={requiredLoginVisible}
+        onCloseWarning={handleCloseRequiredLogin}
+        title='Inicio de sesión.'
+        message='Es necesario iniciar sesión para agendar una cita.'
+        buttonStyle={{ width: 70 }}
+        buttonText='OK'
+      />
+      {/* ------------------------------------------------------------------------------------------------------------------- */}
+
+    </View>
   );
 };
 
@@ -163,42 +228,45 @@ export default Pestanas;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  container: {
+  generalContainer: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#ffffff',
+  },
+  scrollView: {
     flexGrow: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
   },
-  contentHair: {
-    width: '94%',
-    marginHorizontal: '3%',
-    backgroundColor: '#f5f5f5',
-  },
-  containerDescriptionImg: {
+  containerMainImage: {
     width: '100%',
     aspectRatio: 1 * 1, // Convertir pixeles de imágen a "Relación Aspecto" 
   },
-  descriptionImg: {
+  mainImage: {
     width: '100%',
     height: '100%',
   },
+  contentMain: {
+    width: '86%',
+    marginHorizontal: '7%',
+    backgroundColor: '#ffffff',
+  },
   descriptionTitle: {
+    fontFamily: 'Futura PT Medium',
     marginVertical: 20,
-    paddingHorizontal: 12,
-    fontFamily: 'Aspira W05 Bold',
     color: '#000000',
     fontSize: 24,
     letterSpacing: 0.3,
   },
   descriptionText: {
+    fontFamily: 'Futura PT Book',
     marginBottom: 30,
-    paddingHorizontal: 12,
-    fontFamily: 'Aspira W05 Regular',
     color: '#000000',
-    fontSize: 16,
+    fontSize: 17,
     letterSpacing: 0.3,
   },
   separator: {
-    width: '80%',
-    marginHorizontal: '10%',
+    width: '86%',
+    marginHorizontal: '7%',
     borderColor: '#5e5e5e',
     borderBottomWidth: 1,
   },
@@ -209,9 +277,7 @@ const styles = StyleSheet.create({
     marginVertical: 25,
   },
   contentService: {
-    width: '94%',
     marginVertical: 12,
-    marginHorizontal: '3%',
     padding: 15,
     backgroundColor: '#ffffff',
     borderRadius: 8,
@@ -222,7 +288,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Demi',
     textAlign: 'center',
     color: '#000000',
-    fontWeight: '600',
     fontSize: 18,
     letterSpacing: 0.3,
   },
@@ -249,9 +314,9 @@ const styles = StyleSheet.create({
   textService: {
     marginTop: 8,
     marginBottom: 15,
-    fontFamily: 'Futura PT Medium',
+    fontFamily: 'Futura PT Book',
     color: '#333333',
-    fontSize: 16,
+    fontSize: 18,
     letterSpacing: 0.3,
     textAlign: 'center',
   },

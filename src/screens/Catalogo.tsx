@@ -31,16 +31,20 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
   return (
 
     // "contentContainerStyle" en contenedor "ScrollView" con "flexGrow: 1" solucionan errores de Scroll
-    <>
-      <LoadingIndicator isLoading={isLoading} />
-      <HeaderSettingsReturn navigation={navigation} title="Catálogo" />
-      <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.generalContainer}>
 
-        <View style={styles.contentImgCatalogo}>
-          <Image style={styles.imgCatalogo} source={require('../../android/assets/img/catalogo/catalogo.png')} />
+      <LoadingIndicator isLoading={isLoading} />
+
+      <HeaderSettingsReturn navigation={navigation} title="Catálogo" />
+
+      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">
+
+        <View style={styles.containerMainImage}>
+          <Image style={styles.mainImage} source={require('../../android/assets/img/catalogo/catalogo.png')} />
         </View>
 
-        <View style={styles.contentCatalog}>
+        <View style={styles.contentMain}>
           <View style={styles.catalog}>
 
             <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Cabello')}>
@@ -85,25 +89,10 @@ const Catalogo = ({ navigation }: CatalogoProps) => {
               <Text style={styles.textCategory}>CUIDADO DE PIEL</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Quinceanera')}>
-              <View style={styles.contentIconCatalogo}>
-                <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/quiceanera.png')} />
-              </View>
-              <Text style={styles.textCategory}>QUINCEAÑERA</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.contentCategory} onPress={() => navigation.navigate('Novia')}>
-              <View style={styles.contentIconCatalogo}>
-                <Image style={styles.iconCatalogo} source={require('../../android/assets/img/catalogo/novia.png')} />
-              </View>
-              <Text style={styles.textCategory}>NOVIA</Text>
-            </TouchableOpacity>
-
           </View>
-
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -111,28 +100,34 @@ export default Catalogo;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
-  container: {
+  generalContainer: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#ffffff',
+  },
+  scrollView: {
     flexGrow: 1,
     backgroundColor: '#F3ECE6',
   },
-  contentImgCatalogo: {
+  containerMainImage: {
     display: 'flex',
     width: '100%',
     aspectRatio: 1 * 1.2, // Convertir pixeles de imágen a "Relación Aspecto" 
     backgroundColor: '#00000000',
   },
-  imgCatalogo: {
+  mainImage: {
     width: '100%',
     height: '100%',
   },
-  contentCatalog: {
-    width: '90%',
-    marginHorizontal: '5%',
+  contentMain: {
+    width: '86%',
+    marginHorizontal: '7%',
     backgroundColor: '#F3ECE6',
   },
   catalog: {
     flexDirection: 'row', // Posisiona elementos en fila
     flexWrap: 'wrap', // Posiciona elementos horixontalmente en varias filas
+    width: '100%',
     backgroundColor: '#F3ECE6',
     marginBottom: 20,
   },

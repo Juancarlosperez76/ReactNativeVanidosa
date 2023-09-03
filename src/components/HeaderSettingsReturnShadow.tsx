@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 
-interface HeaderSettingsReturnProps {
+interface HeaderSettingsReturnShadowProps {
   title: string;
   navigation: {
     goBack: () => void;
@@ -11,7 +11,7 @@ interface HeaderSettingsReturnProps {
   };
 }
 
-const HeaderSettingsReturn = ({ navigation, title }: HeaderSettingsReturnProps) => {
+const HeaderSettingsReturnShadow = ({ navigation, title }: HeaderSettingsReturnShadowProps) => {
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -34,7 +34,7 @@ const HeaderSettingsReturn = ({ navigation, title }: HeaderSettingsReturnProps) 
   };
   // --------------------------------------------------------------------------
 
-  return ( 
+  return (
 
     <View style={styles.contentCustomHeader}>
 
@@ -55,7 +55,7 @@ const HeaderSettingsReturn = ({ navigation, title }: HeaderSettingsReturnProps) 
 
 };
 
-export default HeaderSettingsReturn;
+export default HeaderSettingsReturnShadow; 
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
@@ -63,6 +63,9 @@ const styles = StyleSheet.create({
     height: 70,
     justifyContent: 'center',
     backgroundColor: '#ffffff',
+    shadowColor: '#6e6e6e', // Superpone color "#ffffff" sobre el color por defecto
+    elevation: 6, // Crea efecto boxshadow"
+    marginBottom: 3, // Permite ver el efecto "boxshadow" de la propiedad "elevation:"
   },
   contentBackIcon: {
     position: 'absolute',
