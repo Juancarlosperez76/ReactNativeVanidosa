@@ -465,7 +465,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#f0f0f0',
     letterSpacing: 0.3,
-    fontWeight: '400',
   },
   radioButton: {
     color: '#f0f0f0',

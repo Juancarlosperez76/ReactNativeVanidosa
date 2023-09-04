@@ -1,4 +1,4 @@
-import { Alert, Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -56,11 +56,17 @@ const Registro = ({ navigation }: RegistroProps) => {
     setSelectModalVisible(true);
   };
 
+  
+    // Función para cerrar "Modal" al hacer clic fuera de él
+    const handleSelectTipoDocumentoOutside = () => {
+      setSelectModalVisible(false);
+    };
+
   const handleSelectTipoDocumento = (value: string) => {
     setSelectedTipoDocumento(value);
     setTimeout(() => {
       setSelectModalVisible(false);
-    }, 500); // Cambia el valor 2000 a la cantidad de milisegundos que deseas esperar antes de ocultar el modal
+    }, 200); // Cambia el valor a la cantidad de milisegundos que deseas esperar antes de ocultar el modal
   };
 
   // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
@@ -352,8 +358,17 @@ const Registro = ({ navigation }: RegistroProps) => {
             </TouchableOpacity>
 
             {/* -------------------------------------"Modal" opciones "Tipo de documento"------------------------------------ */}
-            <Modal visible={selectModalVisible} animationType="slide" transparent={true}>
-              <View style={styles.selectModalContainer}>
+            <Modal
+              visible={selectModalVisible}
+              animationType="fade"
+              transparent={true}
+            >
+
+              <Pressable
+                style={styles.selectModalContainer}
+                onPress={handleSelectTipoDocumentoOutside} // Cerrar "Modal" al hacer clic fuera de él 
+              >
+
                 <View style={styles.selectModalContent}>
                   <Text style={styles.modalTitle}>Seleccione tipo de documento</Text>
                   {tipoDocumentoOptions.map((option) => (
@@ -373,7 +388,9 @@ const Registro = ({ navigation }: RegistroProps) => {
                     </TouchableOpacity>
                   ))}
                 </View>
-              </View>
+
+              </Pressable>
+
             </Modal>
             {/* ------------------------------------------------------------------------------------------------------------- */}
 
@@ -753,34 +770,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: '#00000080',
   },
   selectModalContent: {
+    width: '80%',
     backgroundColor: '#3F3F3F',
     borderRadius: 5,
   },
   modalTitle: {
-    paddingVertical: 16,
-    paddingRight: 30,
-    paddingLeft: 15,
-    color: '#FFFFFF',
+    fontFamily: 'Aspira W05 Medium',
+    paddingVertical: 18,
     fontSize: 18,
-    letterSpacing: 0.6,
-    fontWeight: 'bold',
+    color: '#f0f0f0',
+    textAlign: 'center',
+    letterSpacing: 0.3,
   },
   selectOption: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
     borderTopWidth: 1,
     borderColor: '#7A7A7A'
   },
   selectOptionText: {
-    color: '#FFFFFF',
+    fontFamily: 'Aspira W05 Medium',
+    color: '#f0f0f0',
     fontSize: 16,
-    letterSpacing: 0.6,
-    fontWeight: '400',
+    letterSpacing: 0.3,
   },
 });
