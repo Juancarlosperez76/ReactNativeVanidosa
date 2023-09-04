@@ -1,4 +1,4 @@
-import { Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -92,8 +92,23 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setServiceOptionsVisible(true);
   };
 
-  const handleCloseServiceOptions = (_value: string) => {
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+  const handleCloseServiceOptions = (value: string) => {
+    setSelectedServices((prevSelectedServices) => [...prevSelectedServices, value]);
     setServiceOptionsVisible(false);
+  };
+
+  // Función para cerrar "Modal" al hacer clic fuera de él
+  const handleCloseServiceOptionsOutside = () => {
+    setServiceOptionsVisible(false);
+  };
+
+  // Función para remover servicios almacenados
+  const handleRemoveService = (index: number) => {
+    const updatedServices = [...selectedServices];
+    updatedServices.splice(index, 1);
+    setSelectedServices(updatedServices);
   };
 
   // -------------------------------------Función selectores fecha y hora "DateTimePicker"-------------------------------------
@@ -173,15 +188,70 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             ) : (<Text>No se encontró ningún usuario</Text>)}
 
             {/* ----------------------------------------Modal "Seleccionar servicios"---------------------------------------- */}
-            <View style={styles.containeSeletcServices}>
+            <Modal
+              visible={ServiceOptionsVisible}
+              animationType="fade"
+              transparent
+            >
 
+              <Pressable
+                style={styles.containerServiceOptions}
+                onPress={handleCloseServiceOptionsOutside} // Cerrar "Modal" al hacer clic fuera de él 
+              >
+
+                <View style={styles.contentServiceOptions}>
+                  <Text style={styles.titleSelectService}>Seleccione servicio</Text>
+                  <ScrollView>
+                    {ServiceOptions.map((option) => (
+                      <TouchableOpacity
+                        style={styles.selectServiceOptions}
+                        key={option.value}
+                        onPress={() => handleCloseServiceOptions(option.value)}
+                      >
+                        <View style={styles.containerRadioButton}>
+                          <Text style={styles.serviceOptionText}>{option.label}</Text>
+                          <MaterialIcons style={styles.radioButton} name="radio-button-unchecked"  />
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+
+              </Pressable>
+
+            </Modal>
+
+            {/* ----------------------------------------Modal fecha "DateTimePicker"----------------------------------------- */}
+            {showDatePicker && (
+              <DateTimePicker style={{ width: 400 }}
+                testID="dateTimePicker"
+                value={date}
+                mode="date"
+                display="calendar"
+                onChange={onChangeDate}
+              />
+            )}
+
+            {/* -----------------------------------------Modal hora "DateTimePicker"----------------------------------------- */}
+            {showTimePicker && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={time}
+                mode="time"
+                is24Hour={false}
+                display="spinner"
+                onChange={onChangeTime}
+              />
+            )}
+
+            {/* --------------------Selector modal "Seleccionar servicios" y fecha y hora "DateTimePicker"------------------- */}
+            <View style={styles.containeSeletcServices}>
               <TouchableOpacity onPress={handleOpenServiceOptions}>
                 <View style={styles.containerIconLabel}>
-                  <Ionicons style={styles.iconServiceOptions} name="cut-sharp" />
+                  <Ionicons style={styles.iconServiceOptions} name="brush-outline" />
                   <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
                 </View>
               </TouchableOpacity>
-
               <View>
                 <View style={styles.containerButtonsOpen}>
                   <TouchableOpacity onPress={() => setShowDatePicker(true)} >
@@ -193,75 +263,44 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 </View>
               </View>
             </View>
-
-            <Modal visible={ServiceOptionsVisible} animationType="fade" transparent>
-              <View style={styles.containerServiceOptions}>
-                <View style={styles.contentServiceOptions}>
-                  <ScrollView>
-                    {ServiceOptions.map((option) => (
-                      <TouchableOpacity style={styles.closeServiceOptions} key={option.value} onPress={() => handleCloseServiceOptions(option.value)}>
-                        <Text style={styles.serviceOptionText}>{option.label}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
-              </View>
-            </Modal>
-
-            {/* ----------------------------------Selectores fecha y hora "DateTimePicker"----------------------------------- */}
-            {showDatePicker && (
-              <DateTimePicker style={{ width: 400 }}
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                display="calendar"
-                onChange={onChangeDate}
-              />
-            )}
-
-            {showTimePicker && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={time}
-                mode="time"
-                is24Hour={false}
-                display="spinner"
-                onChange={onChangeTime}
-              />
-            )}
             {/* ------------------------------------------------------------------------------------------------------------- */}
 
             <View style={styles.contentselectedProducts}>
-              <Text style={styles.titleSelectedProducts}>Servicios seleccionados</Text>
+              <Text style={styles.titleSelectedProducts}>SERVICIOS SELECCIONADOS</Text>
             </View>
 
 
             <View style={styles.containerServicesTitle}>
               <View style={styles.containerIdTitle}>
-                <Text style={styles.idTitle}>N&#8304;</Text>
+                <Text style={styles.idTitle}>Id</Text>
               </View>
               <View style={styles.containerServiceTitle}>
                 <Text style={styles.serviceTitle}>Servicio</Text>
               </View>
             </View>
 
-            <View style={styles.containerServicesText}>
-              <View style={styles.containerIdText}>
-                <Text style={styles.idText}>1</Text>
+            {selectedServices.map((service, index) => (
+              <View style={styles.containerServicesText} key={index}>
+                <View style={styles.containerIdText}>
+                  <Text style={styles.idText}>{index + 1}</Text>
+                </View>
+                <View style={styles.containerServiceText}>
+                  <Text style={styles.serviceText}>{service}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.containerServiceIcon}
+                  onPress={() => handleRemoveService(index)}
+                >
+                  <Ionicons style={styles.serviceIcon} name="trash-outline" />
+                </TouchableOpacity>
               </View>
-              <View style={styles.containerServiceText}>
-                <Text style={styles.serviceText}>Corte de cabello</Text>
-              </View>
-              <TouchableOpacity style={styles.containerServiceIcon} onPress={handleOpenServiceOptions}>
-                <Ionicons style={styles.serviceIcon} name="trash-outline" />
-              </TouchableOpacity>
-            </View>
+            ))}
 
             <ButtonPrimary
               onPress={() => { }}
               width={'100%'}
               height={48}
-              marginTop={15}
+              marginTop={30}
               marginBottom={0}
               backgroundColor={'#5B009D'}
               borderRadius={0}
@@ -278,7 +317,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               width={'100%'}
               height={48}
               marginTop={20}
-              marginBottom={0}
+              marginBottom={30}
               backgroundColor={'#00000000'}
               borderColor={'#E00083'}
               borderWidth={2}
@@ -321,28 +360,17 @@ const styles = StyleSheet.create({
     marginHorizontal: '7%',
     backgroundColor: '#ffffff',
   },
-  contentLogoAccount: {
-    marginVertical: 40,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoAccount: {
-    width: 120,
-    height: 72,
-  },
   fieldContainer: {
-    display: 'flex',
     flexDirection: 'row',
     marginVertical: 8,
     borderWidth: 1,
-    borderColor: '#E6E6E6',
+    borderColor: '#d9d9d9',
   },
   iconLabelContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     width: '46%',
     height: 48,
+    alignItems: 'center',
     backgroundColor: '#E6E6E6',
   },
   iconForm: {
@@ -372,14 +400,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 8,
-    marginBottom: 30,
+    marginBottom: 40,
     backgroundColor: '#E6E6E6',
   },
   containerIconLabel: {
     flexDirection: 'row',
   },
   iconServiceOptions: {
-    marginLeft: 6,
+    marginLeft: 8,
     marginRight: 4,
     fontSize: 22,
     color: '#000000',
@@ -401,46 +429,66 @@ const styles = StyleSheet.create({
   // Estilos modal "Seleccionar sevicios"
   containerServiceOptions: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00000080',
   },
   contentServiceOptions: {
-    width: '70%',
-    height: 300,
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    paddingVertical: 15,
+    width: '75%',
+    height: 296,
+    backgroundColor: '#3F3F3F',
+    borderRadius: 8,
   },
-  closeServiceOptions: {
+  titleSelectService: {
+    fontFamily: 'Aspira W05 Medium',
+    paddingVertical: 18,
+    fontSize: 18,
+    color: '#f0f0f0',
+    textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  selectServiceOptions: {
+    paddingVertical: 18,
+    borderTopWidth: 1,
+    borderColor: '#7A7A7A',
+  },
+  containerRadioButton: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    alignItems: 'center',
+    paddingHorizontal: 25,
+    width: '100%',
   },
   serviceOptionText: {
     fontFamily: 'Aspira W05 Medium',
-    width: '100%',
-    fontSize: 15,
-    color: '#000000',
-    textAlign: 'center',
-    letterSpacing: 0.5,
+    fontSize: 16,
+    color: '#f0f0f0',
+    letterSpacing: 0.3,
     fontWeight: '400',
   },
+  radioButton: {
+    color: '#f0f0f0',
+    fontSize: 20
+  },
+  // Estilos modal "Seleccionar sevicios" Fin
   contentselectedProducts: {
-
+    width: '100%',
   },
   titleSelectedProducts: {
-    fontFamily: 'Aspira W05 Demi',
+    fontFamily: 'Aspira W05 Bold',
     marginBottom: 10,
-    fontSize: 20,
+    fontSize: 16,
     color: '#585858',
     textAlign: 'center',
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
   },
   containerServicesTitle: {
     flexDirection: 'row',
     backgroundColor: '#E6E6E6',
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderColor: '#E6E6E6',
   },
   containerIdTitle: {
     width: '12%',
@@ -450,9 +498,9 @@ const styles = StyleSheet.create({
     borderColor: '#ffffff',
   },
   idTitle: {
-    fontFamily: 'Aspira W05 Demi',
+    fontFamily: 'Aspira W05 Medium',
     fontSize: 16,
-    color: '#585858',
+    color: '#000000',
     textAlign: 'center',
     letterSpacing: 0.3,
   },
@@ -462,28 +510,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   serviceTitle: {
-    fontFamily: 'Aspira W05 Demi',
+    fontFamily: 'Aspira W05 Medium',
     fontSize: 16,
-    color: '#585858',
+    color: '#000000',
     textAlign: 'center',
     letterSpacing: 0.3,
   },
   containerServicesText: {
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#E6E6E6',
+    borderTopWidth: 0,
+    borderColor: '#d9d9d9',
   },
   containerIdText: {
     width: '12%',
     height: 48,
     justifyContent: 'center',
     borderRightWidth: 1,
-    borderColor: '#E6E6E6',
+    borderColor: '#d9d9d9',
   },
   idText: {
     fontFamily: 'Aspira W05 Medium',
     fontSize: 15,
-    color: '#585858',
+    color: '#000000',
     textAlign: 'center',
     letterSpacing: 0.3,
   },
@@ -496,7 +545,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Medium',
     paddingLeft: 10,
     fontSize: 15,
-    color: '#585858',
+    color: '#000000',
     letterSpacing: 0.3,
   },
   containerServiceIcon: {
@@ -505,7 +554,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   serviceIcon: {
-    fontSize: 23,
+    fontSize: 22,
     color: '#585858',
     textAlign: 'center',
     letterSpacing: 0.3,
