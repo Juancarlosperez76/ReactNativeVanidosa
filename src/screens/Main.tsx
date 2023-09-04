@@ -4,6 +4,8 @@ import HeaderSettingsLogo from '../components/HeaderSettingsLogo';
 import LoadingIndicator from '../components/LoadingIndicator';
 import React, { useEffect, useState } from 'react';
 import Swiper from 'react-native-swiper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AlertWarning from '../components/AlertWarning';
 
 type RootStackParamList = {
   Main: undefined;
@@ -12,6 +14,7 @@ type RootStackParamList = {
   Unas: undefined;
   Pestanas: undefined;
   AgendarCita: undefined;
+  StackAccount: undefined;
 };
 type MainProps = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
@@ -24,6 +27,27 @@ const Main = ({ navigation }: MainProps) => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
     }, 800); // Tiempo de carga simulado (en milisegundos)
   }, []);
+
+  // ------------------------Función para validar si usuario está logueado y redirigir a "Agendar cita"------------------------
+  const checkLogin = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken'); // Obtener el token del AsyncStorage
+      if (token) {
+        navigation.navigate('AgendarCita'); // Si hay token, el usuario está logueado
+      } else {
+        setRequiredLoginVisible(true); // Muestra alerta "Inicio de sesión requerido"
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  // ----------------------------------------Función alerta "Inicio de sesión requerido"---------------------------------------
+  const [requiredLoginVisible, setRequiredLoginVisible] = useState(false);
+
+  const handleCloseRequiredLogin = () => {
+    setRequiredLoginVisible(false);
+    navigation.navigate('StackAccount')
+  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   const images = [
@@ -64,14 +88,20 @@ const Main = ({ navigation }: MainProps) => {
       <ScrollView style={{ backgroundColor: '#ffffffff' }}>
 
         <View style={styles.contentImageMain}>
+
           <Swiper showsPagination={false} autoplay={true} autoplayTimeout={4} removeClippedSubviews={false}>
             {images.map((image, index) => (
               <Image key={index} source={image} style={styles.imageMain} />
             ))}
           </Swiper>
-          <TouchableOpacity style={styles.buttonSchedule} onPress={() => navigation.navigate('AgendarCita')}>
+
+          <TouchableOpacity
+            style={styles.buttonSchedule}
+            onPress={checkLogin}
+          >
             <Text style={styles.buttonScheduleText}>RESERVA TU CITA</Text>
           </TouchableOpacity>
+
         </View>
 
         <View style={styles.containerMain}>
@@ -112,7 +142,10 @@ const Main = ({ navigation }: MainProps) => {
 
             </View>
 
-            <TouchableOpacity style={styles.buttonScheduleServices} onPress={() => navigation.navigate('AgendarCita')}>
+            <TouchableOpacity
+              style={styles.buttonScheduleServices}
+              onPress={checkLogin}
+            >
               <Text style={styles.buttonScheduleServicesText}>AGENDA TU CITA</Text>
             </TouchableOpacity>
 
@@ -142,6 +175,17 @@ const Main = ({ navigation }: MainProps) => {
           </View>
 
         </View>
+
+        {/* -----------------------------------Mostrar alerta "Inicio de sesión requerido"------------------------------------- */}
+        <AlertWarning
+          visible={requiredLoginVisible}
+          onCloseWarning={handleCloseRequiredLogin}
+          title='Inicio de sesión.'
+          message='Es necesario iniciar sesión para agendar una cita.'
+          buttonStyle={{ width: 70 }}
+          buttonText='OK'
+        />
+        {/* ------------------------------------------------------------------------------------------------------------------- */}
 
       </ScrollView>
 

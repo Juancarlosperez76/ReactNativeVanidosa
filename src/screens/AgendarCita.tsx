@@ -210,7 +210,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                       >
                         <View style={styles.containerRadioButton}>
                           <Text style={styles.serviceOptionText}>{option.label}</Text>
-                          <MaterialIcons style={styles.radioButton} name="radio-button-unchecked"  />
+                          <MaterialIcons style={styles.radioButton} name="radio-button-unchecked" />
                         </View>
                       </TouchableOpacity>
                     ))}
