@@ -248,7 +248,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             <View style={styles.containeSeletcServices}>
               <TouchableOpacity onPress={handleOpenServiceOptions}>
                 <View style={styles.containerIconLabel}>
-                  <Ionicons style={styles.iconServiceOptions} name="brush-outline" />
+                  <Ionicons style={[styles.iconServiceOptions, { transform: [{ rotate: '300deg' }] }]} name="cut-sharp" />
                   <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
                 </View>
               </TouchableOpacity>
@@ -363,8 +363,6 @@ const styles = StyleSheet.create({
   fieldContainer: {
     flexDirection: 'row',
     marginVertical: 8,
-    borderWidth: 1,
-    borderColor: '#d9d9d9',
   },
   iconLabelContainer: {
     flexDirection: 'row',
@@ -372,6 +370,8 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: 'center',
     backgroundColor: '#E6E6E6',
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
   },
   iconForm: {
     marginLeft: 6,
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#000000',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   input: {
     width: '54%',
@@ -391,7 +391,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#000000',
     fontWeight: '400',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
+    borderWidth: 1,
+    borderColor: '#d9d9d9',
   },
   // Estilos botón "Seleccionar sevicios"
   containeSeletcServices: {
@@ -408,7 +410,7 @@ const styles = StyleSheet.create({
   },
   iconServiceOptions: {
     marginLeft: 8,
-    marginRight: 4,
+    marginRight: 3,
     fontSize: 22,
     color: '#000000',
   },
@@ -486,7 +488,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#E6E6E6',
     borderWidth: 1,
-    borderTopWidth: 0,
     borderColor: '#E6E6E6',
   },
   containerIdTitle: {
