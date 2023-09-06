@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 type RootStackParamList = {
-  HomeRecoverPass: undefined;
+  InputEmail: undefined;
   Registro: undefined;
   Login: undefined;
   StackMain: undefined;
@@ -203,7 +203,7 @@ const Login = ({ navigation }: LoginProps) => {
               title={'INICIAR SESIÓN'}
             />
 
-            <TouchableOpacity onPress={() => navigation.navigate('HomeRecoverPass')}>
+            <TouchableOpacity onPress={() => navigation.navigate('InputEmail')}>
               <Text style={styles.recoverPassword}>Restablecer la contraseña</Text>
             </TouchableOpacity>
 

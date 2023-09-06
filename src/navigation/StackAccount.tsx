@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StackAccountHeader from '../navigation/StackAccountHeader';
-import HomeRecoverPass from '../screens/HomeRecoverPass';
 import RecoverPass from '../screens/RecoverPass';
+import InputEmail from '../screens/InputEmail';
 import Registro from '../screens/Registro';
 import Login from '../screens/Login';
 import Main from '../screens/Main';
@@ -28,8 +28,8 @@ const StackAccount = () => {
       />
 
       <Stack.Screen
-        name="HomeRecoverPass"
-        component={HomeRecoverPass as React.ComponentType<any>}
+        name="InputEmail"
+        component={InputEmail as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
