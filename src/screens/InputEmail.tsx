@@ -1,13 +1,12 @@
-
 import { SafeAreaView, StyleSheet, TextInput, View, Image, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
+import AlertWarning from '../components/AlertWarning';
 import HeaderReturn from '../components/HeaderReturn';
 import React, { useEffect, useState } from 'react';
 import SendEmail from '../components/SendEmail';
-import AlertWarning from '../components/AlertWarning';
 
 type RootStackParamList = {
   Login: undefined;
