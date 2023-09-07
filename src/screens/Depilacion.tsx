@@ -4,8 +4,9 @@ import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
-import React, { useEffect, useState } from 'react';
 import AlertWarning from '../components/AlertWarning';
+import { useEffect, useState } from 'react';
+import React from 'react';
 
 type RootStackParamList = {
   AgendarCita: undefined;

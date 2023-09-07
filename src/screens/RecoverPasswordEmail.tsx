@@ -6,7 +6,8 @@ import AlertSendEmail from '../components/AlertSendEmail';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertWarning from '../components/AlertWarning';
 import HeaderReturn from '../components/HeaderReturn';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import React from 'react';
 
 type RootStackParamList = {
   Login: undefined;

@@ -9,8 +9,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
 
 type User = {
   _id: User | null;
@@ -162,7 +163,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   }
 
   // -------------------------------------------Función modal "Confirmar identidad"--------------------------------------------
-  const [ContrasenaActual, setContrasenaActual] = React.useState(''); // Estado contraseña de la alerta "Confirma tu identidad"
+  const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de la alerta "Confirma tu identidad"
   const [validatePassVisible, setValidatePassVisible] = useState(false);
 
   const handleShowValidatePassVisible = () => {

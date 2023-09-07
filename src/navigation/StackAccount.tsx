@@ -3,6 +3,7 @@ import RecoverPasswordEmail from '../screens/RecoverPasswordEmail';
 import StackAccountHeader from '../navigation/StackAccountHeader';
 import RecoverPassword from '../screens/RecoverPassword';
 import Registro from '../screens/Registro';
+import { ComponentType } from 'react';
 import Login from '../screens/Login';
 import Main from '../screens/Main';
 import React from 'react';
@@ -17,37 +18,37 @@ const StackAccount = () => {
 
       <Stack.Screen
         name="Login"
-        component={Login as React.ComponentType<any>}
+        component={Login as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="StackAccountHeader"
-        component={StackAccountHeader as React.ComponentType<any>}
+        component={StackAccountHeader as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="RecoverPassword"
-        component={RecoverPassword as React.ComponentType<any>}
+        component={RecoverPassword as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="RecoverPasswordEmail"
-        component={RecoverPasswordEmail as React.ComponentType<any>}
+        component={RecoverPasswordEmail as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Registro"
-        component={Registro as React.ComponentType<any>}
+        component={Registro as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Main"
-        component={Main as React.ComponentType<any>}
+        component={Main as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

@@ -1,6 +1,6 @@
 import HeaderSettingsReturnShadow from '../components/HeaderSettingsReturnShadow';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
 type RootStackParamList = {

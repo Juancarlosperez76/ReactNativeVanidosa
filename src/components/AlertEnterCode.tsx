@@ -1,4 +1,5 @@
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle, TextInput, Pressable } from 'react-native';
+import { useState } from 'react';
 import React from 'react';
 
 interface AlertEnterCodeProps {
@@ -14,7 +15,7 @@ interface AlertEnterCodeProps {
 
 const AlertEnterCode = ({ visible, onCloseEnterCodeOutside, onCloseEnterCode, title, message, buttonStyle, buttonText, email }: AlertEnterCodeProps) => {
 
-  const [InputOne, setInputOne] = React.useState('');
+  const [InputOne, setInputOne] = useState('');
 
   return (
     <Modal

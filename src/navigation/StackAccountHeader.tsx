@@ -1,9 +1,10 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ChangePassword from '../screens/ChangePassword';
 import AccountHeader from '../screens/AccountHeader';
 import EditAccount from '../screens/EditAccount';
-import ChangePassword from '../screens/ChangePassword';
+import { ComponentType } from 'react';
 import Login from '../screens/Login';
+import React from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,25 +16,25 @@ const StackAccountHeader = () => {
 
       <Stack.Screen
         name="AccountHeader"
-        component={AccountHeader as React.ComponentType<any>}
+        component={AccountHeader as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="EditAccount"
-        component={EditAccount as React.ComponentType<any>}
+        component={EditAccount as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="ChangePassword"
-        component={ChangePassword as React.ComponentType<any>}
+        component={ChangePassword as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Login"
-        component={Login as React.ComponentType<any>}
+        component={Login as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

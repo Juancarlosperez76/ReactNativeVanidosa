@@ -1,10 +1,11 @@
 import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dispatch, SetStateAction } from 'react';
 import ButtonPrimary from './ButtonPrimary';
 import React from 'react';
 
 type TermsAndConditionsModalProps = {
   modalVisible: boolean;
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalVisible: Dispatch<SetStateAction<boolean>>;
 };
 
 const TermsAndConditionsModal = ({ modalVisible, setModalVisible }: TermsAndConditionsModalProps) => {

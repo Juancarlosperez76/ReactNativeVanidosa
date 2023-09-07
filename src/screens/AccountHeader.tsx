@@ -9,8 +9,9 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
 
 type User = {
   Apellido: string;
@@ -142,7 +143,7 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   }, []);
 
   // ------------------------------------------Función modal "Confirmar identidad""--------------------------------------------
-  const [ContrasenaActual, setContrasenaActual] = React.useState(''); // Estado contraseña de alerta "Confirma tu identidad"
+  const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de alerta "Confirma tu identidad"
   const [validatePassVisible, setValidatePassVisible] = useState(false); // Estado contraseña de la alerta "Confirma tu identidad"
 
   const handleValidatePassVisible = () => {

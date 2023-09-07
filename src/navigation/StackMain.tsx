@@ -1,12 +1,13 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Main from '../screens/Main';
-import Maquillaje from '../screens/Maquillaje';
-import Cabello from '../screens/Cabello';
-import Unas from '../screens/Unas';
-import Pestanas from '../screens/Pestanas';
 import StackAccountHeader from './StackAccountHeader';
 import AgendarCita from '../screens/AgendarCita';
+import Maquillaje from '../screens/Maquillaje';
+import Pestanas from '../screens/Pestanas';
+import Cabello from '../screens/Cabello';
+import { ComponentType } from 'react';
+import Main from '../screens/Main';
+import Unas from '../screens/Unas';
+import React from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,43 +19,43 @@ const StackMain = () => {
 
       <Stack.Screen
         name="Main"
-        component={Main as React.ComponentType<any>}
+        component={Main as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="StackAccountHeader"
-        component={StackAccountHeader as React.ComponentType<any>}
+        component={StackAccountHeader as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Maquillaje"
-        component={Maquillaje as React.ComponentType<any>}
+        component={Maquillaje as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Cabello"
-        component={Cabello as React.ComponentType<any>}
+        component={Cabello as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Unas"
-        component={Unas as React.ComponentType<any>}
+        component={Unas as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="Pestanas"
-        component={Pestanas as React.ComponentType<any>}
+        component={Pestanas as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
         name="AgendarCita"
-        component={AgendarCita as React.ComponentType<any>}
+        component={AgendarCita as ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

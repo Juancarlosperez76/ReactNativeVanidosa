@@ -1,11 +1,12 @@
 import { StyleSheet, View, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderSettingsLogo from '../components/HeaderSettingsLogo';
 import LoadingIndicator from '../components/LoadingIndicator';
-import React, { useEffect, useState } from 'react';
-import Swiper from 'react-native-swiper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertWarning from '../components/AlertWarning';
+import { useEffect, useState } from 'react';
+import Swiper from 'react-native-swiper';
+import React from 'react';
 
 type RootStackParamList = {
   Main: undefined;

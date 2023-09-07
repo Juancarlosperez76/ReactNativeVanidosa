@@ -1,4 +1,4 @@
-import { Alert, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TermsAndConditionsModal from '../components/TermsAndConditionsModal';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -10,9 +10,10 @@ import CheckBox from '@react-native-community/checkbox';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import AlertFailure from '../components/AlertFailure';
-import React, { useEffect, useState } from 'react';
 import { RadioButton } from 'react-native-paper';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
 
 type RootStackParamList = {
   Login: undefined;
@@ -33,15 +34,15 @@ const Registro = ({ navigation }: RegistroProps) => {
   }, []);
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
-  const [Nombre, setNombre] = React.useState('');
-  const [Apellido, setApellido] = React.useState('');
+  const [Nombre, setNombre] = useState('');
+  const [Apellido, setApellido] = useState('');
   const [selectedTipoDocumento, setSelectedTipoDocumento] = useState('');
-  const [Documento, setDocumento] = React.useState('');
-  const [Direccion, setDireccion] = React.useState('');
-  const [Telefono, setTelefono] = React.useState('');
-  const [Correo, setCorreo] = React.useState('');
-  const [Contrasena, setContrasena] = React.useState('');
-  const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
+  const [Documento, setDocumento] = useState('');
+  const [Direccion, setDireccion] = useState('');
+  const [Telefono, setTelefono] = useState('');
+  const [Correo, setCorreo] = useState('');
+  const [Contrasena, setContrasena] = useState('');
+  const [ConfirmarContrasena, setConfirmarContrasena] = useState('');
 
   // -------------------------------------Lógica "Imput Select Modal" "Tipo de documento"--------------------------------------
   const tipoDocumentoOptions = [
@@ -135,7 +136,6 @@ const Registro = ({ navigation }: RegistroProps) => {
   // --------------------------------------------------Función de (Registro)---------------------------------------------------
   const handleRegister = async () => {
 
-
     // Validar campos vacíos
     if (!Nombre || !Apellido || !Documento || !Direccion || !Telefono || !Correo || !Contrasena || !ConfirmarContrasena) {
       setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
@@ -181,7 +181,6 @@ const Registro = ({ navigation }: RegistroProps) => {
     // Validar aceptación de "Términos y condiciones"
     if (!acceptTerms) {
       setAcceptTermsVisible(true);
-      setIsLoading(false);
       return;
     }
 
@@ -189,7 +188,6 @@ const Registro = ({ navigation }: RegistroProps) => {
     const userStateDocument = await getUserDocument(parseInt(Documento, 10)); // Obtener el documento antes del registro
     if (userStateDocument === true) {
       setExistingDocumentVisible(true);
-      setIsLoading(false);
       return;
     }
 
@@ -197,7 +195,6 @@ const Registro = ({ navigation }: RegistroProps) => {
     const userState = await getUserState(Correo); // Obtener el correo antes del registro
     if (userState === true) {
       setExistingEmailVisible(true);
-      setIsLoading(false);
       return;
     }
 
@@ -281,6 +278,7 @@ const Registro = ({ navigation }: RegistroProps) => {
 
   const handleCloseExistingDocument = () => {
     setExistingDocumentVisible(false);
+    setIsLoading(false);
   };
 
   // --------------------------------------------Función alerta "El correo ya existe"------------------------------------------
@@ -288,6 +286,7 @@ const Registro = ({ navigation }: RegistroProps) => {
 
   const handleCloseExistingEmail = () => {
     setExistingEmailVisible(false);
+    setIsLoading(false);
   };
 
   // ------------------------------------------Función alerta "Términos y condiciones"-----------------------------------------

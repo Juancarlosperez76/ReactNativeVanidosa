@@ -10,8 +10,9 @@ import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
 import AlertWarning from '../components/AlertWarning';
 import HeaderReturn from '../components/HeaderReturn';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
 
 type RootStackParamList = {
   RecoverPasswordEmail: undefined;
@@ -33,8 +34,8 @@ const Login = ({ navigation }: LoginProps) => {
   }, []);
 
   // --------------------------------------------------Estado de los input"----------------------------------------------------
-  const [Contrasena, setContrasena] = React.useState('');
-  const [Correo, setCorreo] = React.useState('');
+  const [Contrasena, setContrasena] = useState('');
+  const [Correo, setCorreo] = useState('');
 
   // ---------------------------------------------Mostrar y ocultar la contraseña----------------------------------------------
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar y ocultar "Contraseña"

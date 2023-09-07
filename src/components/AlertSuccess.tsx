@@ -1,6 +1,6 @@
-import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import React from 'react';
 
 interface AlertSuccessProps {
   visible: boolean;

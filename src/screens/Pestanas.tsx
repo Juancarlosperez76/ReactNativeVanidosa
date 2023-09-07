@@ -1,11 +1,12 @@
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
-import ButtonSecondary from '../components/ButtonSecondary';
-import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingIndicator from '../components/LoadingIndicator';
+import ButtonSecondary from '../components/ButtonSecondary';
 import AlertWarning from '../components/AlertWarning';
+import { useEffect, useState } from 'react';
+import React from 'react';
 
 type RootStackParamList = {
   Pestanas: undefined;

@@ -7,9 +7,10 @@ import StackCatalogue from './StackCatalogue';
 import StackChedule from './StackChedule';
 import StackAccount from './StackAccount';
 import StackContact from './StackContact';
-import React, { useState } from 'react';
+import StackMain from './StackMain';
 import { Text } from 'react-native';
-import StackMain from './StackMain'
+import { useState } from 'react';
+import React from 'react';
 
 function StackMainScreen() { return (<StackMain />); }
 function StackCatalogueScreen() { return (<StackCatalogue />); }

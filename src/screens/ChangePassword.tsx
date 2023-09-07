@@ -7,8 +7,9 @@ import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderReturn from '../components/HeaderReturn';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import React from 'react';
 
 type User = {
   _id: User | null;
@@ -33,8 +34,8 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
-  const [Contrasena, setContrasena] = React.useState('');
-  const [ConfirmarContrasena, setConfirmarContrasena] = React.useState('');
+  const [Contrasena, setContrasena] = useState('');
+  const [ConfirmarContrasena, setConfirmarContrasena] = useState('');
 
   // ----------------------------------------------Mostrar y ocultar "Contraseña"----------------------------------------------
   const [showPasswordUno, setShowPasswordUno] = useState(false);

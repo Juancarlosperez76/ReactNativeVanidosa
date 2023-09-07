@@ -1,12 +1,11 @@
-import React from 'react';
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
+import React from 'react';
 
 interface LoadingIndicatorProps {
   isLoading: boolean;
 }
 
 const LoadingIndicator = ({ isLoading }: LoadingIndicatorProps) => {
-
   return (
     <Modal
       visible={isLoading}

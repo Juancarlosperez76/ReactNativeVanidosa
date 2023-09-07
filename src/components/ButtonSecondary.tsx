@@ -1,5 +1,5 @@
-import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
+import React from 'react';
 
 // Solución "El elemento de enlace '' tiene un tipo 'any' implícito."
 interface ButtonSecondaryProps {

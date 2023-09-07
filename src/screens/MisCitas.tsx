@@ -1,8 +1,8 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import HeaderSettingsReturnShadow from '../components/HeaderSettingsReturnShadow';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import ButtonSecondary from '../components/ButtonSecondary';
+import React from 'react';
 
 type RootStackParamList = {
   AgendarCita: undefined;
@@ -50,7 +50,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
           />
 
         </View>
-        
+
       </ScrollView>
     </View>
   );
