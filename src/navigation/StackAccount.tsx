@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import RecoverPasswordEmail from '../screens/RecoverPasswordEmail';
 import StackAccountHeader from '../navigation/StackAccountHeader';
-import RecoverPass from '../screens/RecoverPass';
-import InputEmail from '../screens/InputEmail';
+import RecoverPassword from '../screens/RecoverPassword';
 import Registro from '../screens/Registro';
 import Login from '../screens/Login';
 import Main from '../screens/Main';
@@ -28,14 +28,14 @@ const StackAccount = () => {
       />
 
       <Stack.Screen
-        name="InputEmail"
-        component={InputEmail as React.ComponentType<any>}
+        name="RecoverPassword"
+        component={RecoverPassword as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 
       <Stack.Screen
-        name="RecoverPass"
-        component={RecoverPass as React.ComponentType<any>}
+        name="RecoverPasswordEmail"
+        component={RecoverPasswordEmail as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

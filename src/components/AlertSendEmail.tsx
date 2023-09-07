@@ -1,8 +1,8 @@
-import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import React from 'react';
 
-interface SendEmailProps {
+interface AlertSendEmailProps {
   visible: boolean;
   onCloseSuccess: () => void;
   title: string;
@@ -12,7 +12,7 @@ interface SendEmailProps {
   buttonText: string;
 }
 
-const SendEmail = ({ visible, onCloseSuccess, title, message, email, buttonStyle, buttonText }: SendEmailProps) => {
+const AlertSendEmail = ({ visible, onCloseSuccess, title, message, email, buttonStyle, buttonText }: AlertSendEmailProps) => {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -35,7 +35,7 @@ const SendEmail = ({ visible, onCloseSuccess, title, message, email, buttonStyle
   );
 };
 
-export default SendEmail;
+export default AlertSendEmail;
 
 const styles = StyleSheet.create({
   modalBackground: {

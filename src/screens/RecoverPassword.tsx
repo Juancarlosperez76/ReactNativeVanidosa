@@ -1,21 +1,20 @@
 
-import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, ScrollView, Image } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, TextInput, View, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import React, { useEffect, useState } from 'react';
 
 type RootStackParamList = {
   Login: undefined;
-  RecoverPass: undefined;
-  // otras rutas de tu aplicación
+  RecoverPassword: undefined;
 };
-type RecoverPassProps = NativeStackScreenProps<RootStackParamList, 'RecoverPass'>;
+type RecoverPasswordProps = NativeStackScreenProps<RootStackParamList, 'RecoverPassword'>;
 
-const RecoverPass = ({ navigation }: RecoverPassProps) => {
+const RecoverPassword = ({ navigation }: RecoverPasswordProps) => {
 
   // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
@@ -153,7 +152,7 @@ const RecoverPass = ({ navigation }: RecoverPassProps) => {
 
 };
 
-export default RecoverPass;
+export default RecoverPassword;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({

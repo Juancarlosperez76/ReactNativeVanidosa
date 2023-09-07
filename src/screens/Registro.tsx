@@ -56,11 +56,11 @@ const Registro = ({ navigation }: RegistroProps) => {
     setSelectModalVisible(true);
   };
 
-  
-    // Función para cerrar "Modal" al hacer clic fuera de él
-    const handleSelectTipoDocumentoOutside = () => {
-      setSelectModalVisible(false);
-    };
+
+  // Función para cerrar "Modal" al hacer clic fuera de él
+  const handleSelectTipoDocumentoOutside = () => {
+    setSelectModalVisible(false);
+  };
 
   const handleSelectTipoDocumento = (value: string) => {
     setSelectedTipoDocumento(value);
@@ -527,7 +527,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               title={'CREAR CUENTA'}
             />
 
-            {/* ---------------------------------------Mostrar Alerta "Campos vacíos"---------------------------------------- */}
+            {/* -------------------------------------------Alerta "Campos vacíos"-------------------------------------------- */}
             <AlertWarning
               visible={emptyFieldsVisible}
               onCloseWarning={handleCloseEmptyFields}
@@ -536,7 +536,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* -------------------------------------Mostrar alerta "Tipo de documento"-------------------------------------- */}
+            {/* -----------------------------------------Alerta "Tipo de documento"------------------------------------------ */}
             <AlertWarning
               visible={documentTypeVisible}
               onCloseWarning={handleCloseDocumentType}
@@ -545,7 +545,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* ------------------------------------Mostrar alerta "Documento inválido"-------------------------------------- */}
+            {/* ----------------------------------------Alerta "Documento inválido"------------------------------------------ */}
             <AlertWarning
               visible={documentVisible}
               onCloseWarning={handleCloseDocument}
@@ -554,7 +554,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
+            {/* -----------------------------------------Alerta "Teléfono inválido"------------------------------------------ */}
             <AlertWarning
               visible={phoneVisible}
               onCloseWarning={handleClosePhone}
@@ -563,16 +563,16 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* --------------------------------------Mostrar alerta "Correo inválido"--------------------------------------- */}
+            {/* ------------------------------------------Alerta "Correo inválido"------------------------------------------- */}
             <AlertWarning
               visible={emailVisible}
               onCloseWarning={handleCloseEmail}
               title='Correo inválido.'
-              message='Formato de correo incorrecto.'
+              message='El correo ingresado tiene un formato invalido.'
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* ------------------------------------Mostrar alerta "Contraseña inválida"------------------------------------- */}
+            {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
             <AlertWarning
               visible={minPasswordVisible}
               onCloseWarning={handleCloseMinPassword}
@@ -581,7 +581,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* --------------------------------Mostrar alerta "Las contraseñas no coinciden"-------------------------------- */}
+            {/* ------------------------------------Alerta "Las contraseñas no coinciden"------------------------------------ */}
             <AlertWarning
               visible={notMatchVisible}
               onCloseWarning={handleCloseNotMatch}
@@ -590,7 +590,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* -----------------------------------Mostrar alerta "El documento ya exixte"----------------------------------- */}
+            {/* ---------------------------------------Alerta "El documento ya exixte"--------------------------------------- */}
             <AlertWarning
               visible={existingDocumentVisible}
               onCloseWarning={handleCloseExistingDocument}
@@ -599,7 +599,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* ------------------------------------Mostrar alerta "El correo ya exixte"------------------------------------- */}
+            {/* ----------------------------------------Alerta "El correo ya exixte"----------------------------------------- */}
             <AlertWarning
               visible={existingEmailVisible}
               onCloseWarning={handleCloseExistingEmail}
@@ -608,7 +608,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* ----------------------------------Mostrar alerta "Términos y condiciones"------------------------------------ */}
+            {/* --------------------------------------Alerta "Términos y condiciones"---------------------------------------- */}
             <AlertWarning
               visible={acceptTermsVisible}
               onCloseWarning={handleCloseAcceptTerms}
@@ -617,7 +617,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* -------------------------------------Mostrar alerta "Error de registro"-------------------------------------- */}
+            {/* -----------------------------------------Alerta "Error de registro"------------------------------------------ */}
             <AlertFailure
               visible={failedRegisterVisible}
               onCloseFailure={handleCloseFailedRegister}
@@ -626,7 +626,7 @@ const Registro = ({ navigation }: RegistroProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* --------------------------------------Mostrar alerta "Registro exitoso"-------------------------------------- */}
+            {/* ------------------------------------------Alerta "Registro exitoso"------------------------------------------ */}
             <AlertSuccess
               visible={registeredVisible}
               onCloseSuccess={handleCloseRegistered}

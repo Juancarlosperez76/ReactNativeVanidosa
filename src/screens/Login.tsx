@@ -14,10 +14,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 type RootStackParamList = {
-  InputEmail: undefined;
+  RecoverPasswordEmail: undefined;
+  StackMain: undefined;
   Registro: undefined;
   Login: undefined;
-  StackMain: undefined;
 };
 type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -203,7 +203,7 @@ const Login = ({ navigation }: LoginProps) => {
               title={'INICIAR SESIÓN'}
             />
 
-            <TouchableOpacity onPress={() => navigation.navigate('InputEmail')}>
+            <TouchableOpacity onPress={() => navigation.navigate('RecoverPasswordEmail')}>
               <Text style={styles.recoverPassword}>Restablecer la contraseña</Text>
             </TouchableOpacity>
 

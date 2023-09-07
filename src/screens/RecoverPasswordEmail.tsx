@@ -2,20 +2,20 @@ import { SafeAreaView, StyleSheet, TextInput, View, Image, Alert } from 'react-n
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AlertSendEmail from '../components/AlertSendEmail';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertWarning from '../components/AlertWarning';
 import HeaderReturn from '../components/HeaderReturn';
 import React, { useEffect, useState } from 'react';
-import SendEmail from '../components/SendEmail';
 
 type RootStackParamList = {
   Login: undefined;
-  InputEmail: undefined;
+  RecoverPasswordEmail: undefined;
   RecoverPass: undefined;
 };
-type InputEmailProps = NativeStackScreenProps<RootStackParamList, 'InputEmail'>;
+type RecoverPasswordEmailProps = NativeStackScreenProps<RootStackParamList, 'RecoverPasswordEmail'>;
 
-const InputEmail = ({ navigation }: InputEmailProps) => {
+const RecoverPasswordEmail = ({ navigation }: RecoverPasswordEmailProps) => {
 
   // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
@@ -27,13 +27,28 @@ const InputEmail = ({ navigation }: InputEmailProps) => {
   }, []);
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
-  const [email, setEmail] = useState('');
+  const [Correo, setCorreo] = useState('');
 
   // ---------------------------------------------Función alerta "Campo requerido"---------------------------------------------
   const [emptyInputVisible, setEmptyInputVisible] = useState(false);
 
   const handleCloseEmptyInput = () => {
     setEmptyInputVisible(false);
+  };
+
+  // ---------------------------------------------Función alerta "Correo inválido"---------------------------------------------
+  const [emailVisible, setEmailVisible] = useState(false);
+
+  const handleCloseEmail = () => {
+    setEmailVisible(false);
+  };
+
+  // ------------------------------------------Función alerta "Correo no registrado"-------------------------------------------
+  const [unregisteredEmailVisible, setUnregisteredEmailVisible] = useState(false);
+
+  const handleCloseUnregisteredEmail = () => {
+    setUnregisteredEmailVisible(false);
+    setIsLoading(false); // Desactivar el preload
   };
 
   // --------------------------------------------Función alerta "Correo enviado"-----------------------------------------------
@@ -44,39 +59,48 @@ const InputEmail = ({ navigation }: InputEmailProps) => {
     navigation.replace('Login'); // 'replace' en lugar de 'navigate' recarga la "Vista" y actualiza cambios
   };
 
-  // --------------------------Función con "axios" para enviar "Correo de recuperación de contraseña"--------------------------
-  // const handleResetPassword = async () => {
+  // -----------------------------------Funcion para validar si el "Correo" está registrado------------------------------------
+  const getUserState = async (Correo: string) => {
 
-  //   // Validación de campos vacíos
-  //   if (email === '') {
-  //     setEmptyInputVisible(true); // Muestra alerta de "Campos vacíos"
-  //     return
-  //   }
+    setIsLoading(true); // Activar el preload
 
-  //   try {
-  //     const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/olvidocontrasena', {
-  //       Correo: email,
-  //     });
+    try {
+      const response = await fetch('https://api-proyecto-5hms.onrender.com/api/usuario');
 
-  //     if (response.status === 200) {
-  //       setSuccessSendEmailVisible(true);
-  //     } else {
-  //       Alert.alert('Hubo un error al enviar el correo');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error al enviar la solicitud:', error);
-  //     Alert.alert('Hubo un error al enviar la solicitud');
-  //   }
-  // };
-  // --------------------------------------------------------------------------------------------------------------------------
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos del usuario');
+      }
 
-  // ---------------------------Función con fetch para enviar "Correo de recuperación de contraseña"---------------------------
+      const { Usuarios } = await response.json();
+      const user = Usuarios.find((usuario: { Correo: string; }) => usuario.Correo === Correo);
+
+      return user ? user.Estado : null;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  // --------------------------------Función para enviar "Correo de recuperación de contraseña"--------------------------------
   const handleResetPassword = async () => {
 
     // Validación de campos vacíos
-    if (email === '') {
+    if (Correo === '') {
       setEmptyInputVisible(true); // Muestra alerta de "Campos vacíos"
       return
+    }
+
+    // Validar formato de "Correo electrónico"
+    if (!/^[a-zA-Z0-9._-]+@(yahoo|outlook|hotmail|gmail|mailbox)\.(com|es|net|co)$/.test(Correo)) {
+      setEmailVisible(true); // Muestra alerta "Correo inválido"
+      return;
+    }
+
+    // Validar si el correo está registrado
+    const userState = await getUserState(Correo); // Obtener el correo 
+    if (userState !== true) {
+      setUnregisteredEmailVisible(true); // Muestra alerta "Correo no registrado"
+      return;
     }
 
     try {
@@ -86,7 +110,7 @@ const InputEmail = ({ navigation }: InputEmailProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Correo: email,
+          Correo: Correo,
         }),
       });
 
@@ -127,9 +151,8 @@ const InputEmail = ({ navigation }: InputEmailProps) => {
                 style={styles.input}
                 placeholder='Ingrese E-mail para continuar'
                 placeholderTextColor='#000000'
-                // textAlignVertical='bottom'
-                onChangeText={setEmail}
-                value={email}
+                onChangeText={setCorreo}
+                value={Correo}
                 autoCapitalize='none' // Evita que la primera letra ingresada sea mayúscula
                 keyboardType='email-address' />
             </View>
@@ -161,18 +184,34 @@ const InputEmail = ({ navigation }: InputEmailProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-
+            {/* ------------------------------------------Alerta "Correo inválido"------------------------------------------- */}
+            <AlertWarning
+              visible={emailVisible}
+              onCloseWarning={handleCloseEmail}
+              title='Correo inválido.'
+              message='El correo ingresado tiene un formato invalido.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
+            {/* ----------------------------------------Alerta "Correo no registrado"---------------------------------------- */}
+            <AlertWarning
+              visible={unregisteredEmailVisible}
+              onCloseWarning={handleCloseUnregisteredEmail}
+              title='Correo no registrado.'
+              message='El correo electrónico ingresesado no se encuentra registrado.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
             {/* ------------------------------------------Alerta "Correo enviado"-------------------------------------------- */}
-            <SendEmail
+            <AlertSendEmail
               visible={SuccessSendEmailVisible}
               onCloseSuccess={handleCloseSuccessSendEmail}
               title='Correo enviado.'
               message={'Se ha enviado un enlace de recuperación de contraseña a:'}
-              email={`${email}`}
+              email={`${Correo}`}
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-
             {/* ------------------------------------------------------------------------------------------------------------- */}
 
           </SafeAreaView>
@@ -182,7 +221,7 @@ const InputEmail = ({ navigation }: InputEmailProps) => {
   );
 };
 
-export default InputEmail;
+export default RecoverPasswordEmail;
 
 // ********** Estilos CSS **********
 const styles = StyleSheet.create({
