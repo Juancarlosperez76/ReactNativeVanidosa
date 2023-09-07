@@ -3,8 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // ----------------------------Código de redirección a la aplicación de "Google Maps" del teléfono----------------------------- 
 const latitude = 6.231539; // Latitud del destino

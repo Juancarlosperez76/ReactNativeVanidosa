@@ -1,8 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StackAccountHeader from './StackAccountHeader';
+import React, { ComponentType } from 'react';
 import Contacto from '../screens/Contacto';
-import { ComponentType } from 'react';
-import React from 'react';
 
 const Stack = createNativeStackNavigator();
 

@@ -2,8 +2,7 @@ import { TouchableOpacity, StyleSheet, Text, View, ScrollView, Image } from 'rea
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import HeaderSettingsReturn from '../components/HeaderSettingsReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
-import { useEffect, useState } from 'react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 type RootStackParamList = {
   Catalogo: undefined;

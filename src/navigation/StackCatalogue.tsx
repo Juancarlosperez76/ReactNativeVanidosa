@@ -5,14 +5,13 @@ import AgendarCita from '../screens/AgendarCita';
 import Maquillaje from '../screens/Maquillaje';
 import Peluqueria from '../screens/Peluqueria';
 import Depilacion from '../screens/Depilacion';
+import React, { ComponentType } from 'react';
 import Catalogo from '../screens/Catalogo';
 import Pestanas from '../screens/Pestanas';
 import Cabello from '../screens/Cabello';
-import { ComponentType } from 'react';
 import Novia from '../screens/Novia';
 import Unas from '../screens/Unas';
 import Piel from '../screens/Piel';
-import React from 'react';
 
 const Stack = createNativeStackNavigator();
 

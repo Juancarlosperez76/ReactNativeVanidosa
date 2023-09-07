@@ -1,11 +1,10 @@
 import { Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Dispatch, SetStateAction } from 'react';
 import ButtonPrimary from './ButtonPrimary';
 import React from 'react';
 
 type TermsAndConditionsModalProps = {
   modalVisible: boolean;
-  setModalVisible: Dispatch<SetStateAction<boolean>>;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TermsAndConditionsModal = ({ modalVisible, setModalVisible }: TermsAndConditionsModalProps) => {
@@ -17,7 +16,7 @@ const TermsAndConditionsModal = ({ modalVisible, setModalVisible }: TermsAndCond
   return (
     <View style={styles.generalContainer}>
 
-      <Modal visible={modalVisible} animationType="slide" onRequestClose={handleCloseModal} >
+      <Modal visible={modalVisible} animationType="fade" onRequestClose={handleCloseModal} >
 
         {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
         <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">

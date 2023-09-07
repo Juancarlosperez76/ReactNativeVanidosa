@@ -2,12 +2,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StackAccountHeader from './StackAccountHeader';
 import AgendarCita from '../screens/AgendarCita';
 import Maquillaje from '../screens/Maquillaje';
+import React, { ComponentType } from 'react';
 import Pestanas from '../screens/Pestanas';
 import Cabello from '../screens/Cabello';
-import { ComponentType } from 'react';
 import Main from '../screens/Main';
 import Unas from '../screens/Unas';
-import React from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,7 +36,7 @@ const StackMain = () => {
 
       <Stack.Screen
         name="Cabello"
-        component={Cabello as ComponentType<any>}
+        component={Cabello as React.ComponentType<any>}
         options={{ headerShown: false, }}
       />
 

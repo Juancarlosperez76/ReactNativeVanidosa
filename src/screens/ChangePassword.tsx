@@ -7,9 +7,8 @@ import ButtonPrimary from '../components/ButtonPrimary';
 import HeaderReturn from '../components/HeaderReturn';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 
 type User = {
   _id: User | null;
@@ -91,6 +90,9 @@ const ChangePassword = ({ navigation }: ChangePasswordProps) => {
 
   // ---------------------------------------Función para cambiar la contraseña de usuario--------------------------------------
   const changePass = async () => {
+
+    setIsLoading(true); // Activar el preload
+
     try {
       const token = await AsyncStorage.getItem('userToken');
       const userEmail = await AsyncStorage.getItem('userEmail');

@@ -2,8 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StackAccountHeader from './StackAccountHeader';
 import AgendarCita from '../screens/AgendarCita';
 import MisCitas from '../screens/MisCitas';
-import { ComponentType } from 'react';
-import React from 'react';
+import React, { ComponentType } from 'react';
 
 const Stack = createNativeStackNavigator();
 

@@ -9,9 +9,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 
 type User = {
   _id: User | null;
@@ -37,8 +36,18 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
   const [user, setUser] = useState<User | null>(null);
 
-  // -----------------------------------------------Indicador de caega "Preload"-----------------------------------------------
+  // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+
+  // --------------------------------------------------Estado de los input"----------------------------------------------------
+  const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de alerta "Confirma tu identidad"
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------------------Estados para campos editables-----------------------------------------------
   const [Nombre, setNombre] = useState('');
@@ -163,8 +172,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   }
 
   // -------------------------------------------Función modal "Confirmar identidad"--------------------------------------------
-  const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de la alerta "Confirma tu identidad"
-  const [validatePassVisible, setValidatePassVisible] = useState(false);
+  const [validatePassVisible, setValidatePassVisible] = useState(false); // Estado contraseña de alerta "Confirma tu identidad"
 
   const handleShowValidatePassVisible = () => {
     setValidatePassVisible(true);
@@ -172,6 +180,7 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
   const handleCloseValidatePassVisible = () => {
     setValidatePassVisible(false);
+    deactivateAccount(); // Ejecuta la función para desactivar la cuenta
   }
 
   // Mostrar y ocultar "Contraseña"
@@ -187,9 +196,22 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   };
   // -------------------------------------------Función validar contraseña de usuario------------------------------------------
   const validatePassword = async () => {
-    try {
 
-      setIsLoading(true);
+    // Validar campos vacíos
+    if (!ContrasenaActual) {
+      setEmptyFieldsVisible(true); // Muestra alerta "Se requiere contraseña"
+      return;
+    }
+
+    // Validar cantidad mínima de carácteres de la "Contraseña"
+    if (ContrasenaActual.length < 8) {
+      setMinPasswordVisible(true); // Muestra alerta "Contraseña inválida"
+      return
+    }
+
+    setIsLoading(true); // Activar el preload
+
+    try {
 
       const token = await AsyncStorage.getItem('userToken');
       const userEmail = await AsyncStorage.getItem('userEmail');
@@ -199,28 +221,26 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
         return;
       }
 
-      // Validar campos vacíos
-      if (!ContrasenaActual) {
-        setEmptyPasswordInputVisible(true); // Mostrar alerta "Campos vacíos"
-        setIsLoading(false); // Desactivar el preload
-        return
-      }
-
-      const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', {
-        Correo: userEmail,
-        Contrasena: ContrasenaActual, // Contraseña actual ingresada en el campo
+      const response = await fetch('https://api-proyecto-5hms.onrender.com/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Correo: userEmail,
+          Contrasena: ContrasenaActual, // Contraseña actual ingresada en el campo
+        }),
       });
 
-      if (response.data.token) {
+      if (response.status === 200) {
         handleCloseValidatePassVisible();
-        deactivateAccount(); // Ejecuta la función para desactivar la cuenta
       } else {
-        setInvalidPassVisible(true);
+        setInvalidPassVisible(true); // Muestra alerta "Contraseña incorrecta"
+        setContrasenaActual(''); // Limpia el campo "Ingrese contraseña"
       }
     } catch (error) {
-      setInvalidPassVisible(true);
-      setContrasenaActual(''); // Limpia el campo "Ingrese contraseña", después de cerrar alerta "Contraseña inválida"
-      setIsLoading(false); // Desactivar el preload
+      console.error(error);
+      // Manejo de otros errores si es necesario
     }
   };
 
@@ -277,11 +297,18 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
     setEmptyInputVisible(false);
   };
 
-  // ------------------------------------------Función alerta "Se requiere contraseña"-----------------------------------------
-  const [emptyPasswordInputVisible, setEmptyPasswordInputVisible] = useState(false);
+  // -----------------------------------------Función alerta "Se requiere contraseña"------------------------------------------
+  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
 
-  const handleCloseEmptyPasswordInput = () => {
-    setEmptyPasswordInputVisible(false);
+  const handleCloseEmptyFields = () => {
+    setEmptyFieldsVisible(false);
+  };
+
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [minPasswordVisible, setMinPasswordVisible] = useState(false);
+
+  const handleCloseMinPassword = () => {
+    setMinPasswordVisible(false);
   };
 
   // --------------------------------------------Función alerta "Teléfono inválido"--------------------------------------------
@@ -299,11 +326,12 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
   };
 
 
-  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  // ------------------------------------------Función alerta "Contraseña incorrecta-------------------------------------------
   const [invalidPassVisible, setInvalidPassVisible] = useState(false);
 
   const handleCloseInvalidPass = () => {
     setInvalidPassVisible(false);
+    setIsLoading(false); // Desactivar el preload
   };
 
   // -------------------------------Función alerta "¿Está seguro que quiere eliminar su cuenta?"-------------------------------
@@ -576,8 +604,8 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
 
             {/* ---------------------------------------Alerta "Se requiere contraseña"--------------------------------------- */}
             <AlertWarning
-              visible={emptyPasswordInputVisible}
-              onCloseWarning={handleCloseEmptyPasswordInput}
+              visible={emptyFieldsVisible}
+              onCloseWarning={handleCloseEmptyFields}
               title='Se requiere contraseña.'
               message='Por favor, ingrese la contraseña para continuar.'
               buttonStyle={{ width: 70 }}
@@ -601,11 +629,11 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
-            {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
+            {/* ---------------------------------------Alerta "Contraseña incorrecta"---------------------------------------- */}
             <AlertWarning
               visible={invalidPassVisible}
               onCloseWarning={handleCloseInvalidPass}
-              title='Contraseña inválida.'
+              title='Contraseña incorrecta.'
               message='La contraseña ingresada es incorrecta.'
               buttonStyle={{ width: 70 }}
               buttonText='OK'

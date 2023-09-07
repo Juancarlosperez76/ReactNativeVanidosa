@@ -2,11 +2,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RecoverPasswordEmail from '../screens/RecoverPasswordEmail';
 import StackAccountHeader from '../navigation/StackAccountHeader';
 import RecoverPassword from '../screens/RecoverPassword';
+import React, { ComponentType } from 'react';
 import Registro from '../screens/Registro';
-import { ComponentType } from 'react';
 import Login from '../screens/Login';
 import Main from '../screens/Main';
-import React from 'react';
 
 const Stack = createNativeStackNavigator();
 

@@ -15,7 +15,7 @@ interface AlertEnterCodeProps {
 
 const AlertEnterCode = ({ visible, onCloseEnterCodeOutside, onCloseEnterCode, title, message, buttonStyle, buttonText, email }: AlertEnterCodeProps) => {
 
-  const [InputOne, setInputOne] = useState('');
+  const [InputOne, setInputOne] = React.useState('');
 
   return (
     <Modal

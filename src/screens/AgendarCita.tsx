@@ -8,9 +8,8 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 
 type User = {
   _id: User | null;

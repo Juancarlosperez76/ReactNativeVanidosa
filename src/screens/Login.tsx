@@ -10,9 +10,8 @@ import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
 import AlertWarning from '../components/AlertWarning';
 import HeaderReturn from '../components/HeaderReturn';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 
 type RootStackParamList = {
   RecoverPasswordEmail: undefined;
@@ -49,7 +48,7 @@ const Login = ({ navigation }: LoginProps) => {
 
   const handleCloseSuccess = () => {
     setSuccessVisible(false); // Ocultar la alerta de éxito
-    setIsLoading(false); // Mostrar preload mientras se inicia sesión
+    setIsLoading(false); // Desactivar preload 
     navigation.navigate('StackMain'); // Usar "StackMain" para actualizar las pestañas, "Main" no actualiza las pestañas
   }
 
@@ -96,12 +95,15 @@ const Login = ({ navigation }: LoginProps) => {
   };
 
   const handleLogin = async () => {
+
+    // Validar campos vacíos
     if (!Correo || !Contrasena) {
       setWarningVisible(true); // Mostrar alerta "Por favor, complete todos los campos." 
       return;
     }
 
     try {
+
       // Obtener el estado del usuario antes de iniciar sesión
       const userState = await getUserState(Correo);
 

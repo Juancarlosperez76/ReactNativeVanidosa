@@ -4,9 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderSettingsLogo from '../components/HeaderSettingsLogo';
 import LoadingIndicator from '../components/LoadingIndicator';
 import AlertWarning from '../components/AlertWarning';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Swiper from 'react-native-swiper';
-import React from 'react';
 
 type RootStackParamList = {
   Main: undefined;
@@ -20,9 +19,10 @@ type RootStackParamList = {
 type MainProps = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
 const Main = ({ navigation }: MainProps) => {
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga del "Preload"
 
-  // -----------------------------------------controla el tiempo que dura el "Preload"-----------------------------------------
+  // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso

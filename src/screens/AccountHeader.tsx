@@ -9,9 +9,8 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 
 type User = {
   Apellido: string;
@@ -35,6 +34,16 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+    }, 800); // Tiempo de carga simulado (en milisegundos)
+  }, []);
+
+  // --------------------------------------------------Estado de los input"----------------------------------------------------
+  const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de alerta "Confirma tu identidad"
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // ----------------------------------Estado para almacenar la URI de la imagen seleccionada----------------------------------
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -103,8 +112,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   useEffect(() => {
     const fetchUserData = async () => {
 
-      setIsLoading(true); // Activar el preload
-
       try {
         const token = await AsyncStorage.getItem('userToken');
         const userEmail = await AsyncStorage.getItem('userEmail');
@@ -130,10 +137,6 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           }
         }
 
-        setTimeout(() => { // Agregar tiempo de espera adicional después de cargar la pagina
-          setIsLoading(false); // Cambiar isLoading a false después de obtener los datos
-        }, 1000);
-
       } catch (error) {
         console.error('Error al obtener los datos del usuario:', error);
       }
@@ -142,9 +145,8 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
     fetchUserData();
   }, []);
 
-  // ------------------------------------------Función modal "Confirmar identidad""--------------------------------------------
-  const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de alerta "Confirma tu identidad"
-  const [validatePassVisible, setValidatePassVisible] = useState(false); // Estado contraseña de la alerta "Confirma tu identidad"
+  // ------------------------------------------Función modal "Confirmar identidad"---------------------------------------------
+  const [validatePassVisible, setValidatePassVisible] = useState(false); // Estado contraseña de alerta "Confirma tu identidad"
 
   const handleValidatePassVisible = () => {
     setValidatePassVisible(true);
@@ -152,24 +154,40 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
 
   const handleCloseValidatePassVisible = () => {
     setValidatePassVisible(false);
+    setContrasenaActual(''); // Limpia el campo "Ingrese contraseña" antes de redirigir a "ChangePassword"
+    navigation.navigate('ChangePassword');
   }
 
-  // Mostrar y ocultar "Contraseña"
+  // Función para cerrar "Modal" al hacer clic fuera de él
+  const onCloseConfirmPassOutside = () => {
+    setValidatePassVisible(false);
+  };
+
+  // --------------------------------Mostrar y ocultar "Contraseña" modal "Confirmar identidad"--------------------------------
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const togglePasswordModalVisibility = () => {
     setShowPasswordModal(!showPasswordModal);
   };
 
-    // Función para cerrar "Modal" al hacer clic fuera de él
-    const onCloseConfirmPassOutside = () => {
-      setValidatePassVisible(false);
-    };
   // --------------------------------------Función para validar la contraseña del usuario--------------------------------------
   const validatePassword = async () => {
-    try {
 
-      setIsLoading(true); // Activar el preload
+    // Validar campos vacíos
+    if (!ContrasenaActual) {
+      setEmptyFieldsVisible(true); // Muestra alerta "Se requiere contraseña"
+      return;
+    }
+
+    // Validar cantidad mínima de carácteres de la "Contraseña"
+    if (ContrasenaActual.length < 8) {
+      setMinPasswordVisible(true); // Muestra alerta "Contraseña inválida"
+      return
+    }
+
+    setIsLoading(true); // Activar el preload
+
+    try {
 
       const token = await AsyncStorage.getItem('userToken');
       const userEmail = await AsyncStorage.getItem('userEmail');
@@ -179,50 +197,32 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
         return;
       }
 
-      // Validar campos vacíos
-      if (!ContrasenaActual) {
-        setEmptyFieldsVisible(true); // Mostrar alerta "Campos vacíos"
-        setIsLoading(false); // Desactivar el preload
-        return
-      }
-
-      const response = await axios.post('https://api-proyecto-5hms.onrender.com/api/auth/login', {
-        Correo: userEmail,
-        Contrasena: ContrasenaActual, // Contraseña actual ingresada en el campo
+      const response = await fetch('https://api-proyecto-5hms.onrender.com/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Correo: userEmail,
+          Contrasena: ContrasenaActual, // Contraseña actual ingresada en el campo
+        }),
       });
 
-      if (response.data.token) {
+      if (response.status === 200) {
         handleCloseValidatePassVisible();
-        navigation.navigate('ChangePassword');
       } else {
-        setInvalidPassVisible(true);
+        setInvalidPassVisible(true); // Muestra alerta "Contraseña incorrecta"
+        setContrasenaActual(''); // Limpia el campo "Ingrese contraseña"
       }
     } catch (error) {
-      setInvalidPassVisible(true);
-      setContrasenaActual(''); // Limpia el campo "Ingrese contraseña", después de cerrar alerta "Contraseña inválida"
-      setIsLoading(false); // Desactivar el preload
+      console.error(error);
+      // Manejo de otros errores si es necesario
     }
-  };
-
-  // -----------------------------------------Función alerta "Se requiere contraseña"------------------------------------------
-  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
-
-  const handleCloseEmptyFields = () => {
-    setEmptyFieldsVisible(false);
-  };
-
-  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
-  const [invalidPassVisible, setInvalidPassVisible] = useState(false);
-
-  const handleCloseInvalidPass = () => {
-    setInvalidPassVisible(false);
   };
 
   // ---------------------------------------------Función para cerrar la "Sesión"----------------------------------------------
   const handleLogout = async () => {
     try {
-
-      setIsLoading(true); // Mostrar preload mientras se cierra la sesión
 
       // Eliminar el token y correo almacenados en AsyncStorage
       await AsyncStorage.removeItem('userToken');
@@ -234,6 +234,28 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
       console.error('Error al cerrar sesión:', error);
       Alert.alert('Error', 'Ha ocurrido un error al cerrar sesión.');
     }
+  };
+
+  // -----------------------------------------Función alerta "Se requiere contraseña"------------------------------------------
+  const [emptyFieldsVisible, setEmptyFieldsVisible] = useState(false);
+
+  const handleCloseEmptyFields = () => {
+    setEmptyFieldsVisible(false);
+  };
+
+  // -------------------------------------------Función alerta "Contraseña inválida"-------------------------------------------
+  const [minPasswordVisible, setMinPasswordVisible] = useState(false);
+
+  const handleCloseMinPassword = () => {
+    setMinPasswordVisible(false);
+  };
+
+  // ------------------------------------------Función alerta "Contraseña incorrecta"------------------------------------------
+  const [invalidPassVisible, setInvalidPassVisible] = useState(false);
+
+  const handleCloseInvalidPass = () => {
+    setInvalidPassVisible(false);
+    setIsLoading(false); // Desactivar el preload
   };
 
   // --------------------------------------------Función alerta "Cierre de sesión"---------------------------------------------
@@ -330,9 +352,18 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           />
           {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
           <AlertWarning
+            visible={minPasswordVisible}
+            onCloseWarning={handleCloseMinPassword}
+            title='Contraseña inválida.'
+            message='La contraseña debe contener al menos 8 caractéres.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* ---------------------------------------Alerta "Contraseña incorrecta"---------------------------------------- */}
+          <AlertWarning
             visible={invalidPassVisible}
             onCloseWarning={handleCloseInvalidPass}
-            title='Contraseña inválida.'
+            title='Contraseña incorrecta.'
             message='La contraseña ingresada es incorrecta.'
             buttonStyle={{ width: 70 }}
             buttonText='OK'

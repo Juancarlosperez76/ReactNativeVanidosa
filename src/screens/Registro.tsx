@@ -10,10 +10,9 @@ import CheckBox from '@react-native-community/checkbox';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import AlertFailure from '../components/AlertFailure';
+import React, { useEffect, useState } from 'react';
 import { RadioButton } from 'react-native-paper';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 
 type RootStackParamList = {
   Login: undefined;
