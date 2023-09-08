@@ -8,6 +8,7 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
+import AlertFailure from '../components/AlertFailure';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -32,11 +33,19 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+  //   }, 800); // Tiempo de carga simulado (en milisegundos)
+  // }, []);
+
+  // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
+  const [deletedAccountVisible, setDeletedAccountVisible] = useState(false); // Estado de modal "AlertFailure"
+
+  const handleCloseDeletedAccount = () => {
+    setDeletedAccountVisible(false);
+    navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
+  };
 
   // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
   useEffect(() => {
@@ -59,8 +68,12 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           if (currentUser) {
             setUser(currentUser);
             console.log('Datos del usuario obtenidos:', currentUser);
+            setIsLoading(false); // Desactivar el preload
           } else {
-            console.error('Usuario actual no encontrado en la lista de usuarios');
+            setDeletedAccountVisible(true);
+            // Destruye la sesión y redirige al login
+            await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('userEmail');
           }
         } else {
           //setRequiredLoginVisible(true); // Mostrar alerta de "Inicio de sesión requerido"
@@ -335,6 +348,18 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             />
 
           </SafeAreaView>
+
+          {/* ----------------------------------------Alerta "Cuenta eliminada"---------------------------------------- */}
+          <AlertFailure
+            visible={deletedAccountVisible}
+            onCloseFailure={handleCloseDeletedAccount}
+            title='Usuario no encontrado.'
+            message={`No pudimos encontrar la cuenta.\nContacte al administrador.`}
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+          {/* --------------------------------------------------------------------------------------------------------- */}
+
         </View>
       </ScrollView>
     </View>

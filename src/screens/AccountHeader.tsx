@@ -7,6 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LoadingIndicator from '../components/LoadingIndicator';
 import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AlertFailure from '../components/AlertFailure';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
@@ -35,11 +36,11 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-    }, 800); // Tiempo de carga simulado (en milisegundos)
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
+  //   }, 800); // Tiempo de carga simulado (en milisegundos)
+  // }, []);
 
   // --------------------------------------------------Estado de los input"----------------------------------------------------
   const [ContrasenaActual, setContrasenaActual] = useState(''); // Estado contraseña de alerta "Confirma tu identidad"
@@ -129,11 +130,13 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
           // Valida si la cuenta ha sido eliminada o el correo ha sido modificado.
           if (currentUser) {
             setUser(currentUser);
+            console.log('Datos del usuario obtenidos:', currentUser);
+            setIsLoading(false); // Desactivar el preload
           } else {
-            // Destruir la sesión y redirigir al login
+            setDeletedAccountVisible(true);
+            // Destruye la sesión y redirige al login
             await AsyncStorage.removeItem('userToken');
             await AsyncStorage.removeItem('userEmail');
-            navigation.replace('Login'); // Reemplaza la pantalla actual por la pantalla de inicio de sesión
           }
         }
 
@@ -267,12 +270,13 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
   };
 
   // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
-  const [WarningVisible, setWarningVisible] = useState(false);
+  const [deletedAccountVisible, setDeletedAccountVisible] = useState(false); // Estado de modal "AlertFailure"
 
-  const handleCloseWarning = () => {
-    setWarningVisible(false);
-    navigation.navigate('Login'); // Redireccionar a "StackAccount"
+  const handleCloseDeletedAccount = () => {
+    setDeletedAccountVisible(false);
+    navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
   };
+
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -378,11 +382,11 @@ const AccountHeader = ({ navigation }: AccountHeaderProps) => {
             buttonText='OK'
           />
           {/* -----------------------------------------Alerta "Cuenta eliminada"------------------------------------------- */}
-          <AlertWarning
-            visible={WarningVisible}
-            onCloseWarning={handleCloseWarning}
-            title='Cuenta eliminada.'
-            message='La cuenta no existe o fue eliminada.'
+          <AlertFailure
+            visible={deletedAccountVisible}
+            onCloseFailure={handleCloseDeletedAccount}
+            title='Usuario no encontrado.'
+            message={`No pudimos encontrar la cuenta.\nContacte al administrador.`}
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
