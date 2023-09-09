@@ -140,6 +140,26 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setShowTimePicker(false);
     setTime(currentTime);
   };
+
+  // ---------------------------------Funciones para formatear "Fecha y Hora" "DateTimePicker"---------------------------------
+
+  // Función para formatear la "Fecha"
+  const formatDate = (date: Date) => {
+    const day = date.getDate().toString().padStart(2, '0');
+    const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Función para formatear la "Hora"
+  const formatTimeAmOrPm = (time: Date) => {
+    const hours = time.getHours();
+    const minutes = time.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convertir a formato de 12 horas
+    return `${formattedHours}:${minutes} ${ampm}`;
+  };
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -252,53 +272,65 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 value={time}
                 mode="time"
                 is24Hour={false}
-                display="spinner"
+                display="clock"
                 onChange={onChangeTime}
               />
             )}
 
             {/* --------------------Selector modal "Seleccionar servicios" y fecha y hora "DateTimePicker"------------------- */}
-            <View style={styles.containeSeletcServices}>
-              <TouchableOpacity onPress={handleOpenServiceOptions}>
+              <TouchableOpacity style={styles.containeSeletcServices} onPress={handleOpenServiceOptions}>
                 <View style={styles.containerIconLabel}>
                   <Ionicons style={[styles.iconServiceOptions, { transform: [{ rotate: '300deg' }] }]} name="cut-sharp" />
                   <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
                 </View>
               </TouchableOpacity>
-              <View>
-                <View style={styles.containerButtonsOpen}>
-                  <TouchableOpacity onPress={() => setShowDatePicker(true)} >
-                    <MaterialIcons style={styles.iconDateTime} name="calendar-month" size={24} color="#585858" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setShowTimePicker(true)}  >
-                    <MaterialIcons style={styles.iconDateTime} name="access-time" size={24} color="#585858" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+           
             {/* ------------------------------------------------------------------------------------------------------------- */}
 
-            <View style={styles.contentselectedProducts}>
-              <Text style={styles.titleSelectedProducts}>SERVICIOS SELECCIONADOS</Text>
+            <View style={styles.containerDateTime}>
+              <View style={[styles.containerTitleDateTime, { width: '42%' }]}>
+                <Text style={styles.titleDateTime}>Fecha servicio</Text>
+              </View>
+              <View style={[styles.containerTextDateTime, { width: '58%' }]}>
+                <Text style={styles.textDateTime}>{formatDate(date)}</Text>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)} >
+                  <MaterialIcons style={styles.iconDateTime} name="calendar-month" size={28} color="#5B009D" />
+                </TouchableOpacity>
+              </View>
             </View>
 
+            <View style={styles.containerDateTime}>
+              <View style={[styles.containerTitleDateTime, { width: '42%' }]}>
+                <Text style={styles.titleDateTime}>Hora servicio</Text>
+              </View>
+              <View style={[styles.containerTextDateTime, { width: '58%' }]}>
+                <Text style={styles.textDateTime}>{formatTimeAmOrPm(time)}</Text>
+                <TouchableOpacity onPress={() => setShowTimePicker(true)}  >
+                  <MaterialIcons style={styles.iconDateTime} name="access-time" size={28} color="#5B009D" />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* <View style={styles.contentselectedProducts}>
+              <Text style={styles.titleSelectedProducts}>SERVICIOS SELECCIONADOS</Text>
+            </View> */}
 
             <View style={styles.containerServicesTitle}>
-              <View style={styles.containerIdTitle}>
-                <Text style={styles.idTitle}>Id</Text>
+              <View style={[styles.containerTitle, { width: '13%', borderRightWidth: 1, borderColor: '#ffffff', }]}>
+                <Text style={styles.title}>Id</Text>
               </View>
-              <View style={styles.containerServiceTitle}>
-                <Text style={styles.serviceTitle}>Servicio</Text>
+              <View style={[styles.containerTitle, { width: '87%', }]}>
+                <Text style={styles.title}>Servicio</Text>
               </View>
             </View>
 
             {selectedServices.map((service, index) => (
               <View style={styles.containerServicesText} key={index}>
-                <View style={styles.containerIdText}>
-                  <Text style={styles.idText}>{index + 1}</Text>
+                <View style={[styles.containerText, { width: '13%', borderRightWidth: 1, borderColor: '#3F3F3F', }]}>
+                  <Text style={[styles.itemText, { textAlign: 'center', }]}>{index + 1}</Text>
                 </View>
-                <View style={styles.containerServiceText}>
-                  <Text style={styles.serviceText}>{service}</Text>
+                <View style={[styles.containerText, { width: '75%', }]}>
+                  <Text style={[styles.itemText, { paddingLeft: 10, }]}>{service}</Text>
                 </View>
                 <TouchableOpacity
                   style={styles.containerServiceIcon}
@@ -312,7 +344,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             <ButtonPrimary
               onPress={() => { }}
               width={'100%'}
-              height={48}
+              height={45}
               marginTop={30}
               marginBottom={0}
               backgroundColor={'#5B009D'}
@@ -328,8 +360,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             <ButtonSecondary
               onPress={() => navigation.navigate('MisCitas')}
               width={'100%'}
-              height={48}
-              marginTop={20}
+              height={45}
+              marginTop={15}
               marginBottom={30}
               backgroundColor={'#00000000'}
               borderColor={'#E00083'}
@@ -387,71 +419,65 @@ const styles = StyleSheet.create({
   },
   fieldContainer: {
     flexDirection: 'row',
-    marginVertical: 8,
+    marginVertical: 5,
   },
   iconLabelContainer: {
     flexDirection: 'row',
     width: '46%',
-    height: 48,
+    height: 45,
     alignItems: 'center',
-    backgroundColor: '#E6E6E6',
+    backgroundColor: '#5f5f5f',
     borderWidth: 1,
-    borderColor: '#E6E6E6',
+    borderColor: '#5f5f5f',
   },
   iconForm: {
     marginLeft: 6,
     marginRight: 4,
     fontSize: 22,
-    color: '#000000',
+    color: '#ffffff',
   },
   label: {
     fontSize: 14,
-    color: '#000000',
+    color: '#ffffff',
     letterSpacing: 0.3,
   },
   input: {
     width: '54%',
-    height: 48,
+    height: 45,
     paddingLeft: 10,
     fontSize: 14,
     color: '#000000',
     fontWeight: '400',
     letterSpacing: 0.3,
     borderWidth: 1,
-    borderColor: '#d9d9d9',
+    borderColor: '#5f5f5f',
   },
   // Estilos botón "Seleccionar sevicios"
   containeSeletcServices: {
     flexDirection: 'row',
-    height: 48,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 40,
+    height: 45,
+    marginTop: 25,
     backgroundColor: '#E6E6E6',
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
   },
   containerIconLabel: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   iconServiceOptions: {
     marginLeft: 8,
     marginRight: 3,
-    fontSize: 22,
-    color: '#000000',
+    fontSize: 26,
+    color: '#5B009D',
   },
   labelServiceOptions: {
-    fontSize: 14,
+    fontFamily: 'Aspira W05 Medium',
+    fontSize: 16,
     color: '#000000',
-    letterSpacing: 0.5,
-  },
-  // Estilos selectores fecha y hora "DateTimePicker"
-  containerButtonsOpen: {
-    flexDirection: 'row',
-    marginRight: 8,
-  },
-  iconDateTime: {
-    marginLeft: 6,
-    padding: 4,
+    letterSpacing: 0.3,
   },
   // Estilos modal "Seleccionar sevicios"
   containerServiceOptions: {
@@ -459,7 +485,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#00000080',
+    backgroundColor: '#ffffff80',
   },
   contentServiceOptions: {
     width: '75%',
@@ -498,46 +524,66 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   // Estilos modal "Seleccionar sevicios" Fin
-  contentselectedProducts: {
-    width: '100%',
+  // contentselectedProducts: {
+  //   width: '100%',
+  //   marginTop: 20,
+  //   marginBottom: 6,
+  // },
+  // titleSelectedProducts: {
+  //   fontFamily: 'Aspira W05 Bold',
+  //   fontSize: 16,
+  //   color: '#585858',
+  //   textAlign: 'center',
+  //   letterSpacing: 0.3,
+  // },
+  containerDateTime: {
+    flexDirection: 'row',
+    marginTop: 10
   },
-  titleSelectedProducts: {
-    fontFamily: 'Aspira W05 Bold',
-    marginBottom: 10,
+  containerTitleDateTime: {
+    justifyContent: 'center',
+    height: 45,
+    backgroundColor: '#5f5f5f',
+  },
+  titleDateTime: {
+    fontFamily: 'Aspira W05 Medium',
     fontSize: 16,
-    color: '#585858',
-    textAlign: 'center',
+    color: '#ffffff',
+    paddingLeft: 10,
     letterSpacing: 0.3,
+  },
+  containerTextDateTime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 45,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
+  },
+  textDateTime: {
+    fontFamily: 'Aspira W05 Medium',
+    paddingLeft: 10,
+    fontSize: 16,
+    color: '#000000',
+    letterSpacing: 0.3,
+  },
+  // Estilos selectores fecha y hora "DateTimePicker"
+  iconDateTime: {
+    paddingRight: 10,
   },
   containerServicesTitle: {
     flexDirection: 'row',
-    backgroundColor: '#E6E6E6',
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
+    marginTop: 10,
+    backgroundColor: '#5f5f5f',
   },
-  containerIdTitle: {
-    width: '12%',
-    height: 48,
-    justifyContent: 'center',
-    borderRightWidth: 1,
-    borderColor: '#ffffff',
-  },
-  idTitle: {
-    fontFamily: 'Aspira W05 Medium',
-    fontSize: 16,
-    color: '#000000',
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  containerServiceTitle: {
-    width: '88%',
-    height: 48,
+  containerTitle: {
+    height: 45,
     justifyContent: 'center',
   },
-  serviceTitle: {
+  title: {
     fontFamily: 'Aspira W05 Medium',
     fontSize: 16,
-    color: '#000000',
+    color: '#ffffff',
     textAlign: 'center',
     letterSpacing: 0.3,
   },
@@ -545,37 +591,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 1,
     borderTopWidth: 0,
-    borderColor: '#d9d9d9',
+    borderColor: '#5f5f5f',
   },
-  containerIdText: {
-    width: '12%',
-    height: 48,
-    justifyContent: 'center',
-    borderRightWidth: 1,
-    borderColor: '#d9d9d9',
-  },
-  idText: {
-    fontFamily: 'Aspira W05 Medium',
-    fontSize: 15,
-    color: '#000000',
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  containerServiceText: {
-    width: '76%',
-    height: 48,
+  containerText: {
+    height: 45,
     justifyContent: 'center',
   },
-  serviceText: {
+  itemText: {
     fontFamily: 'Aspira W05 Medium',
-    paddingLeft: 10,
     fontSize: 15,
     color: '#000000',
     letterSpacing: 0.3,
   },
   containerServiceIcon: {
     width: '12%',
-    height: 48,
+    height: 45,
     justifyContent: 'center',
   },
   serviceIcon: {
