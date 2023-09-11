@@ -114,7 +114,7 @@ const Main = ({ navigation }: MainProps) => {
             <View style={styles.containerText}>
               <Text style={styles.mainTitle}>PASIÓN POR LA BELLEZA</Text>
               <Text style={[styles.mainText, { marginBottom: 20 }]}>
-                En Vanidosa SPA y Belleza, somos profesionales apasiondos por el arte de la belleza y el cuidado personal, explora nuestra amplia gama de servicios diseñados para ti, estamos compromrtidos y dispuestos a brindarte la mejor atención.
+                En Vanidosa SPA y Belleza, somos profesionales apasiondos por el arte de la belleza y el cuidado personal, explora nuestra amplia gama de servicios diseñados para ti, estamos comprometidos y dispuestos a brindarte la mejor atención.
               </Text>
             </View>
 

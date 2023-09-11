@@ -611,6 +611,16 @@ const EditAccount = ({ navigation }: EditAccountProps) => {
               buttonStyle={{ width: 70 }}
               buttonText='OK'
             />
+
+            {/* ----------------------------------------Alerta "Contraseña inválida"----------------------------------------- */}
+            <AlertWarning
+              visible={minPasswordVisible}
+              onCloseWarning={handleCloseMinPassword}
+              title='Contraseña inválida.'
+              message='La contraseña debe contener al menos 8 caractéres.'
+              buttonStyle={{ width: 70 }}
+              buttonText='OK'
+            />
             {/* -------------------------------------Mostrar alerta "Teléfono inválido"-------------------------------------- */}
             <AlertWarning
               visible={phoneVisible}

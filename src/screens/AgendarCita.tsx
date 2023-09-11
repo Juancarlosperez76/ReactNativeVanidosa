@@ -39,6 +39,15 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   //   }, 800); // Tiempo de carga simulado (en milisegundos)
   // }, []);
 
+  // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
+  const [Documento, setDocumento] = useState('');
+  const [Nombre, setNombre] = useState('');
+  const [Apellido, setApellido] = useState('');
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [FechaCita, setFechaCita] = useState(new Date());
+  const [HoraCita, setHoraCita] = useState(new Date());
+  const [Descripcion, setDescripcion] = useState('');
+
   // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
   const [deletedAccountVisible, setDeletedAccountVisible] = useState(false); // Estado de modal "AlertFailure"
 
@@ -68,6 +77,12 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
           if (currentUser) {
             setUser(currentUser);
             console.log('Datos del usuario obtenidos:', currentUser);
+
+            // Inicializa estado de campos editables, con valores del usuario logueado, "Cambia estado de vacío a lleno"
+            setNombre(currentUser.Nombre);
+            setApellido(currentUser.Apellido);
+            setDocumento(currentUser.Documento);
+
             setIsLoading(false); // Desactivar el preload
           } else {
             setDeletedAccountVisible(true);
@@ -105,8 +120,6 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setServiceOptionsVisible(true);
   };
 
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
-
   const handleCloseServiceOptions = (value: string) => {
     setSelectedServices((prevSelectedServices) => [...prevSelectedServices, value]);
     setServiceOptionsVisible(false);
@@ -125,20 +138,20 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   };
 
   // -------------------------------------Función selectores fecha y hora "DateTimePicker"-------------------------------------
-  const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const onChangeDate = (event: any, selectedDate: Date | undefined) => {
-    const currentDate = selectedDate || date;
+
+  const onChangeDate = (_event: any, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || FechaCita;
     setShowDatePicker(false);
-    setDate(currentDate);
+    setFechaCita(currentDate);
   };
 
-  const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const onChangeTime = (event: any, selectedTime: Date | undefined) => {
-    const currentTime = selectedTime || time;
+
+  const onChangeTime = (_event: any, selectedTime: Date | undefined) => {
+    const currentTime = selectedTime || HoraCita;
     setShowTimePicker(false);
-    setTime(currentTime);
+    setHoraCita(currentTime);
   };
 
   // ---------------------------------Funciones para formatear "Fecha y Hora" "DateTimePicker"---------------------------------
@@ -159,6 +172,61 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = hours % 12 || 12; // Convertir a formato de 12 horas
     return `${formattedHours}:${minutes} ${ampm}`;
+  };
+
+  // ---------------------------------------------------Función crear "Cita"---------------------------------------------------
+  const crearCita = async () => {
+
+    // Función para calcular FinCita
+    const duracionServicioIndividual = 30; // Duración de un servicio individual en minutos
+    const calcularFinCita = () => {
+      const horaCitaDate = new Date(HoraCita);
+      const duracionTotalServicios = selectedServices.length * duracionServicioIndividual;
+      const horaFin = new Date(horaCitaDate.getTime() + duracionTotalServicios * 60000);
+      console.log('Hora de inicio:', horaCitaDate);
+      console.log('Duración total en minutos:', duracionTotalServicios);
+      console.log('Hora de finalización calculada:', horaFin);
+      const horaFinFormateada = `${horaFin.getHours()}:${horaFin.getMinutes()}`;
+      return horaFinFormateada;
+    };
+    const finCita = calcularFinCita();
+
+    // Validar que los campos requeridos no estén vacíos
+    if (!Documento || !Nombre || !Apellido || !selectedServices || !FechaCita || !HoraCita || !finCita || !Descripcion) {
+      console.error('Todos los campos son obligatorios');
+      return;
+    } else {
+      console.log('Servicios seleccionados:', selectedServices);
+    }
+
+    const nuevaCita = {
+      Documento: Documento,
+      Nombre: Nombre,
+      Apellidos: Apellido,
+      Servicios: selectedServices,
+      FechaCita: FechaCita,
+      HoraCita: HoraCita,
+      Fincita: finCita,
+      Descripcion: Descripcion,
+    }
+
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+
+      const response = await axios.post(`https://api-proyecto-5hms.onrender.com/api/cita`, nuevaCita, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) { // Verificar que la respuesta del servidor sea exitosa
+        navigation.navigate('MisCitas');
+      } else {
+        console.log('Error al crear la cita:', response.data)
+      }
+    } catch (error) {
+      console.log('Error al crear la cita:', error);
+    }
   };
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -184,12 +252,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                     <Ionicons style={styles.iconForm} name='person-outline' />
                     <Text style={styles.label}>Nombre:</Text>
                   </View>
-                  <TextInput
-                    style={styles.input}
-                    defaultValue={user.Nombre}
-                    autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-                    editable={false}
-                  />
+                  <Text style={styles.input}>{user.Nombre}</Text>
                 </View>
 
                 <View style={styles.fieldContainer}>
@@ -197,12 +260,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                     <Ionicons style={styles.iconForm} name='people-outline' />
                     <Text style={styles.label}>Apellidos:</Text>
                   </View>
-                  <TextInput
-                    style={styles.input}
-                    defaultValue={user.Apellido}
-                    autoCapitalize="words" // Activa mayúscula inicial para cada palabra
-                    editable={false}
-                  />
+                  <Text style={styles.input}>{user.Apellido}</Text>
                 </View>
 
                 <View style={styles.fieldContainer}>
@@ -210,12 +268,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                     <Ionicons style={styles.iconForm} name='id-card-outline' />
                     <Text style={styles.label}>Documento:</Text>
                   </View>
-                  <TextInput
-                    style={styles.input}
-                    defaultValue={user.Documento.toString()}
-                    keyboardType='numeric'
-                    editable={false}
-                  />
+                  <Text style={styles.input}>{user.Documento}</Text>
                 </View>
               </>
             ) : (<Text>No se encontró ningún usuario</Text>)}
@@ -258,7 +311,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             {showDatePicker && (
               <DateTimePicker style={{ width: 400 }}
                 testID="dateTimePicker"
-                value={date}
+                value={FechaCita}
                 mode="date"
                 display="calendar"
                 onChange={onChangeDate}
@@ -269,7 +322,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             {showTimePicker && (
               <DateTimePicker
                 testID="dateTimePicker"
-                value={time}
+                value={HoraCita}
                 mode="time"
                 is24Hour={false}
                 display="clock"
@@ -278,13 +331,13 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             )}
 
             {/* --------------------Selector modal "Seleccionar servicios" y fecha y hora "DateTimePicker"------------------- */}
-              <TouchableOpacity style={styles.containeSeletcServices} onPress={handleOpenServiceOptions}>
-                <View style={styles.containerIconLabel}>
-                  <Ionicons style={[styles.iconServiceOptions, { transform: [{ rotate: '300deg' }] }]} name="cut-sharp" />
-                  <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
-                </View>
-              </TouchableOpacity>
-           
+            <TouchableOpacity style={styles.containeSeletcServices} onPress={handleOpenServiceOptions}>
+              <View style={styles.containerIconLabel}>
+                <Ionicons style={[styles.iconServiceOptions, { transform: [{ rotate: '300deg' }] }]} name="cut-sharp" />
+                <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
+              </View>
+            </TouchableOpacity>
+
             {/* ------------------------------------------------------------------------------------------------------------- */}
 
             <View style={styles.containerDateTime}>
@@ -292,7 +345,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 <Text style={styles.titleDateTime}>Fecha servicio</Text>
               </View>
               <View style={[styles.containerTextDateTime, { width: '58%' }]}>
-                <Text style={styles.textDateTime}>{formatDate(date)}</Text>
+                <Text style={styles.textDateTime}>{formatDate(FechaCita)}</Text>
                 <TouchableOpacity onPress={() => setShowDatePicker(true)} >
                   <MaterialIcons style={styles.iconDateTime} name="calendar-month" size={28} color="#5B009D" />
                 </TouchableOpacity>
@@ -304,7 +357,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 <Text style={styles.titleDateTime}>Hora servicio</Text>
               </View>
               <View style={[styles.containerTextDateTime, { width: '58%' }]}>
-                <Text style={styles.textDateTime}>{formatTimeAmOrPm(time)}</Text>
+                <Text style={styles.textDateTime}>{formatTimeAmOrPm(HoraCita)}</Text>
                 <TouchableOpacity onPress={() => setShowTimePicker(true)}  >
                   <MaterialIcons style={styles.iconDateTime} name="access-time" size={28} color="#5B009D" />
                 </TouchableOpacity>
@@ -316,7 +369,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             </View> */}
 
             <View style={styles.containerServicesTitle}>
-              <View style={[styles.containerTitle, { width: '13%', borderRightWidth: 1, borderColor: '#ffffff', }]}>
+              <View style={[styles.containerTitle, { width: '13%', borderRightWidth: 1, borderColor: '#5f5f5f', }]}>
                 <Text style={styles.title}>Id</Text>
               </View>
               <View style={[styles.containerTitle, { width: '87%', }]}>
@@ -341,11 +394,27 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               </View>
             ))}
 
+            <View style={styles.containerServicesTitle}>
+              <View style={[styles.containerTitle, { width: '100%', }]}>
+                <Text style={styles.title}>Descripción</Text>
+              </View>
+            </View>
+
+            <View style={styles.containerDescription}>
+              <TextInput
+                style={styles.inputDescription}
+                onChangeText={setDescripcion}
+                value={Descripcion}
+                multiline // Permite múltiples líneas
+                keyboardType='default'
+              />
+            </View>
+
             <ButtonPrimary
-              onPress={() => { }}
+              onPress={crearCita}
               width={'100%'}
               height={45}
-              marginTop={30}
+              marginTop={24}
               marginBottom={0}
               backgroundColor={'#5B009D'}
               borderRadius={0}
@@ -376,7 +445,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               fontSize={15}
               fontWeight={undefined}
               letterSpacing={0.3}
-              title={'CITAS AGENDADAS'}
+              title={'MIS CITAS'}
             />
 
           </SafeAreaView>
@@ -413,44 +482,47 @@ const styles = StyleSheet.create({
   },
   contentMain: {
     width: '86%',
-    marginTop: 30,
+    marginTop: 24,
     marginHorizontal: '7%',
     backgroundColor: '#ffffff',
   },
   fieldContainer: {
     flexDirection: 'row',
-    marginVertical: 5,
+    marginTop: 6,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
   },
   iconLabelContainer: {
     flexDirection: 'row',
     width: '46%',
     height: 45,
     alignItems: 'center',
-    backgroundColor: '#5f5f5f',
-    borderWidth: 1,
-    borderColor: '#5f5f5f',
+    backgroundColor: '#E6E6E6',
   },
   iconForm: {
     marginLeft: 6,
     marginRight: 4,
     fontSize: 22,
-    color: '#ffffff',
+    color: '#000000',
   },
   label: {
-    fontSize: 14,
-    color: '#ffffff',
+    fontFamily: 'Aspira W05 Medium',
+    fontSize: 15,
+    color: '#000000',
     letterSpacing: 0.3,
   },
   input: {
+    fontFamily: 'Aspira W05 Medium',
     width: '54%',
     height: 45,
     paddingLeft: 10,
-    fontSize: 14,
+    fontSize: 15,
     color: '#000000',
+    verticalAlign: 'middle',
     fontWeight: '400',
-    letterSpacing: 0.3,
-    borderWidth: 1,
+    borderLeftWidth: 1,
     borderColor: '#5f5f5f',
+    letterSpacing: 0.3,
   },
   // Estilos botón "Seleccionar sevicios"
   containeSeletcServices: {
@@ -458,7 +530,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,
-    marginTop: 25,
+    marginTop: 24,
     backgroundColor: '#E6E6E6',
     borderWidth: 1,
     borderColor: '#5f5f5f',
@@ -474,7 +546,7 @@ const styles = StyleSheet.create({
     color: '#5B009D',
   },
   labelServiceOptions: {
-    fontFamily: 'Aspira W05 Medium',
+    fontFamily: 'Aspira W05 Demi',
     fontSize: 16,
     color: '#000000',
     letterSpacing: 0.3,
@@ -538,17 +610,19 @@ const styles = StyleSheet.create({
   // },
   containerDateTime: {
     flexDirection: 'row',
-    marginTop: 10
+    marginTop: 6,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
   },
   containerTitleDateTime: {
     justifyContent: 'center',
     height: 45,
-    backgroundColor: '#5f5f5f',
+    backgroundColor: '#E6E6E6',
   },
   titleDateTime: {
     fontFamily: 'Aspira W05 Medium',
-    fontSize: 16,
-    color: '#ffffff',
+    fontSize: 15,
+    color: '#000000',
     paddingLeft: 10,
     letterSpacing: 0.3,
   },
@@ -557,13 +631,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 45,
-    borderWidth: 1,
+    borderLeftWidth: 1,
     borderColor: '#5f5f5f',
   },
   textDateTime: {
     fontFamily: 'Aspira W05 Medium',
     paddingLeft: 10,
-    fontSize: 16,
+    fontSize: 15,
     color: '#000000',
     letterSpacing: 0.3,
   },
@@ -573,17 +647,19 @@ const styles = StyleSheet.create({
   },
   containerServicesTitle: {
     flexDirection: 'row',
-    marginTop: 10,
-    backgroundColor: '#5f5f5f',
+    marginTop: 6,
+    backgroundColor: '#E6E6E6',
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
   },
   containerTitle: {
     height: 45,
     justifyContent: 'center',
   },
   title: {
-    fontFamily: 'Aspira W05 Medium',
+    fontFamily: 'Aspira W05 Demi',
     fontSize: 16,
-    color: '#ffffff',
+    color: '#000000',
     textAlign: 'center',
     letterSpacing: 0.3,
   },
@@ -612,6 +688,21 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#585858',
     textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  containerDescription: {
+    borderTopWidth: 0,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
+  },
+  inputDescription: {
+    fontFamily: 'Aspira W05 Medium',
+    minHeight: 45,
+    maxHeight: 100,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    fontSize: 15,
+    color: '#000000',
     letterSpacing: 0.3,
   },
 });
