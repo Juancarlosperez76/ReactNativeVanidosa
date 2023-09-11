@@ -8,7 +8,6 @@ import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import ButtonPrimary from '../components/ButtonPrimary';
 
 type User = {
   _id: User | null;
@@ -122,7 +121,12 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
             <View style={styles.containerCita} key={_index}>
 
-              <Text style={styles.titleDate}>Información de la cita</Text>
+              <View style={styles.containerTitleDate}>
+                <Text style={styles.titleDateMain}>Información de la cita</Text>
+                <TouchableOpacity style={styles.containerIconDelete}>
+                  <Ionicons name="trash-outline" size={26} color={'#5B009D'} />
+                </TouchableOpacity>
+              </View>
 
               <View style={styles.containerInput}>
                 <View style={styles.containerLabel}>
@@ -147,29 +151,13 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
                 </View>
                 <TouchableOpacity style={{ flexDirection: 'row', width: '54%', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Text style={{ paddingLeft: 10, color: '#000000', verticalAlign: 'middle' }}>Ver servicios</Text>
-                  <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#5B009D'} />
+                  <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#333333'} />
                 </TouchableOpacity>
               </View>
 
               <Text style={[styles.titleDate, { marginTop: 5 }]}>Descripción</Text>
 
               <Text style={styles.inputDescription}>{cita.Descripcion}</Text>
-
-              <ButtonPrimary
-                onPress={() => { }}
-                width={'100%'}
-                height={45}
-                marginTop={5}
-                marginBottom={0}
-                backgroundColor={'#5B009D'}
-                borderRadius={0}
-                fontFamily={'Aspira W05 Demi'}
-                color={'#ffffff'}
-                fontSize={15}
-                fontWeight={undefined}
-                letterSpacing={0.3}
-                title={'CANCELAR'}
-              />
 
             </View>
 
@@ -246,6 +234,22 @@ const styles = StyleSheet.create({
   containerCita: {
     marginBottom: 30,
   },
+  containerTitleDate: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
+    backgroundColor: '#E6E6E6',
+
+  },
+  titleDateMain: {
+    fontFamily: 'Aspira W05 Demi',
+    color: '#000000',
+    textAlign: 'center',
+  },
   titleDate: {
     fontFamily: 'Aspira W05 Demi',
     height: 45,
@@ -257,6 +261,11 @@ const styles = StyleSheet.create({
     borderColor: '#5f5f5f',
     backgroundColor: '#E6E6E6',
     letterSpacing: 0.3,
+  },
+  containerIconDelete: {
+    position: 'absolute',
+    right: 2,
+    padding: 6,
   },
   containerInput: {
     flexDirection: 'row',
