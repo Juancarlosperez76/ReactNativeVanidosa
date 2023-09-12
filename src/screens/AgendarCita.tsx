@@ -199,11 +199,16 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       console.log('Servicios seleccionados:', selectedServices);
     }
 
+    // Crea objeto "Servicios" a partir de "selectedServices"
+    const Servicios = selectedServices.map((selectedServices) => ({
+      Nombre: selectedServices,
+    }));
+
     const nuevaCita = {
       Documento: Documento,
       Nombre: Nombre,
       Apellidos: Apellido,
-      Servicios: selectedServices,
+      Servicios: Servicios,
       FechaCita: FechaCita,
       HoraCita: HoraCita,
       Fincita: finCita,
@@ -364,16 +369,12 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               </View>
             </View>
 
-            {/* <View style={styles.contentselectedProducts}>
-              <Text style={styles.titleSelectedProducts}>SERVICIOS SELECCIONADOS</Text>
-            </View> */}
-
             <View style={styles.containerServicesTitle}>
               <View style={[styles.containerTitle, { width: '13%', borderRightWidth: 1, borderColor: '#5f5f5f', }]}>
                 <Text style={styles.title}>Id</Text>
               </View>
               <View style={[styles.containerTitle, { width: '87%', }]}>
-                <Text style={styles.title}>Servicio</Text>
+                <Text style={styles.title}>Servicio seleccionado</Text>
               </View>
             </View>
 
@@ -596,18 +597,6 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   // Estilos modal "Seleccionar sevicios" Fin
-  // contentselectedProducts: {
-  //   width: '100%',
-  //   marginTop: 20,
-  //   marginBottom: 6,
-  // },
-  // titleSelectedProducts: {
-  //   fontFamily: 'Aspira W05 Bold',
-  //   fontSize: 16,
-  //   color: '#585858',
-  //   textAlign: 'center',
-  //   letterSpacing: 0.3,
-  // },
   containerDateTime: {
     flexDirection: 'row',
     marginTop: 6,

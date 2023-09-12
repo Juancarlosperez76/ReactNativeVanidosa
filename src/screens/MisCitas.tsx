@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -16,11 +16,15 @@ type User = {
   Documento: number;
 };
 
+type Servicio = {
+  Nombre: string;
+};
+
 type Cita = {
   _id: Cita | null;
   Nombre: string;
   Apellidos: string;
-  Servicios: string;
+  Servicios: Servicio[];
   Documento: number;
   FechaCita: string;
   HoraCita: string;
@@ -48,6 +52,27 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [user, setUser] = useState<User | null>(null);
   const [cita, setCita] = useState<Cita[]>([]);
+
+  // --------------------------------------Función para formatear la Fecha "30-SEP-2023"---------------------------------------
+  function formatDate(dateString: string | number | Date) {
+    const months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  // ----------------------------------------Función para formatear la Hora "10:30 AM"-----------------------------------------
+  const formatHour = (hora: string | number | Date) => {
+    const date = new Date(hora);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convierte las 00:00 a 12:00 AM
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
 
   // -------------------------------------------Mostrar "Citas" de usuario logueado--------------------------------------------
   useEffect(() => {
@@ -97,6 +122,19 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
     fetchUserData();
   }, []);
 
+  // --------------------------------------------Función modal "Servicios de Cita"---------------------------------------------
+  const [selectedCitaServices, setSelectedCitaServices] = useState<Servicio[]>([]);
+  const [infoServices, setInfoServices] = useState(false);
+
+  const showInfoServices = (services: Servicio[]) => {
+    setSelectedCitaServices(services);
+    setInfoServices(true);
+  };
+
+  const closeInfoServices = () => {
+    setInfoServices(false);
+  };
+
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -133,7 +171,9 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
                   <MaterialIcons style={{ marginLeft: 6 }} name="calendar-month" size={22} color={'#000000'} />
                   <Text style={styles.label}> Fecha cita</Text>
                 </View>
-                <Text style={styles.input}>{cita.FechaCita}</Text>
+                <Text style={styles.input}>
+                  <Text style={styles.input}>{formatDate(cita.FechaCita)}</Text>
+                </Text>
               </View>
 
               <View style={styles.containerInput}>
@@ -141,7 +181,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
                   <MaterialIcons style={{ marginLeft: 6 }} name="access-time" size={22} color={'#000000'} />
                   <Text style={styles.label}> Hora cita</Text>
                 </View>
-                <Text style={styles.input}>{cita.HoraCita}</Text>
+                <Text style={styles.input}>{formatHour(cita.HoraCita)}</Text>
               </View>
 
               <View style={styles.containerInput}>
@@ -149,11 +189,32 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
                   <Ionicons style={{ marginLeft: 6, transform: [{ rotate: '300deg' }] }} name="cut-sharp" size={22} color={'#000000'} />
                   <Text style={styles.label}> Servicios</Text>
                 </View>
-                <TouchableOpacity style={{ flexDirection: 'row', width: '54%', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Text style={{ paddingLeft: 10, color: '#000000', verticalAlign: 'middle' }}>Ver servicios</Text>
-                  <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#333333'} />
+                <TouchableOpacity
+                  style={{ flexDirection: 'row', width: '54%', justifyContent: 'center', alignItems: 'center' }}
+                  onPress={() => showInfoServices(cita.Servicios)}
+                >
+                  <Text style={{ paddingRight: 10, color: '#000000', verticalAlign: 'middle' }}>Ver servicios</Text>
+                  <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#5B009D'} />
                 </TouchableOpacity>
               </View>
+
+              {/* ----------------------------------------Modal "Servicios de Cita"---------------------------------------- */}
+              <Modal visible={infoServices} transparent animationType="fade">
+                <View style={styles.modalBackground}>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.title}>Servicios de la cita</Text>
+                    {selectedCitaServices.map((service, index) => (
+                      <Text key={index} style={styles.serviceItem}>• {service.Nombre}</Text>
+                    ))}
+                    <View style={styles.containerButton}>
+                      <TouchableOpacity style={styles.button} onPress={closeInfoServices}>
+                        <Text style={styles.buttonText}>SALIR</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+              {/* --------------------------------------------------------------------------------------------------------- */}
 
               <Text style={[styles.titleDate, { marginTop: 5 }]}>Descripción</Text>
 
@@ -243,7 +304,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#5f5f5f',
     backgroundColor: '#E6E6E6',
-
   },
   titleDateMain: {
     fontFamily: 'Aspira W05 Demi',
@@ -289,6 +349,51 @@ const styles = StyleSheet.create({
     verticalAlign: 'middle',
     letterSpacing: 0.3,
   },
+  // Estilos del modal "Servicios"
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000080',
+  },
+  modalContent: {
+    width: '75%',
+    paddingTop: 20,
+    padding: 15,
+    backgroundColor: '#3F3F3F',
+    borderRadius: 8,
+  },
+  title: {
+    fontFamily: 'Aspira W05 Demi',
+    marginBottom: 6,
+    fontSize: 20,
+    color: '#f0f0f0',
+    textAlign: 'center',
+    letterSpacing: 0.2,
+  },
+  serviceItem: {
+    fontSize: 16,
+    marginVertical: 8,
+    color: '#f0f0f0', // Puedes personalizar el color según tus preferencias
+  },
+  containerButton: {
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#7066e0',
+    borderColor: '#b2abff',
+    borderWidth: 3,
+  },
+  buttonText: {
+    fontFamily: 'Montserrat Medium',
+    height: 36,
+    paddingHorizontal: 18,
+    fontSize: 16,
+    color: 'white',
+    verticalAlign: 'middle',
+    letterSpacing: 0.3,
+  },
+  // Estilos del modal "Servicios" Fin
   input: {
     fontFamily: 'Aspira W05 Medium',
     width: '54%',
