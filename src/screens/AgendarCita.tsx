@@ -11,6 +11,7 @@ import ButtonPrimary from '../components/ButtonPrimary';
 import AlertFailure from '../components/AlertFailure';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AlertSuccess from '../components/AlertSuccess';
 
 type User = {
   _id: User | null;
@@ -47,6 +48,14 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   const [FechaCita, setFechaCita] = useState(new Date());
   const [HoraCita, setHoraCita] = useState(new Date());
   const [Descripcion, setDescripcion] = useState('');
+
+  // ----------------------------------------Función alerta "Cita agendada con éxito"------------------------------------------
+  const [createdAppointment, setCreatedAppointment] = useState(false);
+
+  const closeCreatedAppointment = () => {
+    setCreatedAppointment(false);
+    navigation.navigate('MisCitas'); // Redirige a "MisCitas"
+  };
 
   // --------------------------------------------Función alerta "Cuenta eliminada"---------------------------------------------
   const [deletedAccountVisible, setDeletedAccountVisible] = useState(false); // Estado de modal "AlertFailure"
@@ -177,6 +186,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   // ---------------------------------------------------Función crear "Cita"---------------------------------------------------
   const crearCita = async () => {
 
+    setIsLoading(true); // Activar el preload
+
     // Función para calcular FinCita
     const duracionServicioIndividual = 30; // Duración de un servicio individual en minutos
     const calcularFinCita = () => {
@@ -225,7 +236,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       });
 
       if (response.status === 200) { // Verificar que la respuesta del servidor sea exitosa
-        navigation.navigate('MisCitas');
+        setCreatedAppointment(true);
       } else {
         console.log('Error al crear la cita:', response.data)
       }
@@ -450,6 +461,16 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             />
 
           </SafeAreaView>
+
+          {/* ------------------------------------Alerta "Cita Agendada con éxito"------------------------------------- */}
+          <AlertSuccess
+            visible={createdAppointment}
+            onCloseSuccess={closeCreatedAppointment}
+            title='Cita agendada'
+            message='La cita se ha agendado exitosamente.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
 
           {/* ----------------------------------------Alerta "Cuenta eliminada"---------------------------------------- */}
           <AlertFailure

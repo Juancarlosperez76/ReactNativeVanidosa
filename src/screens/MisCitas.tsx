@@ -1,4 +1,6 @@
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AlertCancelAppointment from '../components/AlertCancelAppointment';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -6,6 +8,7 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AlertSuccess from '../components/AlertSuccess';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -14,6 +17,7 @@ type User = {
   Nombre: string;
   Apellido: string;
   Documento: number;
+  Correo: string;
 };
 
 type Servicio = {
@@ -95,17 +99,20 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
           if (currentUser) {
             setUser(currentUser);
 
-            // Obténemos las citas del usuario actual
+            // Obtiene todas las citas 
             const citasResponse = await axios.get('https://api-proyecto-5hms.onrender.com/api/cita', {
-              params: {
-                Documento: currentUser.Documento, // Usar el Documento del usuario
-              },
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             });
-            setCita(citasResponse.data.cita);
-            console.log('Citas del usuario obtenidas:', citasResponse.data);
+
+            // Filtra las citas de usuario logueado por "Documento" y "Estado"
+            const filterAppointments = citasResponse.data.cita.filter((cita: { Documento: string; Estado: boolean }) =>
+              cita.Documento === currentUser.Documento && cita.Estado === true
+            );
+
+            setCita(filterAppointments);
+            console.log('Citas del usuario obtenidas:', filterAppointments);
             setIsLoading(false); // Desactivar el preload
           } else {
             // Destruye la sesión y redirige al login
@@ -122,6 +129,35 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
     fetchUserData();
   }, []);
 
+  // -----------------------------------------------Función cancelar una "Cita"------------------------------------------------
+  const disableAppointment = async (index: number) => {
+    try {
+
+      setIsLoading(true); // Activar el preload
+
+      const apiUrl = `https://api-proyecto-5hms.onrender.com/api/cita`;
+
+      // Obtiene la cita utilizando el índice
+      const getAppointmentToCancel = cita[index];
+
+      const response = await fetch(apiUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ _id: getAppointmentToCancel._id, Estado: false }), // Cambiar el estado a "false" para cancelar la cita
+      });
+
+      if (response.status === 200) {
+        setCancelledAppointment(true); // Muestra alerta "Cita cancelada con éxito"
+      } else {
+        console.error('Error al cancelar la cita');
+      }
+    } catch (error) {
+      console.error('Error al cancelar la cita:', error);
+    }
+  };
+
   // --------------------------------------------Función modal "Servicios de Cita"---------------------------------------------
   const [selectedCitaServices, setSelectedCitaServices] = useState<Servicio[]>([]);
   const [infoServices, setInfoServices] = useState(false);
@@ -133,6 +169,34 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
   const closeInfoServices = () => {
     setInfoServices(false);
+  };
+
+  // --------------------------------------------Función alerta "Cancelar cita"------------------------------------------------
+  const [cancelAppointment, setCancelAppointment] = useState(false);
+  const [cancellationCitaIndex, setCancellationCitaIndex] = useState(-1);
+
+  const showCancelAppointment = (index: number) => {
+    setCancellationCitaIndex(index);
+    setCancelAppointment(true);
+  };
+
+  const closeCancelAppointment = () => {
+    setCancelAppointment(false);
+  };
+
+  const confirmCancelAppointment = () => {
+    setCancelAppointment(false);
+    if (cancellationCitaIndex >= 0) {
+      disableAppointment(cancellationCitaIndex); // Llama a la función "disableAppointment" con el índice de la cita
+    }
+  };
+
+  // ----------------------------------------Función alerta "Cita cancelada con éxito"-----------------------------------------
+  const [cancelledAppointment, setCancelledAppointment] = useState(false);
+
+  const closeCancelledAppointment = () => {
+    setCancelledAppointment(false);
+    navigation.replace('MisCitas'); // Refresca la vista "MisCitas" para actualizar las citas activas
   };
 
   // --------------------------------------------------------------------------------------------------------------------------
@@ -152,17 +216,18 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
           <View style={styles.containerInfo}>
             <Text style={styles.nameText}> {user?.Nombre} {user?.Apellido}</Text>
+            <Text style={styles.documentText}>{user?.Correo}</Text>
             <Text style={styles.documentText}>{user?.Documento}</Text>
           </View>
 
-          {cita.length > 0 ? (cita.map((cita: Cita, _index: number) => (
+          {cita.length > 0 ? (cita.map((cita: Cita, index: number) => (
 
-            <View style={styles.containerCita} key={_index}>
+            <View style={styles.containerCita} key={index}>
 
               <View style={styles.containerTitleDate}>
                 <Text style={styles.titleDateMain}>Información de la cita</Text>
-                <TouchableOpacity style={styles.containerIconDelete}>
-                  <Ionicons name="trash-outline" size={26} color={'#5B009D'} />
+                <TouchableOpacity style={styles.containerIconDelete} onPress={() => showCancelAppointment(index)}>
+                  <MaterialCommunityIcons name="close-box" size={30} color={'#5B009D'} />
                 </TouchableOpacity>
               </View>
 
@@ -224,7 +289,9 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
           ))
           ) : (
-            <Text style={{ color: '#000000' }}>No se encontraron citas</Text>
+            <View style={styles.withoutAppointments}>
+              <Text style={styles.withoutAppointmentsText}>NO TIENES CITAS{'\n'}AGENDADAS</Text>
+            </View>
           )}
 
           <ButtonSecondary
@@ -248,6 +315,29 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
             letterSpacing={0.3}
             title={'REGRESAR'}
           />
+
+          {/* ------------------------------------------Alerta "Cancelar cita"--------------------------------------------- */}
+          <AlertCancelAppointment
+            visible={cancelAppointment}
+            onAlertCancelAppointment={confirmCancelAppointment}
+            closeAlertCancelAppointment={closeCancelAppointment}
+            title='¡Cancelar cita!'
+            message='¿Esta segueo que desea cancelar la cita?'
+            buttonConfirmStyle={{ width: 160 }}
+            buttonConfirmText='Cancelar cita'
+          />
+
+          {/* --------------------------------------Alerta "Cita cancelada con éxito"-------------------------------------- */}
+          <AlertSuccess
+            visible={cancelledAppointment}
+            onCloseSuccess={closeCancelledAppointment}
+            title='Cita cancelada'
+            message='La cita se ha cancelado exitosamente.'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
         </View>
 
@@ -275,10 +365,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   containerInfo: {
-    marginVertical: 30,
-    paddingVertical: 18,
-    borderWidth: 1,
-    borderColor: '#cccccc',
+    marginTop: 30,
+    marginBottom: 50,
   },
   nameText: {
     color: '#333333',
@@ -307,6 +395,7 @@ const styles = StyleSheet.create({
   },
   titleDateMain: {
     fontFamily: 'Aspira W05 Demi',
+    fontSize: 16,
     color: '#000000',
     textAlign: 'center',
   },
@@ -324,8 +413,8 @@ const styles = StyleSheet.create({
   },
   containerIconDelete: {
     position: 'absolute',
-    right: 2,
-    padding: 6,
+    right: 5,
+    padding: 4,
   },
   containerInput: {
     flexDirection: 'row',
@@ -354,30 +443,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#00000080',
+    backgroundColor: '#42424248',
   },
   modalContent: {
-    width: '75%',
-    paddingTop: 20,
-    padding: 15,
+    width: '70%',
+    paddingVertical: 20,
+    paddingHorizontal: 30,
     backgroundColor: '#3F3F3F',
     borderRadius: 8,
   },
   title: {
     fontFamily: 'Aspira W05 Demi',
-    marginBottom: 6,
+    marginBottom: 20,
     fontSize: 20,
     color: '#f0f0f0',
     textAlign: 'center',
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
   },
   serviceItem: {
     fontSize: 16,
-    marginVertical: 8,
-    color: '#f0f0f0', // Puedes personalizar el color según tus preferencias
+    marginVertical: 5,
+    color: '#f0f0f0',
   },
   containerButton: {
     alignItems: 'center',
+    marginTop: 15,
   },
   button: {
     backgroundColor: '#7066e0',
@@ -386,7 +476,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Montserrat Medium',
-    height: 36,
+    height: 34,
     paddingHorizontal: 18,
     fontSize: 16,
     color: 'white',
@@ -416,6 +506,29 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderWidth: 1,
     borderColor: '#5f5f5f',
+    letterSpacing: 0.3,
+  },
+  contentLogoAccount: {
+    width: '86%',
+    marginHorizontal: '7%',
+    marginVertical: 40,
+    backgroundColor: '#E5E5E5',
+    alignItems: 'center',
+  },
+  logoAccount: {
+    width: 120,
+    height: 72,
+  },
+  withoutAppointments: {
+    marginBottom: 30
+  },
+  withoutAppointmentsText: {
+    fontFamily: 'Aspira W05 Medium',
+    height: 350,
+    fontSize: 20,
+    color: '#7c7c7c',
+    verticalAlign: 'middle',
+    textAlign: 'center',
     letterSpacing: 0.3,
   },
 });
