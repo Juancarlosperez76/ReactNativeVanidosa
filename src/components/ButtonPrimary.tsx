@@ -6,8 +6,8 @@ interface ButtonPrimaryProps {
   onPress: () => void;
   width: number | string,
   height: number | string,
-  marginTop: number,
-  marginBottom: number,
+  marginTop: number | string,
+  marginBottom: number | string,
   backgroundColor: string;
   borderRadius: number;
   fontFamily: string;
@@ -18,20 +18,20 @@ interface ButtonPrimaryProps {
   title: string;
 }
 
-const ButtonPrimary = ({ 
-  onPress, 
-  width, 
-  height, 
+const ButtonPrimary = ({
+  onPress,
+  width,
+  height,
   marginTop,
   marginBottom,
-  backgroundColor, 
-  borderRadius, 
+  backgroundColor,
+  borderRadius,
   fontFamily,
-  color, 
-  fontSize, 
-  fontWeight, 
-  letterSpacing, 
-  title }: 
+  color,
+  fontSize,
+  fontWeight,
+  letterSpacing,
+  title }:
   ButtonPrimaryProps) => {
 
   return (

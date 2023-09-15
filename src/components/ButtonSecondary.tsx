@@ -6,8 +6,8 @@ interface ButtonSecondaryProps {
   onPress: () => void;
   width: number | string,
   height: number | string,
-  marginTop: number,
-  marginBottom: number,
+  marginTop: number | string,
+  marginBottom: number | string,
   backgroundColor: string;
   borderWidth: number,
   borderColor: string,
