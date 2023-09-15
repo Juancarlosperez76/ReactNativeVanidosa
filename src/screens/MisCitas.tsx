@@ -1,5 +1,5 @@
-import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertCancelAppointment from '../components/AlertCancelAppointment';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,7 @@ import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AlertSuccess from '../components/AlertSuccess';
 import React, { useEffect, useState } from 'react';
+import PagerView from 'react-native-pager-view';
 import axios from 'axios';
 
 type User = {
@@ -56,6 +57,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [user, setUser] = useState<User | null>(null);
   const [cita, setCita] = useState<Cita[]>([]);
+  const [currentPage, setCurrentPage] = useState(0); // Estado de la página activa
 
   // --------------------------------------Función para formatear la Fecha "30-SEP-2023"---------------------------------------
   function formatDate(dateString: string | number | Date) {
@@ -209,8 +211,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
       <HeaderLogoReturn navigation={navigation} title="Mis citas" />
 
-      {/* "keyboardShouldPersistTaps="always" evita que el teclado se oculte al hacer clic fuera del campo */}
-      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always">
+      <View style={styles.containerMain}>
 
         <View style={styles.contentMain}>
 
@@ -220,128 +221,175 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
             <Text style={styles.documentText}>{user?.Documento}</Text>
           </View>
 
-          {cita.length > 0 ? (cita.map((cita: Cita, index: number) => (
+          <PagerView
+            style={{ flex: 1 }}
+            initialPage={0}
+            onPageSelected={
+              (event) => setCurrentPage(event.nativeEvent.position)
+            }
+          >
 
-            <View style={styles.containerCita} key={index}>
+            {cita.length > 0 ? (cita.map((cita: Cita, index: number) => (
 
-              <View style={styles.containerTitleDate}>
-                <Text style={styles.titleDateMain}>Información de la cita</Text>
-                <TouchableOpacity style={styles.containerIconDelete} onPress={() => showCancelAppointment(index)}>
-                  <MaterialCommunityIcons name="close-box" size={30} color={'#5B009D'} />
-                </TouchableOpacity>
-              </View>
+              <View style={styles.containerCita} key={index}>
 
-              <View style={styles.containerInput}>
-                <View style={styles.containerLabel}>
-                  <MaterialIcons style={{ marginLeft: 6 }} name="calendar-month" size={22} color={'#000000'} />
-                  <Text style={styles.label}> Fecha cita</Text>
+                <View style={styles.containerTitleDate}>
+                  <Text style={styles.titleDateMain}>Información de la cita</Text>
+                  <TouchableOpacity style={styles.containerIconDelete} onPress={() => showCancelAppointment(index)}>
+                    <MaterialCommunityIcons name="close-box" size={30} color={'#5B009D'} />
+                  </TouchableOpacity>
                 </View>
-                <Text style={styles.input}>
-                  <Text style={styles.input}>{formatDate(cita.FechaCita)}</Text>
-                </Text>
-              </View>
 
-              <View style={styles.containerInput}>
-                <View style={styles.containerLabel}>
-                  <MaterialIcons style={{ marginLeft: 6 }} name="access-time" size={22} color={'#000000'} />
-                  <Text style={styles.label}> Hora cita</Text>
-                </View>
-                <Text style={styles.input}>{formatHour(cita.HoraCita)}</Text>
-              </View>
-
-              <View style={styles.containerInput}>
-                <View style={styles.containerLabel}>
-                  <Ionicons style={{ marginLeft: 6, transform: [{ rotate: '300deg' }] }} name="cut-sharp" size={22} color={'#000000'} />
-                  <Text style={styles.label}> Servicios</Text>
-                </View>
-                <TouchableOpacity
-                  style={{ flexDirection: 'row', width: '54%', justifyContent: 'center', alignItems: 'center' }}
-                  onPress={() => showInfoServices(cita.Servicios)}
-                >
-                  <Text style={{ paddingRight: 10, color: '#000000', verticalAlign: 'middle' }}>Ver servicios</Text>
-                  <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#5B009D'} />
-                </TouchableOpacity>
-              </View>
-
-              {/* ----------------------------------------Modal "Servicios de Cita"---------------------------------------- */}
-              <Modal visible={infoServices} transparent animationType="fade">
-                <View style={styles.modalBackground}>
-                  <View style={styles.modalContent}>
-                    <Text style={styles.title}>Servicios de la cita</Text>
-                    {selectedCitaServices.map((service, index) => (
-                      <Text key={index} style={styles.serviceItem}>• {service.Nombre}</Text>
-                    ))}
-                    <View style={styles.containerButton}>
-                      <TouchableOpacity style={styles.button} onPress={closeInfoServices}>
-                        <Text style={styles.buttonText}>SALIR</Text>
-                      </TouchableOpacity>
-                    </View>
+                <View style={styles.containerInput}>
+                  <View style={styles.containerLabel}>
+                    <MaterialIcons style={{ marginLeft: 6 }} name="calendar-month" size={22} color={'#000000'} />
+                    <Text style={styles.label}> Fecha cita</Text>
                   </View>
+                  <Text style={styles.input}>
+                    <Text style={styles.input}>{formatDate(cita.FechaCita)}</Text>
+                  </Text>
                 </View>
-              </Modal>
-              {/* --------------------------------------------------------------------------------------------------------- */}
 
-              <Text style={[styles.titleDate, { marginTop: 5 }]}>Descripción</Text>
+                <View style={styles.containerInput}>
+                  <View style={styles.containerLabel}>
+                    <MaterialIcons style={{ marginLeft: 6 }} name="access-time" size={22} color={'#000000'} />
+                    <Text style={styles.label}> Hora cita</Text>
+                  </View>
+                  <Text style={styles.input}>{formatHour(cita.HoraCita)}</Text>
+                </View>
 
-              <Text style={styles.inputDescription}>{cita.Descripcion}</Text>
+                <View style={styles.containerInput}>
+                  <View style={styles.containerLabel}>
+                    <Ionicons style={{ marginLeft: 6, transform: [{ rotate: '300deg' }] }} name="cut-sharp" size={22} color={'#000000'} />
+                    <Text style={styles.label}> Servicios</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', width: '54%', justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() => showInfoServices(cita.Servicios)}
+                  >
+                    <Text style={{ paddingRight: 10, color: '#000000', verticalAlign: 'middle' }}>Ver servicios</Text>
+                    <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#5B009D'} />
+                  </TouchableOpacity>
+                </View>
 
-            </View>
+                <Text style={[styles.titleDate, { marginTop: 5 }]}>Descripción</Text>
 
-          ))
-          ) : (
-            <View style={styles.withoutAppointments}>
-              <Text style={styles.withoutAppointmentsText}>NO TIENES CITAS{'\n'}AGENDADAS</Text>
-            </View>
-          )}
+                <Text style={styles.inputDescription}>{cita.Descripcion}</Text>
 
-          <ButtonSecondary
-            onPress={() => navigation.navigate('AgendarCita')}
-            width={'100%'}
-            height={48}
-            marginTop={0}
-            marginBottom={30}
-            backgroundColor={'#00000000'}
-            borderColor={'#E00083'}
-            borderWidth={2}
-            borderRadius={0}
-            borderTopLeftRadius={0}
-            borderTopRightRadius={0}
-            borderBottomRightRadius={0}
-            borderBottomLeftRadius={0}
-            fontFamily={'Aspira W05 Demi'}
-            color={'#29344A'}
-            fontSize={15}
-            fontWeight={undefined}
-            letterSpacing={0.3}
-            title={'REGRESAR'}
-          />
+              </View>
 
-          {/* ------------------------------------------Alerta "Cancelar cita"--------------------------------------------- */}
-          <AlertCancelAppointment
-            visible={cancelAppointment}
-            onAlertCancelAppointment={confirmCancelAppointment}
-            closeAlertCancelAppointment={closeCancelAppointment}
-            title='¡Cancelar cita!'
-            message='¿Esta segueo que desea cancelar la cita?'
-            buttonConfirmStyle={{ width: 160 }}
-            buttonConfirmText='Cancelar cita'
-          />
+            ))
+            ) : (
+              <View style={styles.withoutAppointments}>
+                <Text style={styles.withoutAppointmentsText}>NO TIENES CITAS{'\n'}AGENDADAS</Text>
+              </View>
+            )}
 
-          {/* --------------------------------------Alerta "Cita cancelada con éxito"-------------------------------------- */}
-          <AlertSuccess
-            visible={cancelledAppointment}
-            onCloseSuccess={closeCancelledAppointment}
-            title='Cita cancelada'
-            message='La cita se ha cancelado exitosamente.'
-            buttonStyle={{ width: 70 }}
-            buttonText='OK'
-          />
+          </PagerView>
+
+          {/* --------------------------------------Indicadores de páginación "Dots"--------------------------------------- */}
+          <View style={styles.containerDots}>
+            {cita.length > 0 && cita.map((_cita: Cita, index: number) => ( // Actualiza cantidad de "Dots" en función de cantidad de "Citas"
+              <View
+                key={index}
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  backgroundColor: index === currentPage ? '#5B009D' : '#8f8f8f', // Cambia el color del dot activo
+                  marginHorizontal: 5,
+                }}
+              />
+            ))}
+          </View>
+
+          {/* ------------------------------------Indicadores de páginación "Números"-------------------------------------- */}
+          {/* <View style={styles.containerDots}>
+            {cita.length > 0 && cita.map((_cita: Cita, index: number) => (
+              <Text
+                key={index}
+                style={{
+                  fontSize: 15,
+                  fontWeight: index === currentPage ? 'bold' : 'normal', // Cambia el estilo del número activo
+                  color: index === currentPage ? '#000000' : '#7e7e7e', // Cambia el color del número activo/inactivo
+                  marginHorizontal: 5,
+                }}
+              >
+                {index + 1}
+              </Text>
+            ))}
+          </View> */}
 
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
+          <View style={{ paddingHorizontal: '1%', }}>
+            <ButtonSecondary
+              onPress={() => navigation.navigate('AgendarCita')}
+              width={'100%'}
+              height={48}
+              marginTop={0}
+              marginBottom={10}
+              backgroundColor={'#00000000'}
+              borderColor={'#E00083'}
+              borderWidth={2}
+              borderRadius={0}
+              borderTopLeftRadius={0}
+              borderTopRightRadius={0}
+              borderBottomRightRadius={0}
+              borderBottomLeftRadius={0}
+              fontFamily={'Aspira W05 Demi'}
+              color={'#29344A'}
+              fontSize={15}
+              fontWeight={undefined}
+              letterSpacing={0.3}
+              title={'REGRESAR'}
+            />
+          </View>
+
         </View>
 
-      </ScrollView>
+      </View>
+
+      {/* --------------------------------------------Modal "Servicios de Cita"-------------------------------------------- */}
+      <Modal visible={infoServices} transparent animationType="fade">
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContent}>
+            <Text style={styles.title}>Servicios de la cita</Text>
+            {selectedCitaServices.map((service, index) => (
+              <Text key={index} style={styles.serviceItem}>• {service.Nombre}</Text>
+            ))}
+            <View style={styles.containerButton}>
+              <TouchableOpacity style={styles.button} onPress={closeInfoServices}>
+                <Text style={styles.buttonText}>SALIR</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* --------------------------------------------Alerta "Cancelar cita"----------------------------------------------- */}
+      <AlertCancelAppointment
+        visible={cancelAppointment}
+        onAlertCancelAppointment={confirmCancelAppointment}
+        closeAlertCancelAppointment={closeCancelAppointment}
+        title='¡Cancelar cita!'
+        message='¿Esta segueo que desea cancelar la cita?'
+        buttonConfirmStyle={{ width: 160 }}
+        buttonConfirmText='Cancelar cita'
+      />
+
+      {/* ----------------------------------------Alerta "Cita cancelada con éxito"---------------------------------------- */}
+      <AlertSuccess
+        visible={cancelledAppointment}
+        onCloseSuccess={closeCancelledAppointment}
+        title='Cita cancelada'
+        message='La cita se ha cancelado exitosamente.'
+        buttonStyle={{ width: 70 }}
+        buttonText='OK'
+      />
+
+      {/* ----------------------------------------------------------------------------------------------------------------- */}
+
     </View>
   );
 };
@@ -355,17 +403,18 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#ffffff',
   },
-  scrollView: {
-    flexGrow: 1,
-    backgroundColor: '#ffffff',
+  containerMain: {
+    flex: 1,
+    justifyContent: 'center',
   },
   contentMain: {
-    width: '86%',
-    marginHorizontal: '7%',
+    width: '90%',
+    height: 570,
+    marginHorizontal: '5%',
     backgroundColor: '#ffffff',
   },
   containerInfo: {
-    marginTop: 30,
+    marginHorizontal: '1%',
     marginBottom: 50,
   },
   nameText: {
@@ -381,7 +430,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   containerCita: {
-    marginBottom: 30,
+    paddingHorizontal: '1%',
   },
   containerTitleDate: {
     flexDirection: 'row',
@@ -443,7 +492,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#42424248',
+    backgroundColor: '#7e7e7e70',
   },
   modalContent: {
     width: '70%',
@@ -497,27 +546,15 @@ const styles = StyleSheet.create({
   },
   inputDescription: {
     fontFamily: 'Aspira W05 Medium',
-    minHeight: 45,
+    height: 90,
     paddingVertical: 6,
     paddingHorizontal: 10,
     fontSize: 15,
     color: '#000000',
-    verticalAlign: 'middle',
     borderTopWidth: 0,
     borderWidth: 1,
     borderColor: '#5f5f5f',
     letterSpacing: 0.3,
-  },
-  contentLogoAccount: {
-    width: '86%',
-    marginHorizontal: '7%',
-    marginVertical: 40,
-    backgroundColor: '#E5E5E5',
-    alignItems: 'center',
-  },
-  logoAccount: {
-    width: 120,
-    height: 72,
   },
   withoutAppointments: {
     marginBottom: 30
@@ -530,6 +567,11 @@ const styles = StyleSheet.create({
     verticalAlign: 'middle',
     textAlign: 'center',
     letterSpacing: 0.3,
+  },
+  containerDots: {
+    flexDirection: 'row',
+    marginBottom: 25,
+    justifyContent: 'center',
   },
 });
 
