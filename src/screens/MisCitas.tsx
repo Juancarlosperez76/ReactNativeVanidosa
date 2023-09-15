@@ -245,9 +245,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
                     <MaterialIcons style={{ marginLeft: 6 }} name="calendar-month" size={22} color={'#000000'} />
                     <Text style={styles.label}> Fecha cita</Text>
                   </View>
-                  <Text style={styles.input}>
-                    <Text style={styles.input}>{formatDate(cita.FechaCita)}</Text>
-                  </Text>
+                  <Text style={styles.input}>{formatDate(cita.FechaCita)}</Text>
                 </View>
 
                 <View style={styles.containerInput}>
@@ -263,12 +261,9 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
                     <Ionicons style={{ marginLeft: 6, transform: [{ rotate: '300deg' }] }} name="cut-sharp" size={22} color={'#000000'} />
                     <Text style={styles.label}> Servicios</Text>
                   </View>
-                  <TouchableOpacity
-                    style={{ flexDirection: 'row', width: '54%', justifyContent: 'center', alignItems: 'center' }}
-                    onPress={() => showInfoServices(cita.Servicios)}
-                  >
-                    <Text style={{ paddingRight: 10, color: '#000000', verticalAlign: 'middle' }}>Ver servicios</Text>
-                    <Ionicons style={{ marginTop: 2, marginRight: 10 }} name="eye" size={22} color={'#5B009D'} />
+                  <TouchableOpacity style={styles.showServicesButton} onPress={() => showInfoServices(cita.Servicios)}>
+                    <Text style={styles.showServicesText}>Ver servicios</Text>
+                    <Ionicons style={styles.showServicesIcon} name="eye" size={22} color={'#5B009D'} />
                   </TouchableOpacity>
                 </View>
 
@@ -290,35 +285,11 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
           {/* --------------------------------------Indicadores de páginación "Dots"--------------------------------------- */}
           <View style={styles.containerDots}>
             {cita.length > 0 && cita.map((_cita: Cita, index: number) => ( // Actualiza cantidad de "Dots" en función de cantidad de "Citas"
-              <View
-                key={index}
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
-                  backgroundColor: index === currentPage ? '#5B009D' : '#8f8f8f', // Cambia el color del dot activo
-                  marginHorizontal: 5,
-                }}
+              <View key={index}
+                style={[styles.dots, { backgroundColor: index === currentPage ? '#5B009D' : '#8f8f8f' }]}
               />
             ))}
           </View>
-
-          {/* ------------------------------------Indicadores de páginación "Números"-------------------------------------- */}
-          {/* <View style={styles.containerDots}>
-            {cita.length > 0 && cita.map((_cita: Cita, index: number) => (
-              <Text
-                key={index}
-                style={{
-                  fontSize: 15,
-                  fontWeight: index === currentPage ? 'bold' : 'normal', // Cambia el estilo del número activo
-                  color: index === currentPage ? '#000000' : '#7e7e7e', // Cambia el color del número activo/inactivo
-                  marginHorizontal: 5,
-                }}
-              >
-                {index + 1}
-              </Text>
-            ))}
-          </View> */}
 
           {/* ------------------------------------------------------------------------------------------------------------- */}
 
@@ -408,9 +379,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   contentMain: {
-    width: '90%',
+    width: '88%',
     height: 570,
-    marginHorizontal: '5%',
+    marginHorizontal: '6%',
     backgroundColor: '#ffffff',
   },
   containerInfo: {
@@ -486,6 +457,21 @@ const styles = StyleSheet.create({
     color: '#000000',
     verticalAlign: 'middle',
     letterSpacing: 0.3,
+  },
+  showServicesButton: {
+    flexDirection: 'row',
+    width: '54%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  showServicesText: {
+    paddingRight: 10,
+    color: '#000000',
+    verticalAlign: 'middle'
+  },
+  showServicesIcon: {
+    marginTop: 2,
+    marginRight: 10
   },
   // Estilos del modal "Servicios"
   modalBackground: {
@@ -568,10 +554,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.3,
   },
+  // Estilos indicador de paginación "Dots (Puntos)"
   containerDots: {
     flexDirection: 'row',
     marginBottom: 25,
     justifyContent: 'center',
+  },
+  dots: {
+    width: 10,
+    height: 10,
+    marginHorizontal: 5,
+    borderRadius: 5,
   },
 });
 
