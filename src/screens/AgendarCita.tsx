@@ -12,7 +12,9 @@ import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AlertWarning from '../components/AlertWarning';
 
+// Define el tipo para los datos de usuario logueado
 type User = {
   _id: User | null;
   Nombre: string;
@@ -39,12 +41,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-  //   }, 800); // Tiempo de carga simulado (en milisegundos)
-  // }, []);
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [Documento, setDocumento] = useState('');
@@ -54,6 +51,42 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   const [FechaCita, setFechaCita] = useState(new Date());
   const [HoraCita, setHoraCita] = useState(new Date());
   const [Descripcion, setDescripcion] = useState('');
+
+  // --------------------------------------Función alerta "Select "Seleccionar servicios"--------------------------------------
+  const [selectServices, setSelectServices] = useState(false);
+
+  const closeSelectServices = () => {
+    setSelectServices(false);
+    navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
+    setIsLoading(false); // Desactivar el preload
+  };
+
+  // -----------------------------------------Función alerta select "Seleccionar Fecha"----------------------------------------
+  const [selectDate, setSelectDate] = useState(false);
+
+  const closeSelectDate = () => {
+    setSelectDate(false);
+    navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
+    setIsLoading(false); // Desactivar el preload
+  };
+
+  // -----------------------------------------Función alerta select "Seleccionar Hora"-----------------------------------------
+  const [selectTime, setSelectTime] = useState(false);
+
+  const closeSelectTime = () => {
+    setSelectTime(false);
+    navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
+    setIsLoading(false); // Desactivar el preload
+  };
+
+  // ---------------------------------------Función alerta "Campo Descripción requerido"---------------------------------------
+  const [fieldDescriptionRequired, setFieldDescriptionRequired] = useState(false);
+
+  const closefieldDescriptionRequired = () => {
+    setFieldDescriptionRequired(false);
+    navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
+    setIsLoading(false); // Desactivar el preload
+  };
 
   // ----------------------------------------Función alerta "Cita agendada con éxito"------------------------------------------
   const [createdAppointment, setCreatedAppointment] = useState(false);
@@ -110,7 +143,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
         }
 
       } catch (error) {
-        //console.error('Error al obtener los datos del usuario:', error);
+        console.error('Error al obtener los datos del usuario:', error);
       }
     };
     fetchUserData();
@@ -142,7 +175,6 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   }, []);
 
   // ------------------------------------------Función modal "Seleccionar servicios"-------------------------------------------
-
   const [ServiceOptionsVisible, setServiceOptionsVisible] = useState(false);
 
   const handleOpenServiceOptions = () => {
@@ -166,21 +198,24 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setSelectedServices(updatedServices);
   };
 
-  // -------------------------------------Función selectores fecha y hora "DateTimePicker"-------------------------------------
+  // ------------------------------------------Función select Fecha "DateTimePicker"-------------------------------------------
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const onChangeDate = (_event: any, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || FechaCita;
     setShowDatePicker(false);
     setFechaCita(currentDate);
+    setHasSelectedDate(true); // Marcar que usuario ha interactuado con selector de Fecha.
   };
 
+  // -------------------------------------------Función select Hora "DateTimePicker"-------------------------------------------
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const onChangeTime = (_event: any, selectedTime: Date | undefined) => {
     const currentTime = selectedTime || HoraCita;
     setShowTimePicker(false);
     setHoraCita(currentTime);
+    setHasSelectedTime(true); // Marcar que usuario ha interactuado con selector de Hora.
   };
 
   // ---------------------------------Funciones para formatear "Fecha y Hora" "DateTimePicker"---------------------------------
@@ -191,7 +226,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${day}-${month}-${year}`;
   };
 
   // Función para formatear la "Hora"
@@ -204,6 +239,9 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   };
 
   // ---------------------------------------------------Función crear "Cita"---------------------------------------------------
+  const [hasSelectedDate, setHasSelectedDate] = useState(false);
+  const [hasSelectedTime, setHasSelectedTime] = useState(false);
+
   const crearCita = async () => {
 
     setIsLoading(true); // Activar el preload
@@ -222,13 +260,44 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     };
     const finCita = calcularFinCita();
 
-    // Validar que los campos requeridos no estén vacíos
-    if (!Documento || !Nombre || !Apellido || !selectedServices || !FechaCita || !HoraCita || !finCita || !Descripcion) {
-      console.error('Todos los campos son obligatorios');
+    // Validar select "Seleccionar servicios"
+    if (selectedServices.length === 0) {
+      setSelectServices(true);
       return;
     } else {
       console.log('Servicios seleccionados:', selectedServices);
     }
+
+    // Validar select "Seleccionar Fecha"
+    if (hasSelectedDate === false) {
+      setSelectDate(true);
+      return;
+    } else {
+      console.log('Fecha seleccionada:', FechaCita);
+    }
+
+    // Validar select "Seleccionar Hora"
+    if (hasSelectedTime === false) {
+      setSelectTime(true);
+      return;
+    } else {
+      console.log('Hora seleccionada:', HoraCita);
+    }
+
+    // Validar campo "Descripción"
+    if (Descripcion === '') {
+      setFieldDescriptionRequired(true);
+      return;
+    } else {
+      console.log('Descripción establecida:', Descripcion);
+    }
+
+    // Formatear HoraCita en formato de 24 horas
+    const militaryTimeFormat = (time: Date) => {
+      const hours = time.getHours();
+      const minutes = time.getMinutes();
+      return `${hours}:${minutes}`;
+    };
 
     // Crea objeto "Servicios" a partir de "selectedServices"
     const Servicios = selectedServices.map((selectedServices) => ({
@@ -241,7 +310,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       Apellidos: Apellido,
       Servicios: Servicios,
       FechaCita: FechaCita,
-      HoraCita: HoraCita,
+      HoraCita: militaryTimeFormat(HoraCita),
       Fincita: finCita,
       Descripcion: Descripcion,
     }
@@ -255,13 +324,24 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
         },
       });
 
-      if (response.status === 200) { // Verificar que la respuesta del servidor sea exitosa
-        setCreatedAppointment(true);
+      // Verificar que la respuesta del servidor sea exitosa
+      if (response.status === 200) {
+        setCreatedAppointment(true); // Mostrar alerta "Cita Agendada con éxito"
+
+        // Limpiar los campos después de crear la "Cita"
+        setSelectedServices([]);
+        setFechaCita(new Date());
+        setHoraCita(new Date());
+        setDescripcion('');
+
       } else {
-        console.log('Error al crear la cita:', response.data)
+        console.log('Error al crear la cita:');
+        setIsLoading(false); // Desactivar el preload
       }
+
     } catch (error) {
       console.log('Error al crear la cita:', error);
+      setIsLoading(false); // Desactivar el preload
     }
   };
 
@@ -475,7 +555,53 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
           </SafeAreaView>
 
-          {/* ------------------------------------Alerta "Cita Agendada con éxito"------------------------------------- */}
+          {/* -----------------------------------Alerta "Select "Seleccionar servicios"------------------------------------ */}
+          <AlertWarning
+            visible={selectServices}
+            modalContentStyle={{ width: '70%' }}
+            onCloseWarning={closeSelectServices}
+            title='Seleccióne un servicio'
+            message='Por favor, seleccione al menos un servicio'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* --------------------------------------Alerta select "Seleccionar Fecha"-------------------------------------- */}
+          <AlertWarning
+            visible={selectDate}
+            modalContentStyle={{ width: '70%' }}
+            onCloseWarning={closeSelectDate}
+            title='Fecha requerida.'
+            message='Por favor, seleccione la fecha del servicio'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* ---------------------------------------Alerta select "Seleccionar Hora"-------------------------------------- */}
+          <AlertWarning
+            visible={selectTime}
+            modalContentStyle={{ width: '70%' }}
+            onCloseWarning={closeSelectTime}
+            title='Hora requerida'
+            message='Por favor, seleccione la hora del servicio'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* ------------------------------------Alerta "Campo Descripción requerido"------------------------------------- */}
+          <AlertWarning
+            visible={fieldDescriptionRequired}
+            modalContentStyle={{ width: '75%' }}
+            onCloseWarning={closefieldDescriptionRequired}
+            title='Campo requerido'
+            message={
+              <Text>El campo <Text style={{ fontWeight: 'bold', color: '#ca0000', }}>Descripción</Text> es oblogatorio.</Text>
+            }
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* --------------------------------------Alerta "Cita Agendada con éxito"--------------------------------------- */}
           <AlertSuccess
             visible={createdAppointment}
             onCloseSuccess={closeCreatedAppointment}
@@ -485,7 +611,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             buttonText='OK'
           />
 
-          {/* ----------------------------------------Alerta "Cuenta eliminada"---------------------------------------- */}
+          {/* ------------------------------------------Alerta "Cuenta eliminada"------------------------------------------ */}
           <AlertFailure
             visible={deletedAccountVisible}
             onCloseFailure={handleCloseDeletedAccount}
@@ -494,7 +620,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
-          {/* --------------------------------------------------------------------------------------------------------- */}
+
+          {/* ------------------------------------------------------------------------------------------------------------- */}
 
         </View>
       </ScrollView>

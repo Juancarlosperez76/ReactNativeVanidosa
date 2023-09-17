@@ -1,22 +1,23 @@
 import { Modal, View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface AlertWarningProps {
   visible: boolean;
+  modalContentStyle?: StyleProp<ViewStyle>;
   onCloseWarning: () => void;
   title: string;
-  message: string;
+  message: string | ReactNode; // Permite renderizar texto y elementos jsx, tsx
   buttonStyle?: StyleProp<ViewStyle>;
   buttonText: string;
 }
 
-const AlertWarning = ({ visible, onCloseWarning, title, message, buttonStyle, buttonText }: AlertWarningProps) => {
+const AlertWarning = ({ visible, modalContentStyle, onCloseWarning, title, message, buttonStyle, buttonText }: AlertWarningProps) => {
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.modalBackground}>
-        <View style={styles.modalContent}>
+        <View style={[styles.modalContent, modalContentStyle]}>
           <View style={styles.containerAlertIcon}>
           <Ionicons style={styles.alertIcon} name="alert-circle-outline" />
           </View>

@@ -70,14 +70,23 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
   }
 
   // ----------------------------------------Función para formatear la Hora "10:30 AM"-----------------------------------------
-  const formatHour = (hora: string | number | Date) => {
-    const date = new Date(hora);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12; // Convierte las 00:00 a 12:00 AM
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  const formatHour = (time: string) => {
+    try {
+      const timeParts = time.split(':');
+      const hours = parseInt(timeParts[0]);
+      const minutes = parseInt(timeParts[1]);
+
+      const AmPm = hours >= 12 ? 'PM' : 'AM';
+      const twelveHours = hours % 12 || 12; // Convertir a formato de 12 horas
+
+      const formattedHours = twelveHours.toString().padStart(2, '0');
+      const formattedMinutes = minutes.toString().padStart(2, '0');
+
+      return `${formattedHours}:${formattedMinutes} ${AmPm}`;
+    } catch (error) {
+      console.error('Error al formatear la hora:', error);
+      return "Hora inválida";
+    }
   };
 
   // -------------------------------------------Mostrar "Citas" de usuario logueado--------------------------------------------
