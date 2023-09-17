@@ -1,4 +1,4 @@
-import { Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -8,16 +8,22 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
+import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import AlertSuccess from '../components/AlertSuccess';
 
 type User = {
   _id: User | null;
   Nombre: string;
   Apellido: string;
   Documento: number;
+};
+
+// Define el tipo para los datos del servicio
+type Service = {
+  _id: string;
+  Nombre: string;
 };
 
 type RootStackParamList = {
@@ -65,7 +71,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     navigation.navigate('StackAccount'); // Redireccionar a "StackAccount"
   };
 
-  // --------------------------------------------Mostrar datos de usuario logueado---------------------------------------------
+  // --------------------------------------Función para mostrar datos de usuario logueado--------------------------------------
   useEffect(() => {
     const fetchUserData = async () => {
 
@@ -109,19 +115,33 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     };
     fetchUserData();
   }, []);
-  // --------------------------------------------------------------------------------------------------------------------------
+
+  // ------------------------------------------Función mostrar lista de "Servicios"--------------------------------------------
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+
+      try {
+        const servicesResponse = await axios.get('https://api-proyecto-5hms.onrender.com/api/servicio'); // Obtiene todos los servicios
+        const servicesFetched = servicesResponse.data.servicio;
+
+        if (servicesFetched) {
+          console.log('Servicios obtenidos:', servicesFetched);
+          setServices(servicesFetched);
+        } else {
+          console.log('No se encontraron servicios.');
+        }
+
+      } catch (error) {
+        console.error('Error al obtener los servicios:', error);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   // ------------------------------------------Función modal "Seleccionar servicios"-------------------------------------------
-  const ServiceOptions = [
-    { label: 'Peluqueria', value: 'Peluqueria' },
-    { label: 'Uñas', value: 'Uñas' },
-    { label: 'Alisados', value: 'Alisados' },
-    { label: 'Cejas / Pestañas', value: 'Cejas / Pestañas' },
-    { label: 'Limpieza facial', value: 'Limpieza facial' },
-    { label: 'Depilación', value: 'Depilación' },
-    { label: 'Novia', value: 'Novia' },
-    { label: 'Quinceañera', value: 'Quinceañera' },
-  ];
 
   const [ServiceOptionsVisible, setServiceOptionsVisible] = useState(false);
 
@@ -134,8 +154,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setServiceOptionsVisible(false);
   };
 
-  // Función para cerrar "Modal" al hacer clic fuera de él
-  const handleCloseServiceOptionsOutside = () => {
+  // Función para cerrar "Modal" desde botón
+  const handleCloseServiceOptionsButton = () => {
     setServiceOptionsVisible(false);
   };
 
@@ -244,6 +264,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       console.log('Error al crear la cita:', error);
     }
   };
+
   // --------------------------------------------------------------------------------------------------------------------------
 
   return (
@@ -289,38 +310,39 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               </>
             ) : (<Text>No se encontró ningún usuario</Text>)}
 
-            {/* ----------------------------------------Modal "Seleccionar servicios"---------------------------------------- */}
-            <Modal
-              visible={ServiceOptionsVisible}
-              animationType="fade"
-              transparent
-            >
+            {/* --------------------Selector modal "Seleccionar servicios" y fecha y hora "DateTimePicker"------------------- */}
+            <TouchableOpacity style={styles.containeSeletcServices} onPress={handleOpenServiceOptions}>
+              <View style={styles.containerIconLabel}>
+                <Ionicons style={[styles.iconServiceOptions, { transform: [{ rotate: '300deg' }] }]} name="cut-sharp" />
+                <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
+              </View>
+            </TouchableOpacity>
 
-              <Pressable
-                style={styles.containerServiceOptions}
-                onPress={handleCloseServiceOptionsOutside} // Cerrar "Modal" al hacer clic fuera de él 
-              >
+            {/* ----------------------------------------Modal "Seleccionar servicios"---------------------------------------- */}
+            <Modal visible={ServiceOptionsVisible} animationType="fade" transparent>
+              <View style={styles.containerServiceOptions}>
 
                 <View style={styles.contentServiceOptions}>
                   <Text style={styles.titleSelectService}>Seleccione servicio</Text>
                   <ScrollView>
-                    {ServiceOptions.map((option) => (
+                    {services.map((service) => (
                       <TouchableOpacity
-                        style={styles.selectServiceOptions}
-                        key={option.value}
-                        onPress={() => handleCloseServiceOptions(option.value)}
-                      >
-                        <View style={styles.containerRadioButton}>
-                          <Text style={styles.serviceOptionText}>{option.label}</Text>
-                          <MaterialIcons style={styles.radioButton} name="radio-button-unchecked" />
-                        </View>
+                        style={styles.containerRadioButton}
+                        key={service._id}
+                        onPress={() => handleCloseServiceOptions(service.Nombre)}>
+                        <Text style={styles.serviceOptionText}>{service.Nombre}</Text>
+                        <MaterialIcons name="radio-button-unchecked" color={'#f0f0f0'} size={18} />
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
+                  <View style={styles.containerButton}>
+                    <TouchableOpacity style={styles.button} onPress={handleCloseServiceOptionsButton}>
+                      <Text style={styles.buttonText}>SALIR</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
-              </Pressable>
-
+              </View>
             </Modal>
 
             {/* ----------------------------------------Modal fecha "DateTimePicker"----------------------------------------- */}
@@ -345,14 +367,6 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 onChange={onChangeTime}
               />
             )}
-
-            {/* --------------------Selector modal "Seleccionar servicios" y fecha y hora "DateTimePicker"------------------- */}
-            <TouchableOpacity style={styles.containeSeletcServices} onPress={handleOpenServiceOptions}>
-              <View style={styles.containerIconLabel}>
-                <Ionicons style={[styles.iconServiceOptions, { transform: [{ rotate: '300deg' }] }]} name="cut-sharp" />
-                <Text style={styles.labelServiceOptions}>Seleccionar servicios</Text>
-              </View>
-            </TouchableOpacity>
 
             {/* ------------------------------------------------------------------------------------------------------------- */}
 
@@ -385,7 +399,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 <Text style={styles.title}>Id</Text>
               </View>
               <View style={[styles.containerTitle, { width: '87%', }]}>
-                <Text style={styles.title}>Servicio seleccionado</Text>
+                <Text style={styles.title}>Servicios seleccionados</Text>
               </View>
             </View>
 
@@ -412,15 +426,14 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
               </View>
             </View>
 
-            <View style={styles.containerDescription}>
-              <TextInput
-                style={styles.inputDescription}
-                onChangeText={setDescripcion}
-                value={Descripcion}
-                multiline // Permite múltiples líneas
-                keyboardType='default'
-              />
-            </View>
+            <TextInput
+              style={styles.inputDescription}
+              onChangeText={setDescripcion}
+              value={Descripcion}
+              textAlignVertical='top' // Establece alineación vertical de texto en la parte superior
+              multiline // Permite múltiples líneas
+              maxLength={150} // Establece el máximo de caractéres
+            />
 
             <ButtonPrimary
               onPress={crearCita}
@@ -583,7 +596,7 @@ const styles = StyleSheet.create({
   },
   contentServiceOptions: {
     width: '75%',
-    height: 296,
+    height: 325,
     backgroundColor: '#3F3F3F',
     borderRadius: 8,
   },
@@ -595,27 +608,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.3,
   },
-  selectServiceOptions: {
-    paddingVertical: 18,
-    borderTopWidth: 1,
-    borderColor: '#7A7A7A',
-  },
   containerRadioButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 25,
+    marginVertical: 14,
+    paddingHorizontal: 30,
     width: '100%',
   },
   serviceOptionText: {
     fontFamily: 'Aspira W05 Medium',
-    fontSize: 16,
+    fontSize: 15,
     color: '#f0f0f0',
     letterSpacing: 0.3,
   },
-  radioButton: {
-    color: '#f0f0f0',
-    fontSize: 20
+  containerButton: {
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  button: {
+    backgroundColor: '#7066e0',
+    borderColor: '#b2abff',
+    borderWidth: 3,
+  },
+  buttonText: {
+    fontFamily: 'Montserrat Medium',
+    height: 34,
+    paddingHorizontal: 18,
+    fontSize: 16,
+    color: 'white',
+    verticalAlign: 'middle',
+    letterSpacing: 0.3,
   },
   // Estilos modal "Seleccionar sevicios" Fin
   containerDateTime: {
@@ -700,19 +724,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.3,
   },
-  containerDescription: {
-    borderTopWidth: 0,
-    borderWidth: 1,
-    borderColor: '#5f5f5f',
-  },
   inputDescription: {
     fontFamily: 'Aspira W05 Medium',
     minHeight: 45,
-    maxHeight: 100,
-    paddingVertical: 6,
+    maxHeight: 94,
+    paddingTop: 5,
     paddingHorizontal: 10,
     fontSize: 15,
     color: '#000000',
+    borderTopWidth: 0,
+    borderWidth: 1,
+    borderColor: '#5f5f5f',
     letterSpacing: 0.3,
   },
 });

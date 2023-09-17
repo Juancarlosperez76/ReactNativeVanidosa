@@ -327,7 +327,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
           <View style={styles.modalContent}>
             <Text style={styles.title}>Servicios de la cita</Text>
             {selectedCitaServices.map((service, index) => (
-              <Text key={index} style={styles.serviceItem}>• {service.Nombre}</Text>
+              <Text key={index} style={styles.serviceItem}>•  {service.Nombre}</Text>
             ))}
             <View style={styles.containerButton}>
               <TouchableOpacity style={styles.button} onPress={closeInfoServices}>
@@ -482,14 +482,13 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '70%',
-    paddingVertical: 20,
     paddingHorizontal: 30,
     backgroundColor: '#3F3F3F',
     borderRadius: 8,
   },
   title: {
     fontFamily: 'Aspira W05 Demi',
-    marginBottom: 20,
+    marginVertical: 20,
     fontSize: 20,
     color: '#f0f0f0',
     textAlign: 'center',
@@ -497,12 +496,12 @@ const styles = StyleSheet.create({
   },
   serviceItem: {
     fontSize: 16,
-    marginVertical: 5,
+    marginVertical: 8,
     color: '#f0f0f0',
   },
   containerButton: {
     alignItems: 'center',
-    marginTop: 15,
+    paddingVertical: 20,
   },
   button: {
     backgroundColor: '#7066e0',
@@ -532,8 +531,8 @@ const styles = StyleSheet.create({
   },
   inputDescription: {
     fontFamily: 'Aspira W05 Medium',
-    height: 90,
-    paddingVertical: 6,
+    height: 94,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     fontSize: 15,
     color: '#000000',
