@@ -8,6 +8,7 @@ import HeaderLogoReturn from '../components/HeaderLogoReturn';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ButtonSecondary from '../components/ButtonSecondary';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AlertWarning from '../components/AlertWarning';
 import AlertSuccess from '../components/AlertSuccess';
 import React, { useEffect, useState } from 'react';
 import PagerView from 'react-native-pager-view';
@@ -46,13 +47,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
   // -----------------------------------------------Indicador de carga "Preload"-----------------------------------------------
   const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLoading(false); // Ocultar el "preload" después de completar la carga o el proceso
-  //   }, 800); // Tiempo de carga simulado (en milisegundos)
-  // }, []);
-
+  // --------------------------------------------------------------------------------------------------------------------------
 
   // --------------------------------------------------Estado de los "Inputs"--------------------------------------------------
   const [user, setUser] = useState<User | null>(null);
@@ -118,8 +113,8 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
             });
 
             // Filtra las citas de usuario logueado por "Documento" y "Estado"
-            const filterAppointments = citasResponse.data.cita.filter((cita: { Documento: string; Estado: boolean }) =>
-              cita.Documento === currentUser.Documento && cita.Estado === true
+            const filterAppointments = citasResponse.data.cita.filter((cita:
+              { Documento: string; Estado: boolean }) => cita.Documento === currentUser.Documento && cita.Estado === true
             );
 
             setCita(filterAppointments);
@@ -151,6 +146,39 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
       // Obtiene la cita utilizando el índice
       const getAppointmentToCancel = cita[index];
 
+      // Obtiene la Fecha y la Hora actuales
+      const currentDate = new Date(); // Obtiene Fecha y Hora actuales
+      const FechaActual = currentDate.toISOString().split('T')[0]; // Formatea Fecha actual
+      const HoraActual = currentDate.toLocaleTimeString(); // Formatea Hora actual
+
+      // Obtiene la Fecha y la Hora de la Cita
+      const FechaCita = getAppointmentToCancel.FechaCita.split('T')[0]; // Formatea Fecha de la cita
+      const HoraCita = getAppointmentToCancel.HoraCita; // Formatea Hora de la cita
+
+      // Función para convertir una hora en formato HH:MM en minutos
+      function timeToMinutes(timeString: string) {
+        const [hours, minutes] = timeString.split(':');
+        return parseInt(hours) * 60 + parseInt(minutes);
+      }
+
+      // Convertir la hora actual y la hora de la cita en minutos
+      const minutosHoraActual = timeToMinutes(HoraActual);
+      const minutosHoraCita = timeToMinutes(HoraCita);
+
+      console.log('Fecha actual:', FechaActual);
+      console.log('Hora actual:', HoraActual);
+      console.log('Fecha de la cita:', FechaCita);
+      console.log('Hora de la cita:', HoraCita);
+      console.log('Hora actual en minutos:', minutosHoraActual);
+      console.log('Hora de la cita en minutos:', minutosHoraCita);
+
+      if ((FechaActual === FechaCita) && (minutosHoraCita - minutosHoraActual < 300)) {
+        setCancellationDenied(true);
+        return
+      } else {
+        console.log('Cita eliminada con exito');
+      }
+
       const response = await fetch(apiUrl, {
         method: 'PATCH',
         headers: {
@@ -180,6 +208,15 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
   const closeInfoServices = () => {
     setInfoServices(false);
+  };
+
+  // ------------------------------------------Función alerta "Cancelación denegada"-------------------------------------------
+  const [cancellationDenied, setCancellationDenied] = useState(false);
+
+  const closeCancellationDenied = () => {
+    setCancellationDenied(false);
+    navigation.navigate('MisCitas');
+    setIsLoading(false); // Desctivar el preload
   };
 
   // --------------------------------------------Función alerta "Cancelar cita"------------------------------------------------
@@ -346,6 +383,16 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
           </View>
         </View>
       </Modal>
+
+      {/* ----------------------------------------Alerta "Cancelación denegada"-------------------------------------------- */}
+      <AlertWarning
+        visible={cancellationDenied}
+        onCloseWarning={closeCancellationDenied}
+        title='Cancelación denegada'
+        message='Sólo se permite cancelar una cita con 3 horas de anticipación.'
+        buttonStyle={{ width: 70 }}
+        buttonText='OK'
+      />
 
       {/* --------------------------------------------Alerta "Cancelar cita"----------------------------------------------- */}
       <AlertCancelAppointment
