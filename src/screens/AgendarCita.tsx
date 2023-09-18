@@ -10,9 +10,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ButtonPrimary from '../components/ButtonPrimary';
 import AlertSuccess from '../components/AlertSuccess';
 import AlertFailure from '../components/AlertFailure';
+import AlertWarning from '../components/AlertWarning';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import AlertWarning from '../components/AlertWarning';
 
 // Define el tipo para los datos de usuario logueado
 type User = {
@@ -26,6 +26,7 @@ type User = {
 type Service = {
   _id: string;
   Nombre: string;
+  Tiempo: number;
 };
 
 type RootStackParamList = {
@@ -52,11 +53,20 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   const [HoraCita, setHoraCita] = useState(new Date());
   const [Descripcion, setDescripcion] = useState('');
 
-  // --------------------------------------Función alerta "Select "Seleccionar servicios"--------------------------------------
+  // ---------------------------------------Función alerta Select "Seleccionar servicios"--------------------------------------
   const [selectServices, setSelectServices] = useState(false);
 
   const closeSelectServices = () => {
     setSelectServices(false);
+    navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
+    setIsLoading(false); // Desactivar el preload
+  };
+
+  // -------------------------------------------Función alerta "Servicio duplicado"--------------------------------------------
+  const [duplicateService, setDuplicateService] = useState(false);
+
+  const closeDuplicateService = () => {
+    setDuplicateService(false);
     navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
     setIsLoading(false); // Desactivar el preload
   };
@@ -132,6 +142,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             setDocumento(currentUser.Documento);
 
             setIsLoading(false); // Desactivar el preload
+            
           } else {
             setDeletedAccountVisible(true);
             // Destruye la sesión y redirige al login
@@ -175,6 +186,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   }, []);
 
   // ------------------------------------------Función modal "Seleccionar servicios"-------------------------------------------
+  const [servicesAdded, setServicesAdded] = useState<string[]>([]); // Seguimiento de servicios seleccionados
   const [ServiceOptionsVisible, setServiceOptionsVisible] = useState(false);
 
   const handleOpenServiceOptions = () => {
@@ -182,7 +194,12 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   };
 
   const handleCloseServiceOptions = (value: string) => {
-    setSelectedServices((prevSelectedServices) => [...prevSelectedServices, value]);
+    if (servicesAdded.includes(value)) {
+      setDuplicateService(true);
+    } else {
+      setSelectedServices((prevSelectedServices) => [...prevSelectedServices, value]);
+      setServicesAdded((prevServicesAdded) => [...prevServicesAdded, value]);
+    }
     setServiceOptionsVisible(false);
   };
 
@@ -193,9 +210,15 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
   // Función para remover servicios almacenados
   const handleRemoveService = (index: number) => {
+    const removedService = selectedServices[index];
     const updatedServices = [...selectedServices];
     updatedServices.splice(index, 1);
     setSelectedServices(updatedServices);
+  
+    // Elimina el servicio de "servicesAdded"
+    setServicesAdded((prevServicesAdded) =>
+      prevServicesAdded.filter((service) => service !== removedService)
+    );
   };
 
   // ------------------------------------------Función select Fecha "DateTimePicker"-------------------------------------------
@@ -218,9 +241,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setHasSelectedTime(true); // Marcar que usuario ha interactuado con selector de Hora.
   };
 
-  // ---------------------------------Funciones para formatear "Fecha y Hora" "DateTimePicker"---------------------------------
-
-  // Función para formatear la "Fecha"
+  // ---------------------------------------Función para formatear Fecha "DateTimePicker"--------------------------------------
   const formatDate = (date: Date) => {
     const day = date.getDate().toString().padStart(2, '0');
     const monthNames = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
@@ -229,7 +250,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     return `${day}-${month}-${year}`;
   };
 
-  // Función para formatear la "Hora"
+  // ---------------------------------------Función para formatear Hora "DateTimePicker"---------------------------------------
   const formatTimeAmOrPm = (time: Date) => {
     const hours = time.getHours();
     const minutes = time.getMinutes().toString().padStart(2, '0');
@@ -245,20 +266,6 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   const crearCita = async () => {
 
     setIsLoading(true); // Activar el preload
-
-    // Función para calcular FinCita
-    const duracionServicioIndividual = 30; // Duración de un servicio individual en minutos
-    const calcularFinCita = () => {
-      const horaCitaDate = new Date(HoraCita);
-      const duracionTotalServicios = selectedServices.length * duracionServicioIndividual;
-      const horaFin = new Date(horaCitaDate.getTime() + duracionTotalServicios * 60000);
-      console.log('Hora de inicio:', horaCitaDate);
-      console.log('Duración total en minutos:', duracionTotalServicios);
-      console.log('Hora de finalización calculada:', horaFin);
-      const horaFinFormateada = `${horaFin.getHours()}:${horaFin.getMinutes()}`;
-      return horaFinFormateada;
-    };
-    const finCita = calcularFinCita();
 
     // Validar select "Seleccionar servicios"
     if (selectedServices.length === 0) {
@@ -292,10 +299,28 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       console.log('Descripción establecida:', Descripcion);
     }
 
+    // ------------------------Función para calcular "Horafin"-------------------------
+    const Fincita = new Date(HoraCita);
+    // Obtener tiempo de cada servicio seleccionado y sumarlo a "HoraFinal"
+    selectedServices.forEach((selectedService) => {
+      const service = services.find((service) => service.Nombre === selectedService);
+      if (service) {
+        Fincita.setMinutes(Fincita.getMinutes() + service.Tiempo);
+      }
+    });
+    // --------------------------------------------------------------------------------
+
     // Formatear HoraCita en formato de 24 horas
-    const militaryTimeFormat = (time: Date) => {
-      const hours = time.getHours();
-      const minutes = time.getMinutes();
+    const formatHoraCita = (time: Date) => {
+      const hours = time.getHours().toString().padStart(2, '0'); // Dos dígitos para las horas
+      const minutes = time.getMinutes().toString().padStart(2, '0'); // Dos dígitos para los minutos
+      return `${hours}:${minutes}`;
+    };
+
+    // Formatear Fincita en formato de 24 horas
+    const formatFincita = (time: Date) => {
+      const hours = time.getHours().toString().padStart(2, '0'); // Dos dígitos para las horas
+      const minutes = time.getMinutes().toString().padStart(2, '0'); // Dos dígitos para los minutos
       return `${hours}:${minutes}`;
     };
 
@@ -310,8 +335,8 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       Apellidos: Apellido,
       Servicios: Servicios,
       FechaCita: FechaCita,
-      HoraCita: militaryTimeFormat(HoraCita),
-      Fincita: finCita,
+      HoraCita: formatHoraCita(HoraCita),
+      Fincita: formatFincita(Fincita),
       Descripcion: Descripcion,
     }
 
@@ -330,6 +355,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
         // Limpiar los campos después de crear la "Cita"
         setSelectedServices([]);
+        setServicesAdded([])
         setFechaCita(new Date());
         setHoraCita(new Date());
         setDescripcion('');
@@ -566,6 +592,17 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             buttonText='OK'
           />
 
+          {/* -----------------------------------------Alerta "Servicio duplicado"----------------------------------------- */}
+          <AlertWarning
+            visible={duplicateService}
+            modalContentStyle={{ width: '70%' }}
+            onCloseWarning={closeDuplicateService}
+            title='Servicio duplicado'
+            message='No puede seleccionar dos veces el mismo servicio'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
           {/* --------------------------------------Alerta select "Seleccionar Fecha"-------------------------------------- */}
           <AlertWarning
             visible={selectDate}
@@ -797,9 +834,11 @@ const styles = StyleSheet.create({
   },
   textDateTime: {
     fontFamily: 'Aspira W05 Medium',
+    width: '75%',
     paddingLeft: 10,
     fontSize: 15,
     color: '#000000',
+    textAlign: 'right',
     letterSpacing: 0.3,
   },
   // Estilos selectores fecha y hora "DateTimePicker"

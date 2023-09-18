@@ -69,7 +69,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
     return `${day}-${month}-${year}`;
   }
 
-  // ----------------------------------------Función para formatear la Hora "10:30 AM"-----------------------------------------
+  // --------------------------------------------Función para formatear "HoraCita"---------------------------------------------
   const formatHour = (time: string) => {
     try {
       const timeParts = time.split(':');
@@ -79,7 +79,7 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
       const AmPm = hours >= 12 ? 'PM' : 'AM';
       const twelveHours = hours % 12 || 12; // Convertir a formato de 12 horas
 
-      const formattedHours = twelveHours.toString().padStart(2, '0');
+      const formattedHours = twelveHours.toString();
       const formattedMinutes = minutes.toString().padStart(2, '0');
 
       return `${formattedHours}:${formattedMinutes} ${AmPm}`;
@@ -531,9 +531,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Aspira W05 Medium',
     width: '54%',
     height: 45,
-    paddingLeft: 10,
+    paddingRight: 15,
     fontSize: 15,
     color: '#000000',
+    textAlign: 'right',
     verticalAlign: 'middle',
     fontWeight: '400',
     letterSpacing: 0.3,
