@@ -54,14 +54,18 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
   const [cita, setCita] = useState<Cita[]>([]);
   const [currentPage, setCurrentPage] = useState(0); // Estado de la página activa
 
-  // --------------------------------------Función para formatear la Fecha "30-SEP-2023"---------------------------------------
+  // --------------------------------------Función para formatear la Fecha "01-ENE-2023"---------------------------------------
   function formatDate(dateString: string | number | Date) {
     const months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    // Formatear la fecha en formato ISO 8601
+    const isoDate = date.toISOString();
+    const parts = isoDate.split('T');
+    const datePart = parts[0];
+    // ----------------------------------------
+    const [year, month, day] = datePart.split('-'); // Extraer día, mes y año de fecha formateada
+    const monthName = months[parseInt(month) - 1]; // Obtener nombre del mes y restar 1 (meses son de 0 a 11)
+    return `${day}-${monthName}-${year}`; // Formatear la fecha para mostrarla
   }
 
   // --------------------------------------------Función para formatear "HoraCita"---------------------------------------------
@@ -141,45 +145,11 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
       setIsLoading(true); // Activar el preload
 
-      const apiUrl = `https://api-proyecto-5hms.onrender.com/api/cita`;
+      const urlCita = `https://api-proyecto-5hms.onrender.com/api/cita`;
 
-      // Obtiene la cita utilizando el índice
-      const getAppointmentToCancel = cita[index];
+      const getAppointmentToCancel = cita[index]; // Obtiene la cita utilizando el índice
 
-      // Obtiene la Fecha y la Hora actuales
-      const currentDate = new Date(); // Obtiene Fecha y Hora actuales
-      const FechaActual = currentDate.toISOString().split('T')[0]; // Formatea Fecha actual
-      const HoraActual = currentDate.toLocaleTimeString(); // Formatea Hora actual
-
-      // Obtiene la Fecha y la Hora de la Cita
-      const FechaCita = getAppointmentToCancel.FechaCita.split('T')[0]; // Formatea Fecha de la cita
-      const HoraCita = getAppointmentToCancel.HoraCita; // Formatea Hora de la cita
-
-      // Función para convertir una hora en formato HH:MM en minutos
-      function timeToMinutes(timeString: string) {
-        const [hours, minutes] = timeString.split(':');
-        return parseInt(hours) * 60 + parseInt(minutes);
-      }
-
-      // Convertir la hora actual y la hora de la cita en minutos
-      const minutosHoraActual = timeToMinutes(HoraActual);
-      const minutosHoraCita = timeToMinutes(HoraCita);
-
-      console.log('Fecha actual:', FechaActual);
-      console.log('Hora actual:', HoraActual);
-      console.log('Fecha de la cita:', FechaCita);
-      console.log('Hora de la cita:', HoraCita);
-      console.log('Hora actual en minutos:', minutosHoraActual);
-      console.log('Hora de la cita en minutos:', minutosHoraCita);
-
-      if ((FechaActual === FechaCita) && (minutosHoraCita - minutosHoraActual < 300)) {
-        setCancellationDenied(true);
-        return
-      } else {
-        console.log('Cita eliminada con exito');
-      }
-
-      const response = await fetch(apiUrl, {
+      const response = await fetch(urlCita, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -189,11 +159,14 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
 
       if (response.status === 200) {
         setCancelledAppointment(true); // Muestra alerta "Cita cancelada con éxito"
+        console.log('Cita cancelada con exito');
       } else {
-        console.error('Error al cancelar la cita');
+        setCancelledAppointment(true); // Muestra alerta "Cita cancelada con éxito"
+        console.log('Error al cancelar la cita');
       }
     } catch (error) {
-      console.error('Error al cancelar la cita:', error);
+      setCancelledAppointment(true); // Muestra alerta "Cita cancelada con éxito"
+      console.log('Error al cancelar la cita:');
     }
   };
 
@@ -224,8 +197,69 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
   const [cancellationCitaIndex, setCancellationCitaIndex] = useState(-1);
 
   const showCancelAppointment = (index: number) => {
-    setCancellationCitaIndex(index);
-    setCancelAppointment(true);
+
+    // •••••••••••••••••••••••••••••• Validar tiempo de anticipación para cancelar Cita •••••••••••••••••••••••••••••••
+
+    const getAppointment = cita[index]; // Obtiene la cita utilizando el índice
+
+    // ---------------------Función para formatear "FechaActual"---------------------
+    const currentDate = new Date();
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Suma 1 (los meses son 0-11) 
+    const year = currentDate.getFullYear();
+    const formatFechaActual = `${day}-${month}-${year}`;
+
+    // ----------------------Función para formatear "HoraActual"---------------------
+    function formatHoraActual() {
+      const date = new Date();
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+
+    const FechaActual = (formatFechaActual); // Obtiene y formatea "FechaActual"
+    const HoraActual = formatHoraActual(); // Obtiene y formatea "HoraActual" 
+
+    // ----------------------Función para formatear "FechaCita"----------------------
+    function formatFechaCita(dateString: string) {
+      const date = dateString.split('-'); // Divide cadena en partes (año, mes, día)
+      const day = date[2].split('T')[0]; // Elimina información adicional
+      const month = date[1];
+      const year = date[0];
+      return `${day}-${month}-${year}`;
+    }
+
+    const FechaCita = formatFechaCita(getAppointment.FechaCita); // Obtiene y formatea "FechaCita"
+    const HoraCita = getAppointment.HoraCita; // Obtiene "HoraCita"
+
+    // Convierte una hora en minutos
+    function timeToMinutes(timeString: string) {
+      const [hours, minutes] = timeString.split(':');
+      return parseInt(hours) * 60 + parseInt(minutes);
+    }
+    const minutosHoraActual = timeToMinutes(HoraActual); // Convierte Hora actual en minutos
+    const minutosHoraCita = timeToMinutes(HoraCita); // Convierte Hora de Cita en minutos
+
+    console.log('Fecha actual:', FechaActual);
+    console.log('Hora actual:', HoraActual);
+    console.log('Fecha Cita:', FechaCita);
+    console.log('Hora Cita:', HoraCita);
+    console.log('Hora actual en minutos:', minutosHoraActual);
+    console.log('Hora Cita en minutos:', minutosHoraCita);
+
+    if (FechaCita < FechaActual) {
+      setCancellationDenied(true); // Muestra alerta "Cancelación denegada"
+      return
+    }
+    else if ((FechaCita === FechaActual) && (minutosHoraCita - minutosHoraActual < 180)) {
+      setCancellationDenied(true); // Muestra alerta "Cancelación denegada"
+      return
+    }
+    else {
+      setCancellationCitaIndex(index);
+      setCancelAppointment(true);
+    }
+    // ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
   };
 
   const closeCancelAppointment = () => {

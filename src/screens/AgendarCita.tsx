@@ -80,6 +80,15 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     setIsLoading(false); // Desactivar el preload
   };
 
+  // ----------------------------------------------Función alerta "Fecha inválida"---------------------------------------------
+  const [invalidDate, setInvalidDate] = useState(false);
+
+  const closeInvalidDate = () => {
+    setInvalidDate(false);
+    navigation.navigate('AgendarCita'); // Redireccionar a "AgendarCita"
+    setIsLoading(false); // Desactivar el preload
+  };
+
   // -----------------------------------------Función alerta select "Seleccionar Hora"-----------------------------------------
   const [selectTime, setSelectTime] = useState(false);
 
@@ -142,7 +151,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             setDocumento(currentUser.Documento);
 
             setIsLoading(false); // Desactivar el preload
-            
+
           } else {
             setDeletedAccountVisible(true);
             // Destruye la sesión y redirige al login
@@ -214,7 +223,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
     const updatedServices = [...selectedServices];
     updatedServices.splice(index, 1);
     setSelectedServices(updatedServices);
-  
+
     // Elimina el servicio de "servicesAdded"
     setServicesAdded((prevServicesAdded) =>
       prevServicesAdded.filter((service) => service !== removedService)
@@ -251,7 +260,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
   };
 
   // ---------------------------------------Función para formatear Hora "DateTimePicker"---------------------------------------
-  const formatTimeAmOrPm = (time: Date) => {
+  const formatTime = (time: Date) => {
     const hours = time.getHours();
     const minutes = time.getMinutes().toString().padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -267,9 +276,12 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
     setIsLoading(true); // Activar el preload
 
+    const currentDate = new Date(); // Obtiene Fecha y Hora actuales
+    const FechaActual = (currentDate); // Obtiene la Fecha actual 
+
     // Validar select "Seleccionar servicios"
     if (selectedServices.length === 0) {
-      setSelectServices(true);
+      setSelectServices(true); // Mostrar alerta "Seleccióne un servicio"
       return;
     } else {
       console.log('Servicios seleccionados:', selectedServices);
@@ -277,10 +289,18 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
 
     // Validar select "Seleccionar Fecha"
     if (hasSelectedDate === false) {
-      setSelectDate(true);
+      setSelectDate(true); // Mostrar alerta "Fecha requerida"
       return;
     } else {
-      console.log('Fecha seleccionada:', FechaCita);
+      console.log('Fecha seleccionada:', formatDate(FechaCita));
+    }
+
+    // Validar que Fecha seleccionada no sea anterior a Fecha actual
+    if (formatDate(FechaCita) < formatDate(FechaActual)) {
+      setInvalidDate(true); // Mostrar alerta "Fecha inválida"
+      return;
+    } else {
+      console.log('La fecha seleccionada es posterior a la fecha actual');
     }
 
     // Validar select "Seleccionar Hora"
@@ -288,7 +308,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       setSelectTime(true);
       return;
     } else {
-      console.log('Hora seleccionada:', HoraCita);
+      console.log('Hora seleccionada:', formatTime(HoraCita));
     }
 
     // Validar campo "Descripción"
@@ -309,6 +329,14 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       }
     });
     // --------------------------------------------------------------------------------
+
+    // Formatear FechaCita en formato de 24 horas
+    const formatFechaCita = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
 
     // Formatear HoraCita en formato de 24 horas
     const formatHoraCita = (time: Date) => {
@@ -334,7 +362,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
       Nombre: Nombre,
       Apellidos: Apellido,
       Servicios: Servicios,
-      FechaCita: FechaCita,
+      FechaCita: formatFechaCita(FechaCita),
       HoraCita: formatHoraCita(HoraCita),
       Fincita: formatFincita(Fincita),
       Descripcion: Descripcion,
@@ -493,7 +521,7 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
                 <Text style={styles.titleDateTime}>Hora servicio</Text>
               </View>
               <View style={[styles.containerTextDateTime, { width: '58%' }]}>
-                <Text style={styles.textDateTime}>{formatTimeAmOrPm(HoraCita)}</Text>
+                <Text style={styles.textDateTime}>{formatTime(HoraCita)}</Text>
                 <TouchableOpacity onPress={() => setShowTimePicker(true)}  >
                   <MaterialIcons style={styles.iconDateTime} name="access-time" size={28} color="#5B009D" />
                 </TouchableOpacity>
@@ -610,6 +638,17 @@ const AgendarCita = ({ navigation }: AgendarCitaProps) => {
             onCloseWarning={closeSelectDate}
             title='Fecha requerida.'
             message='Por favor, seleccione la fecha del servicio'
+            buttonStyle={{ width: 70 }}
+            buttonText='OK'
+          />
+
+          {/* -------------------------------------------Alerta "Fecha inválida"------------------------------------------- */}
+          <AlertWarning
+            visible={invalidDate}
+            modalContentStyle={{ width: '70%' }}
+            onCloseWarning={closeInvalidDate}
+            title='Fecha Inválida.'
+            message='La fecha seleccionada, no puede ser anterior a la fecha actual'
             buttonStyle={{ width: 70 }}
             buttonText='OK'
           />
