@@ -104,21 +104,21 @@ const MisCitas = ({ navigation }: MisCitasProps) => {
           });
 
           const userData = userResponse.data.Usuarios;
-          const currentUser = userData.find((user: { Correo: string; }) => user.Correo === userEmail);
+          const currentUser = userData.find((user: { Correo: string; }) => user.Correo === userEmail);   
 
           if (currentUser) {
             setUser(currentUser);
 
             // Obtiene todas las citas 
-            const citasResponse = await axios.get('https://api-proyecto-5hms.onrender.com/api/cita', {
+            const citasResponse = await axios.get('https://api-proyecto-5hms.onrender.com/api/cita', {  
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             });
 
-            // Filtra las citas de usuario logueado por "Documento" y "Estado"
+            // Filtra las citas de usuario logueado por "Documento" Confirmación y "Estado"
             const filterAppointments = citasResponse.data.cita.filter((cita:
-              { Documento: string; Estado: boolean }) => cita.Documento === currentUser.Documento && cita.Estado === true
+              { Documento: string; ConfirmarCita: boolean; Estado: boolean }) => cita.Documento === currentUser.Documento && cita.ConfirmarCita === false && cita.Estado === true
             );
 
             setCita(filterAppointments);
